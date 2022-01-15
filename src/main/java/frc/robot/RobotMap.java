@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
+
 public class RobotMap {
     
     /**
@@ -25,6 +27,13 @@ public class RobotMap {
         public static final int TIMEOUT_MS = 30;
     }
 
+    /**
+     * constants for Pilot Controller
+     */
+    public static class PilotControllerConstants{
+        public static final int XBOX_CONTROLLER_PORT = 1;
 
+        public static final double PILOT_CONTROLLER_STICK_DEADBAND = 0.08;
+    }
 
 }

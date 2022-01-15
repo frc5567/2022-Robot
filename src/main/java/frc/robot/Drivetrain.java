@@ -3,9 +3,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 // This imports an enum that we will call later
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 // Import motor
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -14,6 +14,8 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 //Import Motor controller
 import com.ctre.phoenix.motorcontrol.SensorCollection;
+
+import com.kauailabs.navx.frc.AHRS;
 
 public class Drivetrain {
 
@@ -35,6 +37,9 @@ public class Drivetrain {
 
     // Declares the gear used to switch from high to low gear
     private Gear m_gear;
+
+    // Declares the NavX gyro
+    private AHRS m_gyro;
 
     // Arcade Drive method 1 trigger to give gas, 1 thumbstick to turn
 
@@ -124,5 +129,11 @@ public class Drivetrain {
 
         m_slaveLeftMotor.follow(m_masterLeftMotor);
         m_slaveRightMotor.follow(m_masterRightMotor);
+    }
+
+    
+    public void init(){
+        zeroEncoders();
+        shiftGear(Gear.kHighGear);
     }
 }
