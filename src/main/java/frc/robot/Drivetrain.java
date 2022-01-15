@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 // Import motor
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 //Import Motor controller
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 
@@ -64,61 +65,64 @@ public class Drivetrain {
     public Drivetrain () {
 
         // Instantiate TalonFX Motors
-        m_masterRightMotor = new TalonFX(RobotMap.MASTER_RIGHT_FALCON_ID);
-        m_masterLeftMotor = new TalonFX(RobotMap.MASTER_LEFT_FALCON_ID);
+        m_masterRightMotor = new TalonFX(RobotMap.DrivetrainConstants.MASTER_RIGHT_FALCON_ID);
+        m_masterLeftMotor = new TalonFX(RobotMap.DrivetrainConstants.MASTER_LEFT_FALCON_ID);
 
-        m_slaveRightMotor = new TalonFX(RobotMap.SLAVE_RIGHT_FALCON_ID);
-        m_slaveLeftMotor = new TalonFX(RobotMap.SLAVE_LEFT_FALCON_ID);
+        m_slaveRightMotor = new TalonFX(RobotMap.DrivetrainConstants.SLAVE_RIGHT_FALCON_ID);
+        m_slaveLeftMotor = new TalonFX(RobotMap.DrivetrainConstants.SLAVE_LEFT_FALCON_ID);
 
         // Instantiate Encoders
         m_leftDriveEncoder = new SensorCollection (m_masterLeftMotor);
         m_rightDriveEncoder = new SensorCollection (m_masterRightMotor); 
 
         // Instantiate Right and Left Solenoids
-        m_rightSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.LEFT_DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.LEFT_DOUBLESOLENOID_HIGH_GEAR_PORT);
-        m_leftSolenoid  = new DoubleSolenoid(RobotMap.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.RIGHT_DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.RIGHT_DOUBLESOLENOID_HIGH_GEAR_PORT);
+        m_rightSolenoid = new DoubleSolenoid(RobotMap.DrivetrainConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.LEFT_DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.LEFT_DOUBLESOLENOID_HIGH_GEAR_PORT);
+        m_leftSolenoid  = new DoubleSolenoid(RobotMap.DrivetrainConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.RIGHT_DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.RIGHT_DOUBLESOLENOID_HIGH_GEAR_PORT);
 
         //instantiating the gear and setting it to unknown at the beginning 
         m_gear = Gear.kUnkown; 
     }
 
-    public void zeroEncoders() {
+    private void zeroEncoders() {
     
-        m_leftDriveEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
-        m_rightDriveEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
+        m_leftDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
+        m_rightDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
     }
-
+    
     private void setPistons(DoubleSolenoid.Value value) {
 
         m_leftSolenoid.set(value);
         m_rightSolenoid.set(value);
     }
 
-
-
-    // TODO: 
+    /**
+     * shiftGear is a method for changing between low and high gears
+     * @param gear which gear to change to
+     */
     public void shiftGear(Gear gear) {
-
         if (m_gear == gear) {
-
             return; 
         }
-
         m_gear = gear;
         
         if (m_gear == Gear.kLowGear) {
-
             setPistons(Value.kForward);
         }
-
         else if (m_gear == Gear.kHighGear) {
-
             setPistons(Value.kReverse);
         }
-
-
     }
 
+    /**
+     * arcadeDrive is a method for controlling the drivetrain using forward and reverse motion and a turn value
+     * @param forward velocity input (valid values: -1 to 1)
+     * @param turn rate of turn (valid values: -1 to 1)
+     */
+    public void arcadeDrive(double forward, double turn){
+        m_masterLeftMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
+        m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
 
-    
+        m_slaveLeftMotor.follow(m_masterLeftMotor);
+        m_slaveRightMotor.follow(m_masterRightMotor);
+    }
 }
