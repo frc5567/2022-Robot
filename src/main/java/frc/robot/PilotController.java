@@ -1,6 +1,7 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Drivetrain.Gear;
+import frc.robot.Launcher.LauncherState;
 import edu.wpi.first.wpilibj.GenericHID;
 
 /**
@@ -17,6 +18,7 @@ arcadeDriveCmd() // helper method that calculates proper values and passes into 
 public class PilotController {
     private XboxController m_controller;
     private Drivetrain m_drivetrain;
+    private Launcher m_launcher;
 
     //constructor for Pilot Controller
     public PilotController(){
@@ -64,6 +66,17 @@ public class PilotController {
         }
     }
 
+    //This method is for testng the flywheel before the CoPilot Controller is ready
+    private void manualLauncherCmd(){
+        //when the a button is pressed, flywheel is revved to launch speed. when b button is pressed, flywheel returns to idle
+        if (m_controller.getAButtonPressed()){
+            m_launcher.setState(LauncherState.kLaunch);
+
+        } else if (m_controller.getBButtonPressed()){
+            m_launcher.setState(LauncherState.kIdle);
+        }
+    }
+
     public void init(){
         m_drivetrain.init();
     }
@@ -71,6 +84,7 @@ public class PilotController {
     public void periodic() {
         arcadeDriveCmd();
         controlGear();
+        manualLauncherCmd();
     }
 
 

@@ -36,4 +36,14 @@ public class RobotMap {
         public static final double PILOT_CONTROLLER_STICK_DEADBAND = 0.08;
     }
 
+    //Constants for Launcher 
+    public static class LauncherConstants{
+        //These are untested placesholder values until we know what speed we actually need
+        public static final double SETUP_SPEED = 0.5;
+        public static final double FIRING_SPEED = 1;
+
+        //the launcher timeout for running confing methods
+        public static final int CONFIG_TIMEOUT_MS = 30;
+    }
+
 }
