@@ -18,3 +18,10 @@
 | Turn Control   | Left Stick X  |
 | High Gear      | X Button      |
 | Low Gear       | Y Button      |
+| Launch         | a Button      |
+| Idle Launcher  | b Button      |
+| Intake         | Right Bumper  |
+| Unjam          | Left Bumper   |
+| Run Magazine   | Start Button  |
+| Extend Intake  | RStick Button |
+| Retract Intake | LStick Button |
