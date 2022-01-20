@@ -1,6 +1,7 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Drivetrain.Gear;
+import frc.robot.Intake.IntakeState;
 import frc.robot.Launcher.LauncherState;
 import edu.wpi.first.wpilibj.GenericHID;
 
@@ -19,11 +20,14 @@ public class PilotController {
     private XboxController m_controller;
     private Drivetrain m_drivetrain;
     private Launcher m_launcher;
+    private Intake m_intake;
 
     //constructor for Pilot Controller
     public PilotController(){
         m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
         m_drivetrain = new Drivetrain();
+        m_launcher = new Launcher();
+        m_intake = new Intake();
     }
 
     // this method takes away the deadband value from any input (creates a deadband close to 0)
@@ -57,7 +61,7 @@ public class PilotController {
     }
 
     private void controlGear(){
-        // When x botton is pressed, drivetrain is switched into high gear
+        // When x botton is pressed, drivetrain is switched into high gear, and when Y button is pressed drivetrain is switched into low gear
         if (m_controller.getXButtonPressed()){
             m_drivetrain.shiftGear(Gear.kHighGear);
 
@@ -77,6 +81,42 @@ public class PilotController {
         }
     }
 
+    //current button setup is temporary before a copilot controller is completed
+    private void intakeCmd(){
+        //when right bumper is held, activate intake
+        if (m_controller.getRightBumperPressed()){
+            m_intake.takeIn();
+        }
+    }
+
+    //current button setup is temporary before a copilot controller is completed
+    private void unJamCmd(){
+        //when left bumper is held, reverse all magazine and intake motors to expell game pieces
+        if (m_controller.getLeftBumperPressed()){
+            m_intake.unJam();
+        }
+    }
+
+    //current button setup is temporary before a copilot controller is completed
+    private void magazineCmd(){
+        //when start button is held, run magazine
+        if (m_controller.getStartButtonPressed()){
+            m_intake.runMagazine();
+        }
+    }
+
+    //current button setup is temporary before a copilot controller is completed
+    private void toggleIntakeExtension(){
+        //when the left stick button is pressed down, retract the intake
+        if (m_controller.getLeftStickButtonPressed()){
+            m_intake.toggleIntakeExtension(IntakeState.kRetracted);
+        }
+        //when the right stick button is pressed down, retract the intake
+        else if (m_controller.getRightStickButtonPressed()){
+            m_intake.toggleIntakeExtension(IntakeState.kExtended);
+        }
+    }
+
     public void init(){
         m_drivetrain.init();
     }
@@ -85,8 +125,9 @@ public class PilotController {
         arcadeDriveCmd();
         controlGear();
         manualLauncherCmd();
+        intakeCmd();
+        unJamCmd();
+        magazineCmd();
+        toggleIntakeExtension();
     }
-
-
-
 }

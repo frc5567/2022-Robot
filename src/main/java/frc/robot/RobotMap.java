@@ -38,12 +38,43 @@ public class RobotMap {
 
     //Constants for Launcher 
     public static class LauncherConstants{
+        //constants for drivetrain motor IDs (on the CAN bus)
+        public static final int FLYWHEEL_FALCON_ID = 4;
+        public static final int FEEDER_FALCON_ID = 5;
+        public static final int TURRET_FALCON_ID = 6;
+        
         //These are untested placesholder values until we know what speed we actually need
+        public static final double IDLE_SPEED = 0.0;
         public static final double SETUP_SPEED = 0.5;
         public static final double FIRING_SPEED = 1;
 
         //the launcher timeout for running confing methods
         public static final int CONFIG_TIMEOUT_MS = 30;
+    }
+
+    //Constants for Intake
+    public static class IntakeConstants{
+        //constants for drivetrain motor IDs (on the CAN bus)
+        public static final int ROLLER_FALCON_ID = 7;
+        public static final int INTAKE_FALCON_ID = 8;
+        public static final int MAGAZINE_FALCON_ID = 9;
+        //These are untested placesholder values until we know what speed we actually need
+        public static final double ROLLER_SPEED = 0.5;
+        public static final double INTAKE_SPEED = 0.5;
+        public static final double MAGAZINE_SPEED = 0.5;
+
+        //These are untested placesholder values until we know what speed we actually need but it is important that these are negative
+        public static final double REVERSE_ROLLER_SPEED = -0.5;
+        public static final double REVERSE_INTAKE_SPEED = -0.5;
+        public static final double REVERSE_MAGAZINE_SPEED = -0.5;
+
+        public static final int PCM_CAN_ID = 4;
+
+        //constants for gearbox solenoid (on the PCM)
+        public static final int LEFT_DOUBLESOLENOID_RETRACTED_PORT = 4;
+        public static final int LEFT_DOUBLESOLENOID_EXTENDED_PORT = 5;
+        public static final int RIGHT_DOUBLESOLENOID_RETRACTED_PORT = 6; 
+        public static final int RIGHT_DOUBLESOLENOID_EXTENDED_PORT = 7;
     }
 
 }

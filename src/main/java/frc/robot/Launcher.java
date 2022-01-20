@@ -43,16 +43,11 @@ public class Launcher{
 
     /**
      * Constructor for Launcher objects
-     * @param flywheelMotor the motor that controls the flywheel
-     * @param turretMotor the motor that controls the angle of the turret
      */
-    public Launcher(TalonFX flywheelMotor, TalonFX feederMotor, TalonFX turretMotor){
-        m_flywheelMotor = flywheelMotor;
-        m_feederMotor = feederMotor;
-        m_turretMotor = turretMotor;
-        m_flywheelEncoder = new SensorCollection(m_flywheelMotor);
-        m_feederEncoder = new SensorCollection(m_feederMotor);
-        m_turretEncoder = new SensorCollection(m_turretMotor);
+    public Launcher(){
+        m_flywheelMotor = new TalonFX(RobotMap.LauncherConstants.FLYWHEEL_FALCON_ID);
+        m_feederMotor = new TalonFX(RobotMap.LauncherConstants.FEEDER_FALCON_ID);
+        m_turretMotor = new TalonFX(RobotMap.LauncherConstants.TURRET_FALCON_ID);
     }
 
     //Zeros encoders
@@ -72,7 +67,7 @@ public class Launcher{
 
         //Checks which state we are in and sets motor speed for each state
         if(m_state == LauncherState.kIdle) {
-           setSpeed(0.0);
+           setSpeed(RobotMap.LauncherConstants.IDLE_SPEED);
         }
         else if (m_state == LauncherState.kSetup) {
             setSpeed(RobotMap.LauncherConstants.SETUP_SPEED);
