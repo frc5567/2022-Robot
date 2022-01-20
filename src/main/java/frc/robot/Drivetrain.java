@@ -81,8 +81,8 @@ public class Drivetrain {
         m_rightDriveEncoder = new SensorCollection (m_masterRightMotor); 
 
         // Instantiate Right and Left Solenoids
-        m_rightSolenoid = new DoubleSolenoid(RobotMap.DrivetrainConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.LEFT_DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.LEFT_DOUBLESOLENOID_HIGH_GEAR_PORT);
-        m_leftSolenoid  = new DoubleSolenoid(RobotMap.DrivetrainConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.RIGHT_DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.RIGHT_DOUBLESOLENOID_HIGH_GEAR_PORT);
+        m_rightSolenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.LEFT_DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.LEFT_DOUBLESOLENOID_HIGH_GEAR_PORT);
+        m_leftSolenoid  = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.RIGHT_DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.RIGHT_DOUBLESOLENOID_HIGH_GEAR_PORT);
 
         //instantiating the gear and setting it to unknown at the beginning 
         m_gear = Gear.kUnkown; 
