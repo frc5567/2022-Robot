@@ -10,12 +10,12 @@ public class RobotMap {
     public static class DrivetrainConstants{
 
         //constants for drivetrain motor ID's (on the CAN bus)
-        public static final int MASTER_RIGHT_FALCON_ID = 0; 
-        public static final int MASTER_LEFT_FALCON_ID = 1;
-        public static final int SLAVE_RIGHT_FALCON_ID = 2;
-        public static final int SLAVE_LEFT_FALCON_ID = 3;
+        public static final int MASTER_RIGHT_FALCON_ID = 4; 
+        public static final int MASTER_LEFT_FALCON_ID = 3;
+        public static final int SLAVE_RIGHT_FALCON_ID = 14;
+        public static final int SLAVE_LEFT_FALCON_ID = 13;
 
-        public static final int PCM_CAN_ID = 4;
+        public static final int PCM_CAN_ID = 20;
 
         //constants for gearbox solenoid (on the PCM)
         public static final int LEFT_DOUBLESOLENOID_LOW_GEAR_PORT = 0;

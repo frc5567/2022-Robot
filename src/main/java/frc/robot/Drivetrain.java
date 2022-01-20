@@ -125,7 +125,7 @@ public class Drivetrain {
      */
     public void arcadeDrive(double forward, double turn){
         m_masterLeftMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
-        m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
+        m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, -turn);
 
         m_slaveLeftMotor.follow(m_masterLeftMotor);
         m_slaveRightMotor.follow(m_masterRightMotor);
@@ -135,5 +135,7 @@ public class Drivetrain {
     public void init(){
         zeroEncoders();
         shiftGear(Gear.kHighGear);
+        m_masterRightMotor.setInverted(true);
+        m_slaveRightMotor.setInverted(true);
     }
 }
