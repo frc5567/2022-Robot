@@ -3,7 +3,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class RobotMap {
-    
+
+    /**
+     * constant for PCM location on the CAN bus
+     */
+    public static class CANConstants{
+        public static final int PCM_CAN_ID = 20;
+    }
+
     /**
     * constants for drivetrain 
     */
@@ -14,8 +21,6 @@ public class RobotMap {
         public static final int MASTER_LEFT_FALCON_ID = 3;
         public static final int SLAVE_RIGHT_FALCON_ID = 14;
         public static final int SLAVE_LEFT_FALCON_ID = 13;
-
-        public static final int PCM_CAN_ID = 20;
 
         //constants for gearbox solenoid (on the PCM)
         public static final int LEFT_DOUBLESOLENOID_LOW_GEAR_PORT = 0;
@@ -36,12 +41,22 @@ public class RobotMap {
         public static final double PILOT_CONTROLLER_STICK_DEADBAND = 0.08;
     }
 
+    /**
+     * constants for Copilot Controller
+     */
+    public static class CopilotControllerConstants{
+        public static final int XBOX_CONTROLLER_PORT = 2;
+
+        public static final double PILOT_CONTROLLER_STICK_DEADBAND = 0.08;
+    }
+
+
     //Constants for Launcher 
     public static class LauncherConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
-        public static final int FLYWHEEL_FALCON_ID = 4;
-        public static final int FEEDER_FALCON_ID = 5;
-        public static final int TURRET_FALCON_ID = 6;
+        public static final int FLYWHEEL_FALCON_ID = 5;
+        public static final int FEEDER_FALCON_ID = 6;
+        public static final int TURRET_FALCON_ID = 7;
         
         //These are untested placesholder values until we know what speed we actually need
         public static final double IDLE_SPEED = 0.0;
@@ -55,9 +70,9 @@ public class RobotMap {
     //Constants for Intake
     public static class IntakeConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
-        public static final int ROLLER_FALCON_ID = 7;
-        public static final int INTAKE_FALCON_ID = 8;
-        public static final int MAGAZINE_FALCON_ID = 9;
+        public static final int ROLLER_FALCON_ID = 8;
+        public static final int INTAKE_FALCON_ID = 9;
+        public static final int MAGAZINE_FALCON_ID = 10;
         //These are untested placesholder values until we know what speed we actually need
         public static final double ROLLER_SPEED = 0.5;
         public static final double INTAKE_SPEED = 0.5;
@@ -68,8 +83,6 @@ public class RobotMap {
         public static final double REVERSE_INTAKE_SPEED = -0.5;
         public static final double REVERSE_MAGAZINE_SPEED = -0.5;
 
-        public static final int PCM_CAN_ID = 4;
-
         //constants for gearbox solenoid (on the PCM)
         public static final int LEFT_DOUBLESOLENOID_RETRACTED_PORT = 4;
         public static final int LEFT_DOUBLESOLENOID_EXTENDED_PORT = 5;
@@ -77,4 +90,10 @@ public class RobotMap {
         public static final int RIGHT_DOUBLESOLENOID_EXTENDED_PORT = 7;
     }
 
+    //Constants for Climber
+    public static class ClimberConstants{
+        //constants for motor IDs (on the CAN bus)
+        public static final int CLIMBER_MOTOR_ID = 11;
+        public static final int CLIMBER_WINCH_ID = 12;
+    }
 }
