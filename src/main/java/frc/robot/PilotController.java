@@ -34,19 +34,19 @@ public class PilotController {
     private double adjustForDeadband(double stickInput){
         double absoluteStickInput = Math.abs(stickInput);
         //if value is within deadband, return 0
-        if(absoluteStickInput < RobotMap.PilotControllerConstants.PILOT_CONTROLLER_STICK_DEADBAND) {
+        if(absoluteStickInput < RobotMap.PilotControllerConstants.STICK_DEADBAND) {
             return 0; 
         }
         //if value is greater than deadband, subtract deadband and reapply sign (forwards and backwards)
         else {
             //subtracts deadband so that there is not a jump in values
-            absoluteStickInput -= RobotMap.PilotControllerConstants.PILOT_CONTROLLER_STICK_DEADBAND;
+            absoluteStickInput -= RobotMap.PilotControllerConstants.STICK_DEADBAND;
 
             //assigning negative sign to negative inputs
             stickInput = Math.copySign(absoluteStickInput, stickInput);
 
             //adjusts for the limited range
-            return stickInput / (1.0-RobotMap.PilotControllerConstants.PILOT_CONTROLLER_STICK_DEADBAND);
+            return stickInput / (1.0-RobotMap.PilotControllerConstants.STICK_DEADBAND);
         }
     }
 
