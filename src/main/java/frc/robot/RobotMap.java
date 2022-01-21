@@ -76,5 +76,14 @@ public class RobotMap {
         public static final int RIGHT_DOUBLESOLENOID_RETRACTED_PORT = 6; 
         public static final int RIGHT_DOUBLESOLENOID_EXTENDED_PORT = 7;
     }
+    /**
+     * Constants for LimelightVision class
+     */
+    public static class LimelightConstants{
+        //TODO change camera height after camera is mounted
+        public static final double CAMERA_HEIGHT = 12.0; //in inches
+        public static final double HUB_HEIGHT = 104.0; //in inches
+    }
+
 
 }
