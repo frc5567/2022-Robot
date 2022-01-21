@@ -38,7 +38,7 @@ public class RobotMap {
     public static class PilotControllerConstants{
         public static final int XBOX_CONTROLLER_PORT = 1;
 
-        public static final double PILOT_CONTROLLER_STICK_DEADBAND = 0.08;
+        public static final double STICK_DEADBAND = 0.08;
     }
 
     /**
@@ -47,7 +47,7 @@ public class RobotMap {
     public static class CopilotControllerConstants{
         public static final int XBOX_CONTROLLER_PORT = 2;
 
-        public static final double PILOT_CONTROLLER_STICK_DEADBAND = 0.08;
+        public static final double STICK_DEADBAND = 0.08;
     }
 
 
