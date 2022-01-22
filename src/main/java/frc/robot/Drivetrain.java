@@ -88,7 +88,7 @@ public class Drivetrain {
         m_gear = Gear.kUnkown; 
     }
 
-    private void zeroEncoders() {
+    public void zeroEncoders() {
     
         m_leftDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
         m_rightDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);

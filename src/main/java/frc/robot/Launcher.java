@@ -50,6 +50,16 @@ public class Launcher{
         m_turretMotor = new TalonFX(RobotMap.LauncherConstants.TURRET_FALCON_ID);
     }
 
+    //method for preparing the launch sequence
+    public void prepareLaunch(){
+        
+    }
+
+    //method for feeding the ball into the flywheel once it's revved up to speed
+    public void launch(){
+        
+    }
+
     //Zeros encoders
     public void zeroEncoders(){
         m_flywheelEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
