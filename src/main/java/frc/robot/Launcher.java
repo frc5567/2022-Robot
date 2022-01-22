@@ -50,6 +50,21 @@ public class Launcher{
         m_turretMotor = new TalonFX(RobotMap.LauncherConstants.TURRET_FALCON_ID);
     }
 
+    //method for preparing the launch sequence
+    public void prepareLaunch(){
+        /*
+        look for target
+        turn to target
+        */
+        setState(LauncherState.kSetup);
+    }
+
+    //method for feeding the ball into the flywheel once it's revved up to speed
+    public void launch(){
+        setState(LauncherState.kLaunch);
+        setFlywheelSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+    }
+
     //Zeros encoders
     public void zeroEncoders(){
         m_flywheelEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
@@ -67,18 +82,22 @@ public class Launcher{
 
         //Checks which state we are in and sets motor speed for each state
         if(m_state == LauncherState.kIdle) {
-           setSpeed(RobotMap.LauncherConstants.IDLE_SPEED);
+           setFlywheelSpeed(RobotMap.LauncherConstants.IDLE_SPEED);
         }
         else if (m_state == LauncherState.kSetup) {
-            setSpeed(RobotMap.LauncherConstants.SETUP_SPEED);
+            setFlywheelSpeed(RobotMap.LauncherConstants.SETUP_SPEED);
         }
         else if (m_state == LauncherState.kLaunch){
-            setSpeed(RobotMap.LauncherConstants.FIRING_SPEED);
+            setFlywheelSpeed(RobotMap.LauncherConstants.FIRING_SPEED);
         }
     }
 
+    public void setFeederSpeed(double speed){
+        m_feederMotor.set(ControlMode.PercentOutput, speed);
+    }
+
     //Sets the speed of the launcher flywheel motor
-    public void setSpeed(double speed){
+    public void setFlywheelSpeed(double speed){
         m_flywheelMotor.set(ControlMode.PercentOutput, speed);
     }
 

@@ -40,11 +40,6 @@ public class Intake {
     private TalonFX m_intakeMotor;
     private TalonFX m_magazineMotor;
 
-    //declares encoders for intake motors
-    private SensorCollection m_rollerEncoder;
-    private SensorCollection m_intakeEncoder;
-    private SensorCollection m_magazineEncoder;
-
     //declares solenoids for extension and retraction
     private DoubleSolenoid m_leftSolenoid;
     private DoubleSolenoid m_rightSolenoid;
@@ -60,8 +55,8 @@ public class Intake {
         m_magazineMotor = new TalonFX(RobotMap.IntakeConstants.MAGAZINE_FALCON_ID);
 
         // Instantiate Right and Left Solenoids
-        m_rightSolenoid = new DoubleSolenoid(RobotMap.IntakeConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.LEFT_DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.LEFT_DOUBLESOLENOID_EXTENDED_PORT);
-        m_leftSolenoid  = new DoubleSolenoid(RobotMap.IntakeConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.RIGHT_DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.RIGHT_DOUBLESOLENOID_EXTENDED_PORT);
+        m_rightSolenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.LEFT_DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.LEFT_DOUBLESOLENOID_EXTENDED_PORT);
+        m_leftSolenoid  = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.RIGHT_DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.RIGHT_DOUBLESOLENOID_EXTENDED_PORT);
 
         m_state = IntakeState.kUnkown;
     }

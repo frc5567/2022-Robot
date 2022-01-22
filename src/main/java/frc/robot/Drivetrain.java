@@ -79,14 +79,14 @@ public class Drivetrain {
         m_leftDriveEncoder = new SensorCollection (m_masterLeftMotor);
         m_rightDriveEncoder = new SensorCollection (m_masterRightMotor); 
 
-        // Instantiate Right and Left Solenoids
+        // Instantiate Solenoid
         m_solenoid = new DoubleSolenoid(RobotMap.DrivetrainConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.DOUBLESOLENOID_HIGH_GEAR_PORT);
 
         //instantiating the gear and setting it to unknown at the beginning 
         m_gear = Gear.kUnkown; 
     }
 
-    private void zeroEncoders() {
+    public void zeroEncoders() {
     
         m_leftDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
         m_rightDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
