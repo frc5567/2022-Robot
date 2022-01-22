@@ -62,6 +62,7 @@ public class RobotMap {
         public static final double IDLE_SPEED = 0.0;
         public static final double SETUP_SPEED = 0.5;
         public static final double FIRING_SPEED = 1;
+        public static final double FEEDING_SPEED = 0.5;
 
         //the launcher timeout for running confing methods
         public static final int CONFIG_TIMEOUT_MS = 30;
