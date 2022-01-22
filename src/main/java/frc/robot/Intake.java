@@ -40,11 +40,6 @@ public class Intake {
     private TalonFX m_intakeMotor;
     private TalonFX m_magazineMotor;
 
-    //declares encoders for intake motors
-    private SensorCollection m_rollerEncoder;
-    private SensorCollection m_intakeEncoder;
-    private SensorCollection m_magazineEncoder;
-
     //declares solenoids for extension and retraction
     private DoubleSolenoid m_leftSolenoid;
     private DoubleSolenoid m_rightSolenoid;
