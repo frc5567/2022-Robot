@@ -11,8 +11,6 @@ public class Launcher{
     public enum LauncherState{
         // Idle state for the Launcher
         kIdle("Idle"),
-        // Setup state for the Launcher
-        kSetup("Setup"),
         // Launch state for the Launcher
         kLaunch("Launch");
 
@@ -50,20 +48,25 @@ public class Launcher{
         m_turretMotor = new TalonFX(RobotMap.LauncherConstants.TURRET_FALCON_ID);
     }
 
+    
+    /*
     //method for preparing the launch sequence
+    This is commented out because we will need to impliment it into the copilot controller class and we don't have enough buttons 
+    left on the pilot controller for testing. It also needs distance and angle calculations from the limelight for the targeting. 
+    Once the copilot class exists, we will make it so when the button is released it returns to idle.
     public void prepareLaunch(){
-        /*
+        
         look for target
         turn to target
-        */
-        setState(LauncherState.kSetup);
+        
+        setState(LauncherState.kLaunch);
     }
 
     //method for feeding the ball into the flywheel once it's revved up to speed
     public void launch(){
-        setState(LauncherState.kLaunch);
         setFlywheelSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
     }
+    */
 
     //Zeros encoders
     public void zeroEncoders(){
@@ -84,14 +87,12 @@ public class Launcher{
         if(m_state == LauncherState.kIdle) {
            setFlywheelSpeed(RobotMap.LauncherConstants.IDLE_SPEED);
         }
-        else if (m_state == LauncherState.kSetup) {
-            setFlywheelSpeed(RobotMap.LauncherConstants.SETUP_SPEED);
-        }
         else if (m_state == LauncherState.kLaunch){
             setFlywheelSpeed(RobotMap.LauncherConstants.FIRING_SPEED);
         }
     }
 
+    //Sets the speed of the feeder motor
     public void setFeederSpeed(double speed){
         m_feederMotor.set(ControlMode.PercentOutput, speed);
     }
@@ -113,10 +114,7 @@ public class Launcher{
 
     //Returns target speed of flywheel motor
     public double getCmdSpeed(){
-        if (m_state == LauncherState.kSetup){
-            return RobotMap.LauncherConstants.SETUP_SPEED;
-        } 
-        else if (m_state == LauncherState.kLaunch){
+        if (m_state == LauncherState.kLaunch){
             return RobotMap.LauncherConstants.FIRING_SPEED;
         }
         else {
