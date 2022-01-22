@@ -23,10 +23,8 @@ public class RobotMap {
         public static final int SLAVE_LEFT_FALCON_ID = 13;
 
         //constants for gearbox solenoid (on the PCM)
-        public static final int LEFT_DOUBLESOLENOID_LOW_GEAR_PORT = 0;
-        public static final int LEFT_DOUBLESOLENOID_HIGH_GEAR_PORT = 1;
-        public static final int RIGHT_DOUBLESOLENOID_LOW_GEAR_PORT = 2; 
-        public static final int RIGHT_DOUBLESOLENOID_HIGH_GEAR_PORT = 3;
+        public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 2; 
+        public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 3;
 
         //timeout in milliseconds for the CTRE config methods
         public static final int TIMEOUT_MS = 30;
@@ -97,6 +95,13 @@ public class RobotMap {
         //TODO change camera height after camera is mounted
         public static final double CAMERA_HEIGHT = 12.0; //in inches
         public static final double HUB_HEIGHT = 104.0; //in inches
+    }
+
+    /**
+     * Constants used in RobotShuffelbaard class (also used in Pilot controller when initial scalars are set)
+     */
+    public static class ShuffleboardConstants {
+        public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.6;
     }
 
 

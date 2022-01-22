@@ -32,8 +32,7 @@ public class Drivetrain {
     private SensorCollection m_rightDriveEncoder;
 
     // Pneumatic controller for gear box
-    private DoubleSolenoid m_rightSolenoid;
-    private DoubleSolenoid m_leftSolenoid;
+    private DoubleSolenoid m_solenoid;
 
     // Declares the gear used to switch from high to low gear
     private Gear m_gear;
@@ -80,9 +79,8 @@ public class Drivetrain {
         m_leftDriveEncoder = new SensorCollection (m_masterLeftMotor);
         m_rightDriveEncoder = new SensorCollection (m_masterRightMotor); 
 
-        // Instantiate Right and Left Solenoids
-        m_rightSolenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.LEFT_DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.LEFT_DOUBLESOLENOID_HIGH_GEAR_PORT);
-        m_leftSolenoid  = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.RIGHT_DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.RIGHT_DOUBLESOLENOID_HIGH_GEAR_PORT);
+        // Instantiate Solenoid
+        m_solenoid = new DoubleSolenoid(RobotMap.DrivetrainConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.DOUBLESOLENOID_HIGH_GEAR_PORT);
 
         //instantiating the gear and setting it to unknown at the beginning 
         m_gear = Gear.kUnkown; 
@@ -95,9 +93,7 @@ public class Drivetrain {
     }
     
     private void setPistons(DoubleSolenoid.Value value) {
-
-        m_leftSolenoid.set(value);
-        m_rightSolenoid.set(value);
+        m_solenoid.set(value);
     }
 
     /**
