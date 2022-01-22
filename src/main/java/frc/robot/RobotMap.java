@@ -60,7 +60,6 @@ public class RobotMap {
         
         //These are untested placesholder values until we know what speed we actually need
         public static final double IDLE_SPEED = 0.0;
-        public static final double SETUP_SPEED = 0.5;
         public static final double FIRING_SPEED = 1;
         public static final double FEEDING_SPEED = 0.5;
 
