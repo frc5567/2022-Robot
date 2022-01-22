@@ -21,6 +21,9 @@ public class PilotController {
     private Drivetrain m_drivetrain;
     private Launcher m_launcher;
     private Intake m_intake;
+    private RobotShuffleboard m_shuffleboard;
+    private double m_currentVelocityScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
+    private double m_currentTurnScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
 
     //constructor for Pilot Controller
     public PilotController(){
@@ -28,6 +31,10 @@ public class PilotController {
         m_drivetrain = new Drivetrain();
         m_launcher = new Launcher();
         m_intake = new Intake();
+        m_shuffleboard = new RobotShuffleboard();
+
+        //puts input scalar widgets on the shuffleboard
+        m_shuffleboard.drivetrainShuffleboardConfig();
     }
 
     // this method takes away the deadband value from any input (creates a deadband close to 0)
@@ -51,11 +58,19 @@ public class PilotController {
     }
 
     private void arcadeDriveCmd(){
+        // triggerInput is for the velocity input forward and backwards
         double triggerInput = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
+        // leftStickXInput is for our current turn input
         double leftStickXInput = m_controller.getLeftX();
 
         // applies deadband method 
         leftStickXInput = adjustForDeadband(leftStickXInput);
+
+        // Multiplies triggerInput and currentVelocityScalar and sets triggerInput equal to product
+        triggerInput *= m_currentVelocityScalar;
+        // Multiplies triggerInput and currentTurnScalar and sets triggerInput equal to the product.
+        leftStickXInput *= m_currentTurnScalar;
+
         // passes in our variables from this method (calculations) into our arcade drive in drivetrain
         m_drivetrain.arcadeDrive(triggerInput, leftStickXInput);
     }
@@ -64,9 +79,15 @@ public class PilotController {
         // When x botton is pressed, drivetrain is switched into high gear, and when Y button is pressed drivetrain is switched into low gear
         if (m_controller.getXButtonPressed()){
             m_drivetrain.shiftGear(Gear.kHighGear);
+            // Sets currentVelocityScalar equal to the value in the shuffleboard for the scalar
+            m_currentVelocityScalar = m_shuffleboard.getHighVelocityScalar();
+            m_currentTurnScalar = m_shuffleboard.getHighTurnScalar();
 
         } else if (m_controller.getYButtonPressed()){
             m_drivetrain.shiftGear(Gear.kLowGear);
+            // Sets currentVelocityScalar equal to the value in the shuffleboard for the scalar
+            m_currentVelocityScalar = m_shuffleboard.getLowVelocityScalar();
+            m_currentTurnScalar = m_shuffleboard.getLowTurnScalar();
         }
     }
 
