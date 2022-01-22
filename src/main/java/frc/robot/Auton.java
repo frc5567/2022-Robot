@@ -1,22 +1,6 @@
 package frc.robot;
 
 public class Auton{    
-    //declares instances of our drivetrain and the auton step enum
-    private AutonStep m_step;
-    private AutonPath m_path;
-    private Drivetrain m_drivetrain;
-    private Launcher m_launcher;
-
-    /**
-     * constructor for auton
-     * @param drivetrain drivetrain mechanism on the robot
-     */
-    public Auton(Drivetrain drivetrain){
-        m_drivetrain = drivetrain;
-        m_step = AutonStep.kStep1;
-        m_path = AutonPath.kLeftWall;
-    }
-    
     //enum for what path we are going to take in auton
     public enum AutonPath{
         //auton path for starting on the hub wall on the left side
@@ -34,6 +18,23 @@ public class Auton{
         kStep1,
 
         kStop;
+    }
+    
+    //declares instances of our drivetrain and the auton step enum
+    private AutonStep m_step;
+    private AutonPath m_path;
+    private Drivetrain m_drivetrain;
+    private Launcher m_launcher;
+
+    /**
+     * constructor for auton
+     * @param drivetrain drivetrain mechanism on the robot
+     */
+    public Auton(Drivetrain drivetrain, Launcher launcher){
+        m_drivetrain = drivetrain;
+        m_launcher = launcher;
+        m_step = AutonStep.kStep1;
+        m_path = AutonPath.kLeftWall;
     }
 
     //this method will be run at the start of every auton period
