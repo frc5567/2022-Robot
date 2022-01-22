@@ -11,6 +11,8 @@
 * Variable names should always start with a lower-case letter
 
 ### Current Drive Controls
+
+##### Pilot
 | System         | Control       |
 | -------------- | ------------- |
 | Drive Forward  | R. Trigger    |
@@ -25,3 +27,12 @@
 | Run Magazine   | Start Button  |
 | Extend Intake  | RStick Button |
 | Retract Intake | LStick Button |
+
+##### Copilot
+| System         | Control (ID)  |
+| -------------- | ------------- |
+| Climber Up     |       4       |
+| Climber Down   |       5       |
+| Winch Forward  |       6       |
+| Rev Launcher   |       7       |
+| Idle Cli.+Win. |       8       |
