@@ -1,16 +1,8 @@
 package frc.robot;
 
-//imports, still need vision update
-import frc.robot.Drivetrain;
-import frc.robot.Launcher;
-import frc.robot.Intake;
-import frc.robot.Climber;
-import frc.robot.Gamepad;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-
 public class CopilotController {
     //declarations
-    private Gamepad m_gamepad;
+    private GamePad m_gamePad;
     private Drivetrain m_drivetrain;
     private Launcher m_launcher;
     private Intake m_intake;
@@ -18,7 +10,7 @@ public class CopilotController {
 
     //constructor for copilot controller
     public CopilotController(Drivetrain drivetrain){
-        m_gamePad = new GamePad(RobotMap.GAMEPAD_PORT);
+        m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.XBOX_CONTROLLER_PORT);
         m_intake = new Intake();
         m_launcher = new Launcher();
         //pass in turret here?

@@ -70,12 +70,12 @@ public class GamePad extends GenericHID {
 	 */
 
 	//Method that returns the x axis value of the joystick
-	public double getX(Hand hand) {
+	public double getX() {
 		return getRawAxis(0);
 	}
 
 	//Method that returns the y axis value of the joystick
-	public double getY(Hand hand) {
+	public double getY() {
 		return getRawAxis(1);
 	}
 
