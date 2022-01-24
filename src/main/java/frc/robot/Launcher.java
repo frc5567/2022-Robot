@@ -28,7 +28,9 @@ public class Launcher{
 
     //Declares launcher state
     LauncherState m_state;
-    
+    //Declares limelight object
+    private LimelightVision m_limelightVision;
+
     //Declares variables for the motor that moves the launcher flywheel and the motor that controls the turret angle
     private TalonFX m_flywheelMotor;
     private TalonFX m_feederMotor;
@@ -46,6 +48,7 @@ public class Launcher{
         m_flywheelMotor = new TalonFX(RobotMap.LauncherConstants.FLYWHEEL_FALCON_ID);
         m_feederMotor = new TalonFX(RobotMap.LauncherConstants.FEEDER_FALCON_ID);
         m_turretMotor = new TalonFX(RobotMap.LauncherConstants.TURRET_FALCON_ID);
+        m_limelightVision = new LimelightVision();
     }
 
     
@@ -55,18 +58,27 @@ public class Launcher{
     left on the pilot controller for testing. It also needs distance and angle calculations from the limelight for the targeting. 
     Once the copilot class exists, we will make it so when the button is released it returns to idle.
     public void prepareLaunch(){
+        if(m_limelightVision.seeTarget){
+            if(m_limelightVision.xAngleToTarget != 0){
+                if(m_limelightVision.xAngleToTarget > 0){
+                    setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
+                }
+                else if(m_limelightVision.xAngleToTarget < 0){
+                    setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
+                }
+            }
+            Use dist to find target velocity and use y value to find the target angle of hood
+        }
         
-        look for target
-        turn to target
         
         setState(LauncherState.kLaunch);
     }
+    */
 
     //method for feeding the ball into the flywheel once it's revved up to speed
     public void launch(){
         setFlywheelSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
     }
-    */
 
     //Zeros encoders
     public void zeroEncoders(){
@@ -100,6 +112,10 @@ public class Launcher{
     //Sets the speed of the launcher flywheel motor
     public void setFlywheelSpeed(double speed){
         m_flywheelMotor.set(ControlMode.PercentOutput, speed);
+    }
+
+    public void setTurretSpeed(double speed){
+        m_turretMotor.set(ControlMode.PercentOutput, speed);
     }
 
     //Returns the current state of the Launcher
