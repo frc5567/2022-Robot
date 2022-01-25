@@ -94,6 +94,7 @@ public class RobotMap {
         //TODO change camera height after camera is mounted
         public static final double CAMERA_HEIGHT = 12.0; //in inches
         public static final double HUB_HEIGHT = 104.0; //in inches
+        public static final double CAMERA_DEGREES_FROM_GROUND = 45;
     }
 
     /**
@@ -110,4 +111,5 @@ public class RobotMap {
         public static final int CLIMBER_MOTOR_ID = 11;
         public static final int CLIMBER_WINCH_ID = 12;
     }
+
 }
