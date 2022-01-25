@@ -63,6 +63,9 @@ public class RobotMap {
 
         //the launcher timeout for running confing methods
         public static final int CONFIG_TIMEOUT_MS = 30;
+
+        public static final double POSITIVE_TURRET_ROTATION_SPEED = 0.25;
+        public static final double NEGATIVE_TURRET_ROTATION_SPEED = -0.25;
     }
 
     //Constants for Intake
