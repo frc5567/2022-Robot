@@ -43,7 +43,7 @@ public class RobotMap {
      * constants for Copilot Controller
      */
     public static class CopilotControllerConstants{
-        public static final int XBOX_CONTROLLER_PORT = 2;
+        public static final int GAMEPAD_PORT = 2;
 
         public static final double STICK_DEADBAND = 0.08;
     }
@@ -112,5 +112,10 @@ public class RobotMap {
         //constants for motor IDs (on the CAN bus)
         public static final int CLIMBER_MOTOR_ID = 11;
         public static final int CLIMBER_WINCH_ID = 12;
+
+        //constants for motor speeds 
+        public static final double CLIMBER_MOTOR_SPEED = 0.8;
+        public static final double CLIMBER_MOTOR_REVERSE_SPEED = -0.8;
+        public static final double WINCH_MOTOR_SPEED = 0.8;
     }
 }
