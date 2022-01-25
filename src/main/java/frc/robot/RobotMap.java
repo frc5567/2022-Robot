@@ -60,12 +60,15 @@ public class RobotMap {
         public static final double IDLE_SPEED = 0.0;
         public static final double FIRING_SPEED = 1;
         public static final double FEEDING_SPEED = 0.5;
+        public static final double ANGLER_SPEED = 0.25;
 
         //the launcher timeout for running confing methods
         public static final int CONFIG_TIMEOUT_MS = 30;
 
         public static final double POSITIVE_TURRET_ROTATION_SPEED = 0.25;
         public static final double NEGATIVE_TURRET_ROTATION_SPEED = -0.25;
+
+        public static final double ANGLER_ENCODER_LIMIT = 30000;
     }
 
     //Constants for Intake
