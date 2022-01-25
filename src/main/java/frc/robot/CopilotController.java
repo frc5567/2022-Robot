@@ -10,7 +10,7 @@ public class CopilotController {
 
     //constructor for copilot controller
     public CopilotController(Drivetrain drivetrain){
-        m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.XBOX_CONTROLLER_PORT);
+        m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
         m_intake = new Intake();
         m_launcher = new Launcher();
         //pass in turret here?
@@ -27,28 +27,48 @@ public class CopilotController {
      */
     public void periodicCopilot(){
         controlClimber();
+        //TODO: launcher controls, intake controls
     }
 
+    
+
+    /**
+     * This method controlls the climber using three buttons to pass in values of power to two motors; the climber motor and the winch motor.
+     */
     public void controlClimber(){
+        //controls Climber motor with two buttons, up or down
         if(m_gamePad.getMoveClimberUp()){
-            //move up
+            m_climber.climbMotor(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
         }
         else if(m_gamePad.getMoveClimberDown()){
-            //move down
+            m_climber.climbMotor(RobotMap.ClimberConstants.CLIMBER_MOTOR_REVERSE_SPEED);
+        }
+        else{
+            m_climber.climbMotor(0);
+        }
+        //controls Climber winch with one button, up
+        if(m_gamePad.getMoveRobotUp()){
+            m_climber.climbWinch(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
+        }
+        else{
+            m_climber.climbWinch(0);
         }
     }
+
     /**
      * @return the launcher
      */
     public Launcher getLauncher() {
         return m_launcher;
     }
+
     /**
      * @return the intake
      */
     public Intake getIntake() {
         return m_intake;
     }
+
     /**
      * @return the climber
      */
