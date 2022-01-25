@@ -41,7 +41,8 @@ public class LimelightVision {
     double m_xAngleOffset;
     double m_yAngleOffset;
     double m_areaOfScreen;
-
+    
+    //Constructor for limelight
     public LimelightVision (){
         m_limelightTable = NetworkTableInstance.getDefault().getTable("Limelight");
 
@@ -129,7 +130,7 @@ public class LimelightVision {
         //math to find the height from the camera to the top of the hub
         m_totalHeight = RobotMap.LimelightConstants.HUB_HEIGHT - RobotMap.LimelightConstants.CAMERA_HEIGHT;
         //finds the sine of the sum of both angles and sets it to one member variable
-        m_sineOfAngle = Math.sin(cameraDegreesFromGround + yAngleToTarget());
+        m_sineOfAngle = Math.sin(RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND + yAngleToTarget());
         //calculates the distance of the hypotenuse (distance from camera to upper hub)
         m_distance = m_totalHeight/m_sineOfAngle;
         //returns calculated distance in inches
