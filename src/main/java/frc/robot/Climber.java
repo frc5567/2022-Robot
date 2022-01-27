@@ -21,7 +21,7 @@ private TalonFX m_winchMotor;
       * sets speed of climber to passed in variable
       * @param climb  velocity input (valid values: -1 to 1)
       */
-    public void climbMotor(double climb){
+    public void climbCMD(double climb){
         m_climbMotor.set(ControlMode.PercentOutput, climb);
     }
 
@@ -29,7 +29,7 @@ private TalonFX m_winchMotor;
      * sets the speed of winch to passed in variable
      * @param winch velocity input (valid values 0 to 1)
      */
-    public void climbWinch(double winch){
+    public void WinchCMD(double winch){
         m_winchMotor.set(ControlMode.PercentOutput, winch);
     }
 
