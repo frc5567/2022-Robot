@@ -52,9 +52,10 @@ public class RobotMap {
     //Constants for Launcher 
     public static class LauncherConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
-        public static final int FLYWHEEL_FALCON_ID = 5;
-        public static final int FEEDER_FALCON_ID = 6;
-        public static final int TURRET_FALCON_ID = 7;
+        public static final int MASTER_FLYWHEEL_FALCON_ID = 5;
+        public static final int SLAVE_FLYWHEEL_FALCON_ID = 6;
+        public static final int FEEDER_FALCON_ID = 7;
+        public static final int TURRET_FALCON_ID = 8;
         
         //These are untested placesholder values until we know what speed we actually need
         public static final double IDLE_SPEED = 0.0;
@@ -75,9 +76,9 @@ public class RobotMap {
     //Constants for Intake
     public static class IntakeConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
-        public static final int ROLLER_FALCON_ID = 8;
-        public static final int INTAKE_FALCON_ID = 9;
-        public static final int MAGAZINE_FALCON_ID = 10;
+        public static final int ROLLER_FALCON_ID = 9;
+        public static final int INTAKE_FALCON_ID = 10;
+        public static final int MAGAZINE_FALCON_ID = 11;
         //These are untested placesholder values until we know what speed we actually need
         public static final double ROLLER_SPEED = 0.5;
         public static final double INTAKE_SPEED = 0.5;
@@ -115,8 +116,8 @@ public class RobotMap {
     //Constants for Climber
     public static class ClimberConstants{
         //constants for motor IDs (on the CAN bus)
-        public static final int CLIMBER_MOTOR_ID = 11;
-        public static final int CLIMBER_WINCH_ID = 12;
+        public static final int CLIMBER_MOTOR_ID = 12;
+        public static final int CLIMBER_WINCH_ID = 13;
 
         //constants for motor speeds 
         public static final double CLIMBER_MOTOR_SPEED = 0.8;

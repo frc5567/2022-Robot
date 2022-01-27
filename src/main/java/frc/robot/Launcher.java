@@ -5,37 +5,20 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 //Import Encoders
 import com.ctre.phoenix.motorcontrol.SensorCollection;
+//import servo
+import edu.wpi.first.wpilibj.Servo;
 
 public class Launcher{
-    //Enum for storing the possible states of the launcher
-    public enum LauncherState{
-        // Idle state for the Launcher
-        kIdle("Idle"),
-        // Launch state for the Launcher
-        kLaunch("Launch");
-
-        private String stateName;
-
-        LauncherState (String stateName){
-            this.stateName = stateName;
-        }
-
-        //toString for the current state of the launcher
-        public String toString(){
-            return this.stateName;
-        }
-    }
-
-    //Declares launcher state
-    LauncherState m_state;
     //Declares limelight object
     private LimelightVision m_limelightVision;
     
     //Declares variables for the motor that moves the launcher flywheel and the motor that controls the turret angle
-    private TalonFX m_flywheelMotor;
+    private TalonFX m_masterFlywheelMotor;
+    private TalonFX m_slaveFlywheelMotor;
     private TalonFX m_feederMotor;
     private TalonFX m_turretMotor;
     private TalonFX m_trajectoryMotor;
+    Servo m_trajectoryServo;
 
     //Declares variables for the encoders
     private SensorCollection m_flywheelEncoder;
@@ -47,9 +30,12 @@ public class Launcher{
      * Constructor for Launcher objects
      */
     public Launcher(){
-        m_flywheelMotor = new TalonFX(RobotMap.LauncherConstants.FLYWHEEL_FALCON_ID);
+        m_masterFlywheelMotor = new TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
+        m_slaveFlywheelMotor = new TalonFX(RobotMap.LauncherConstants.SLAVE_FLYWHEEL_FALCON_ID);
         m_feederMotor = new TalonFX(RobotMap.LauncherConstants.FEEDER_FALCON_ID);
         m_turretMotor = new TalonFX(RobotMap.LauncherConstants.TURRET_FALCON_ID);
+        m_trajectoryServo = new Servo(0);
+
         m_limelightVision = new LimelightVision();
 
         m_trajectoryEncoder = new SensorCollection (m_trajectoryMotor);
@@ -67,7 +53,8 @@ public class Launcher{
                     setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
                 }
             }
-            
+
+            m_trajectoryServo.set(-(m_limelightVision.yAngleToTarget()/2) + 0.5);
 
             //This will be inaccurate and will need to be enhanced to be more specific later, ideally with PID
             if(getTrajectoryPosition() > 0 && getTrajectoryPosition() < RobotMap.LauncherConstants.TRAJECTORY_ENCODER_LIMIT){
@@ -84,7 +71,30 @@ public class Launcher{
             setFlywheelSpeed(m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100);
         }
     }
-    
+
+    /*
+    This is a seperate version of the method in case we end up using a servo for trajectory control
+    public void prepareLaunch(){
+        if(m_limelightVision.seeTarget()){
+            if(m_limelightVision.xAngleToTarget() != 0){
+                if(m_limelightVision.xAngleToTarget() > 0){
+                    setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
+                }
+                else if(m_limelightVision.xAngleToTarget() < 0){
+                    setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
+                }
+            }
+            
+            //This will be inaccurate and will need to be enhanced to be more specific later, ideally with PID
+            m_trajectoryServo.set(-(m_limelightVision.yAngleToTarget()/2) + 0.5);
+            
+
+            // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
+            // 100 is arbitrary and needs to be tested (more will probably need to be done so this is more fine tuned)
+            setFlywheelSpeed(m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100);
+        }
+    }
+    */
 
     //method for feeding the ball into the flywheel once it's revved up to speed
     public void launch(){
@@ -105,23 +115,6 @@ public class Launcher{
         m_trajectoryEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
     }
 
-    //Sets the state of the launcher flywheel
-    public void setState(LauncherState launcherState){
-        if(m_state == launcherState) {
-            return;
-        }
-        //Sets the input state to our state
-        m_state = launcherState;
-
-        //Checks which state we are in and sets motor speed for each state
-        if(m_state == LauncherState.kIdle) {
-           setFlywheelSpeed(RobotMap.LauncherConstants.IDLE_SPEED);
-        }
-        else if (m_state == LauncherState.kLaunch){
-            setFlywheelSpeed(RobotMap.LauncherConstants.FIRING_SPEED);
-        }
-    }
-
     public double getTrajectoryPosition(){
         return m_trajectoryEncoder.getQuadraturePosition();
     }
@@ -133,7 +126,8 @@ public class Launcher{
 
     //Sets the speed of the launcher flywheel motor
     public void setFlywheelSpeed(double speed){
-        m_flywheelMotor.set(ControlMode.PercentOutput, speed);
+        m_masterFlywheelMotor.set(ControlMode.PercentOutput, speed);
+        m_slaveFlywheelMotor.follow(m_masterFlywheelMotor);
     }
 
     public void setTurretSpeed(double speed){
@@ -144,23 +138,8 @@ public class Launcher{
         m_trajectoryMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    //Returns the current state of the Launcher
-    public LauncherState getState(){
-        return m_state;
-    }
-
     //Returns current speed of flywheel motor
     public double getRealSpeed(){
-        return m_flywheelMotor.getSelectedSensorVelocity();
-    }
-
-    //Returns target speed of flywheel motor
-    public double getCmdSpeed(){
-        if (m_state == LauncherState.kLaunch){
-            return RobotMap.LauncherConstants.FIRING_SPEED;
-        }
-        else {
-            return (0.0);
-        }
+        return m_masterFlywheelMotor.getSelectedSensorVelocity();
     }
 }
