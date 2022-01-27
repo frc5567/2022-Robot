@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.robot.Intake.IntakeState;
+
 public class CopilotController {
     //declarations
     private GamePad m_gamePad;
@@ -27,10 +29,40 @@ public class CopilotController {
      */
     public void periodicCopilot(){
         controlClimber();
-        //TODO: launcher controls, intake controls
+        controlIntake();
+        controlLauncher();
     }
 
-    
+    /**
+     * This method controlls the intake using three buttons
+     */
+    public void controlIntake(){
+        //two if statements to determine intake position
+        if(m_gamePad.getExtendIntakePressed()){
+            m_intake.toggleIntakeExtension(IntakeState.kExtended);
+        }
+        else if(m_gamePad.getRetractIntakePressed()){
+            m_intake.toggleIntakeExtension(IntakeState.kRetracted);
+        }
+        //if statement to control the power of the intake
+        if (m_gamePad.getIntakeCMDPressed()){
+            m_intake.takeIn();
+        }
+    }
+
+    /**
+     * This method controls the launcher (and turret) with two buttons, one for revving and one for advancing balls into the launcher
+     */
+    public void controlLauncher(){
+        //uses one button to aim and rev
+        if (m_gamePad.getRevPressed()){
+            m_launcher.prepareLaunch();
+        }
+        //uses one button to advance the feeder wheel
+        if (m_gamePad.getLaunchCMD()){
+            m_launcher.launch();
+        }
+    }
 
     /**
      * This method controlls the climber using three buttons to pass in values of power to two motors; the climber motor and the winch motor.
@@ -38,20 +70,20 @@ public class CopilotController {
     public void controlClimber(){
         //controls Climber motor with two buttons, up or down
         if(m_gamePad.getMoveClimberUp()){
-            m_climber.climbMotor(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
+            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
         }
         else if(m_gamePad.getMoveClimberDown()){
-            m_climber.climbMotor(RobotMap.ClimberConstants.CLIMBER_MOTOR_REVERSE_SPEED);
+            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_REVERSE_SPEED);
         }
         else{
-            m_climber.climbMotor(0);
+            m_climber.climbCMD(0);
         }
         //controls Climber winch with one button, up
         if(m_gamePad.getMoveRobotUp()){
-            m_climber.climbWinch(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
+            m_climber.WinchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
         }
         else{
-            m_climber.climbWinch(0);
+            m_climber.WinchCMD(0);
         }
     }
 
