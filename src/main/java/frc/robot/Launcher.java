@@ -54,8 +54,6 @@ public class Launcher{
                 }
             }
 
-            m_trajectoryServo.set(-(m_limelightVision.yAngleToTarget()/2) + 0.5);
-
             //This will be inaccurate and will need to be enhanced to be more specific later, ideally with PID
             if(getTrajectoryPosition() > 0 && getTrajectoryPosition() < RobotMap.LauncherConstants.TRAJECTORY_ENCODER_LIMIT){
                 if(m_limelightVision.yAngleToTarget() > 0){
