@@ -35,15 +35,13 @@ public class Launcher{
     private TalonFX m_flywheelMotor;
     private TalonFX m_feederMotor;
     private TalonFX m_turretMotor;
-    private TalonFX m_anglerMotor;
+    private TalonFX m_trajectoryMotor;
 
     //Declares variables for the encoders
     private SensorCollection m_flywheelEncoder;
     private SensorCollection m_feederEncoder;
     private SensorCollection m_turretEncoder;
-    private SensorCollection m_anglerEncoder;
-
-    
+    private SensorCollection m_trajectoryEncoder;
 
     /**
      * Constructor for Launcher objects
@@ -54,7 +52,7 @@ public class Launcher{
         m_turretMotor = new TalonFX(RobotMap.LauncherConstants.TURRET_FALCON_ID);
         m_limelightVision = new LimelightVision();
 
-        m_anglerEncoder = new SensorCollection (m_anglerMotor);
+        m_trajectoryEncoder = new SensorCollection (m_trajectoryMotor);
     }
     
     
@@ -69,26 +67,34 @@ public class Launcher{
                     setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
                 }
             }
+            
+
+            //This will be inaccurate and will need to be enhanced to be more specific later, ideally with PID
+            if(getTrajectoryPosition() > 0 && getTrajectoryPosition() < RobotMap.LauncherConstants.TRAJECTORY_ENCODER_LIMIT){
+                if(m_limelightVision.yAngleToTarget() > 0){
+                    setTrajectorySpeed(-RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
+                }
+                else if(m_limelightVision.yAngleToTarget() < 0){
+                    setTrajectorySpeed(RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
+                }
+            }
+
             // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
             // 100 is arbitrary and needs to be tested (more will probably need to be done so this is more fine tuned)
             setFlywheelSpeed(m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100);
-
-            //This will be inaccurate and will need to be enhanced to be more specific later, ideally with PID
-            if(getAnglerPosition() > 0 && getAnglerPosition() < RobotMap.LauncherConstants.ANGLER_ENCODER_LIMIT){
-                if(m_limelightVision.yAngleToTarget() > 0){
-                    setAnglerSpeed(-RobotMap.LauncherConstants.ANGLER_SPEED);
-                }
-                else if(m_limelightVision.yAngleToTarget() < 0){
-                    setAnglerSpeed(RobotMap.LauncherConstants.ANGLER_SPEED);
-                }
-            }
         }
     }
     
 
     //method for feeding the ball into the flywheel once it's revved up to speed
     public void launch(){
-        setFlywheelSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+    }
+
+    //method for getting rid of balls we don't want
+    public void expel(){
+        setFlywheelSpeed(RobotMap.LauncherConstants.EXPEL_SPEED);
+        setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
     }
 
     //Zeros encoders
@@ -96,7 +102,7 @@ public class Launcher{
         m_flywheelEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
         m_feederEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
         m_turretEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
-        m_anglerEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
+        m_trajectoryEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
     }
 
     //Sets the state of the launcher flywheel
@@ -116,8 +122,8 @@ public class Launcher{
         }
     }
 
-    public double getAnglerPosition(){
-        return m_flywheelEncoder.getQuadraturePosition();
+    public double getTrajectoryPosition(){
+        return m_trajectoryEncoder.getQuadraturePosition();
     }
 
     //Sets the speed of the feeder motor
@@ -134,8 +140,8 @@ public class Launcher{
         m_turretMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    public void setAnglerSpeed(double speed){
-        m_anglerMotor.set(ControlMode.PercentOutput, speed);
+    public void setTrajectorySpeed(double speed){
+        m_trajectoryMotor.set(ControlMode.PercentOutput, speed);
     }
 
     //Returns the current state of the Launcher

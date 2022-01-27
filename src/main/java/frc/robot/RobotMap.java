@@ -23,8 +23,8 @@ public class RobotMap {
         public static final int SLAVE_LEFT_FALCON_ID = 13;
 
         //constants for gearbox solenoid (on the PCM)
-        public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 2; 
-        public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 3;
+        public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 0; 
+        public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 1;
 
         //timeout in milliseconds for the CTRE config methods
         public static final int TIMEOUT_MS = 30;
@@ -34,18 +34,18 @@ public class RobotMap {
      * constants for Pilot Controller
      */
     public static class PilotControllerConstants{
-        public static final int XBOX_CONTROLLER_PORT = 1;
+        public static final int XBOX_CONTROLLER_PORT = 0;
 
-        public static final double STICK_DEADBAND = 0.08;
+        public static final double STICK_DEADBAND = 0.09;
     }
 
     /**
      * constants for Copilot Controller
      */
     public static class CopilotControllerConstants{
-        public static final int GAMEPAD_PORT = 2;
+        public static final int GAMEPAD_PORT = 1;
 
-        public static final double STICK_DEADBAND = 0.08;
+        public static final double STICK_DEADBAND = 0.09;
     }
 
 
@@ -60,7 +60,8 @@ public class RobotMap {
         public static final double IDLE_SPEED = 0.0;
         public static final double FIRING_SPEED = 1;
         public static final double FEEDING_SPEED = 0.5;
-        public static final double ANGLER_SPEED = 0.25;
+        public static final double TRAJECTORY_MOTOR_SPEED = 0.25;
+        public static final double EXPEL_SPEED = 0.25;
 
         //the launcher timeout for running confing methods
         public static final int CONFIG_TIMEOUT_MS = 30;
@@ -68,7 +69,7 @@ public class RobotMap {
         public static final double POSITIVE_TURRET_ROTATION_SPEED = 0.25;
         public static final double NEGATIVE_TURRET_ROTATION_SPEED = -0.25;
 
-        public static final double ANGLER_ENCODER_LIMIT = 30000;
+        public static final double TRAJECTORY_ENCODER_LIMIT = 30000;
     }
 
     //Constants for Intake
