@@ -1,5 +1,7 @@
 package frc.robot;
 
+import javax.naming.ldap.LdapReferralException;
+
 public class Auton{    
     //enum for what path we are going to take in auton
     public enum AutonPath{
@@ -157,6 +159,133 @@ public class Auton{
             -turn about 180 degress back towards the hub
             -target and shoot both the pre-loaded ball and the picked-up ball
             */
+        }
+    }
+
+    /**
+     * code taken from 2021 auton (protobranch)
+     * @param speed speed robot will travel at 
+     * @param target target distance in inches
+     * @return whether or not we have reached our target
+     */
+    public boolean driveToTarget(double speed, double target){
+        double rightEncoder = m_drivetrain.getRightDriveEncoderPosition();
+        double leftEncoder = m_drivetrain.getLeftDriveEncoderPosition();
+        target = target * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
+        System.out.println("EncoderTarget: " + target);
+        System.out.println("Right Encoder Ticks: " + rightEncoder);
+        System.out.println("Left Encoder Ticks: " + leftEncoder);
+
+        if(speed < 0){
+            target = target * -1;
+            if((target > 0) && (speed > 0)){
+                if((leftEncoder < target) || (rightEncoder < target)){
+                    m_drivetrain.arcadeDrive(speed, 0);
+                    return false;
+                }
+                else{
+                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.zeroEncoders();
+                    //TODO: look for docuemtation about using gyros
+                    return true;
+                }
+            }
+            else if((target < 0) && (speed < 0)){
+                if(leftEncoder > target || rightEncoder > target){
+                    m_drivetrain.arcadeDrive(speed,0);
+                    return false;
+                }
+                else{
+                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.zeroEncoders();
+                    //gyro again
+                    return true;
+                }
+            }
+            else{
+                System.out.println("Robot will never reach target; exiting pathing.");
+                m_step = AutonStep.kStop;
+                return false;
+            }
+        }
+        //if speed is greater than 0 (or 0)
+        else{
+            if((target > 0) && (speed > 0)){
+                if((leftEncoder < target) || (rightEncoder < target)){
+                    m_drivetrain.arcadeDrive(speed, 0);
+                    return false;
+                }
+                else{
+                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.zeroEncoders();
+                    //gyro again
+                    return true;
+                }
+            }
+            else if((target < 0) && (speed < 0)){
+                if((leftEncoder > target) || (rightEncoder > target)){
+                    m_drivetrain.arcadeDrive(speed,0);
+                    return false;
+                }
+                else{
+                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.zeroEncoders();
+                    //gyro again
+                    return true;
+                }
+            }
+            else{
+                System.out.println("Robot will never reach target; exiting pathing.");
+                m_step = AutonStep.kStop;
+                return false;
+            }
+        }
+    }
+
+    /**
+     * code taken from 2021 auton (protobranch) with prints commented out.
+     * @param speed speed at which we want to turn
+     * @param target target angle in degrees we want to turn to
+     * @return whether or not we have reached our target angle
+     */
+    public boolean turnToAngle(double speed, double target){
+        float currentAngle = m_drivetrain.getGyro();
+        //if target is on the left, this if statement will run
+        if(speed <0){
+            target = target * -1;
+            System.out.println("Target Angle: " + target);
+            System.out.println("Current Angle " + currentAngle);
+            if(currentAngle < (target * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
+                m_drivetrain.arcadeDrive(0,0);
+                m_drivetrain.zeroGyro();
+                m_drivetrain.zeroEncoders();
+                System.out.println("Zero Gyro " + m_drivetrain.getGyro()); 
+                System.out.println("At Target Angle " + currentAngle);
+                return true;
+            }
+            else{
+                m_drivetrain.arcadeDrive(0, speed);
+                System.out.println("Not At Target Angle " + currentAngle);
+                return false;
+            }
+        }
+        //if target is on the right, this if statement will run
+        else{
+            System.out.println("Target Angle: " + target);
+            System.out.println("Current Angle: " + currentAngle);
+            if(currentAngle > (target * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
+                m_drivetrain.arcadeDrive(0, 0);
+                m_drivetrain.zeroEncoders();
+                m_drivetrain.zeroGyro();
+                System.out.println("zero Gyro" + m_drivetrain.getGyro());
+                System.out.println("At Target Angle " + currentAngle);
+                return true;
+            }
+            else{
+                m_drivetrain.arcadeDrive(0, speed);
+                System.out.println("Not At Target Angle " + currentAngle);
+                return false;
+            }
         }
     }
 }

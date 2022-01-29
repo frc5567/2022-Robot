@@ -6,9 +6,10 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 // This imports an enum that we will call later
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.SPI;
 
 // Import motor
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FollowerType;
@@ -21,11 +22,11 @@ public class Drivetrain {
 
     // Insert object motor controllers 2 left TalonFX and 2 right TalonFX
 
-    private TalonFX m_masterRightMotor;
-    private TalonFX m_masterLeftMotor;
+    private WPI_TalonFX m_masterRightMotor;
+    private WPI_TalonFX m_masterLeftMotor;
 
-    private TalonFX m_slaveRightMotor;
-    private TalonFX m_slaveLeftMotor;
+    private WPI_TalonFX m_slaveRightMotor;
+    private WPI_TalonFX m_slaveLeftMotor;
 
     // Declare variables for encoders
     private SensorCollection m_leftDriveEncoder;
@@ -69,11 +70,11 @@ public class Drivetrain {
     public Drivetrain () {
 
         // Instantiate TalonFX Motors
-        m_masterRightMotor = new TalonFX(RobotMap.DrivetrainConstants.MASTER_RIGHT_FALCON_ID);
-        m_masterLeftMotor = new TalonFX(RobotMap.DrivetrainConstants.MASTER_LEFT_FALCON_ID);
+        m_masterRightMotor = new WPI_TalonFX(RobotMap.DrivetrainConstants.MASTER_RIGHT_FALCON_ID);
+        m_masterLeftMotor = new WPI_TalonFX(RobotMap.DrivetrainConstants.MASTER_LEFT_FALCON_ID);
 
-        m_slaveRightMotor = new TalonFX(RobotMap.DrivetrainConstants.SLAVE_RIGHT_FALCON_ID);
-        m_slaveLeftMotor = new TalonFX(RobotMap.DrivetrainConstants.SLAVE_LEFT_FALCON_ID);
+        m_slaveRightMotor = new WPI_TalonFX(RobotMap.DrivetrainConstants.SLAVE_RIGHT_FALCON_ID);
+        m_slaveLeftMotor = new WPI_TalonFX(RobotMap.DrivetrainConstants.SLAVE_LEFT_FALCON_ID);
 
         // Instantiate Encoders
         m_leftDriveEncoder = new SensorCollection (m_masterLeftMotor);
@@ -84,12 +85,19 @@ public class Drivetrain {
 
         //instantiating the gear and setting it to unknown at the beginning 
         m_gear = Gear.kUnkown; 
+
+        //instantiating the gyro
+        m_gyro = new AHRS(SPI.Port.kMXP);   
     }
 
     public void zeroEncoders() {
     
         m_leftDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
         m_rightDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
+    }
+
+    public void zeroGyro(){
+        m_gyro.zeroYaw();
     }
     
     private void setPistons(DoubleSolenoid.Value value) {
@@ -133,5 +141,26 @@ public class Drivetrain {
         shiftGear(Gear.kHighGear);
         m_masterRightMotor.setInverted(true);
         m_slaveRightMotor.setInverted(true);
+    }
+
+    /**
+     * returns the position of the drivetrain's right encoder
+     */
+    public double getRightDriveEncoderPosition(){
+        return m_masterRightMotor.getSelectedSensorPosition();
+    }
+
+    /**
+     * returns the position of the drivetrain's left encoder
+     */
+    public double getLeftDriveEncoderPosition(){
+        return m_masterLeftMotor.getSelectedSensorPosition();
+    }
+
+    /**
+     * returns the angle of the robot in degrees
+     */
+    public float getGyro(){
+        return m_gyro.getYaw();
     }
 }

@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
-
 public class RobotMap {
 
     /**
@@ -23,8 +21,8 @@ public class RobotMap {
         public static final int SLAVE_LEFT_FALCON_ID = 13;
 
         //constants for gearbox solenoid (on the PCM)
-        public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 0; 
-        public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 1;
+        public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 4; 
+        public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 5;
 
         //timeout in milliseconds for the CTRE config methods
         public static final int TIMEOUT_MS = 30;
@@ -71,29 +69,34 @@ public class RobotMap {
         public static final double NEGATIVE_TURRET_ROTATION_SPEED = -0.25;
 
         public static final double TRAJECTORY_ENCODER_LIMIT = 30000;
+
+        public static final double TURRET_ENCODER_LIMIT = 75000;
+
+        public static final double TOLERATED_TURRET_ERROR = 0.08;
+        public static final double TOLERATED_TRAJECTORY_ERROR = 1000;
     }
 
     //Constants for Intake
     public static class IntakeConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
-        public static final int ROLLER_FALCON_ID = 9;
-        public static final int INTAKE_FALCON_ID = 10;
+        public static final int FRONT_ROLLER_FALCON_ID = 9;
+        public static final int BACK_ROLLER_FALCON_ID = 10;
         public static final int MAGAZINE_FALCON_ID = 11;
         //These are untested placesholder values until we know what speed we actually need
-        public static final double ROLLER_SPEED = 0.5;
-        public static final double INTAKE_SPEED = 0.5;
+        public static final double FRONT_ROLLER_SPEED = 0.5;
+        public static final double BACK_ROLLER_SPEED = 0.35;
         public static final double MAGAZINE_SPEED = 0.5;
 
         //These are untested placesholder values until we know what speed we actually need but it is important that these are negative
-        public static final double REVERSE_ROLLER_SPEED = -0.5;
-        public static final double REVERSE_INTAKE_SPEED = -0.5;
+        public static final double REVERSE_FRONT_ROLLER_SPEED = -0.5;
+        public static final double REVERSE_BACK_ROLLER_SPEED = -0.5;
         public static final double REVERSE_MAGAZINE_SPEED = -0.5;
 
-        //constants for gearbox solenoid (on the PCM)
-        public static final int LEFT_DOUBLESOLENOID_RETRACTED_PORT = 4;
-        public static final int LEFT_DOUBLESOLENOID_EXTENDED_PORT = 5;
-        public static final int RIGHT_DOUBLESOLENOID_RETRACTED_PORT = 6; 
-        public static final int RIGHT_DOUBLESOLENOID_EXTENDED_PORT = 7;
+        //constants for solenoids (on the PCM)
+        public static final int LEFT_DOUBLESOLENOID_RETRACTED_PORT = 0;
+        public static final int LEFT_DOUBLESOLENOID_EXTENDED_PORT = 1;
+        public static final int RIGHT_DOUBLESOLENOID_RETRACTED_PORT = 2; 
+        public static final int RIGHT_DOUBLESOLENOID_EXTENDED_PORT = 3;
     }
     /**
      * Constants for LimelightVision class
@@ -128,4 +131,13 @@ public class RobotMap {
         public static final double WINCH_MOTOR_SPEED = 0.8;
     }
 
+    //constants for Auton
+    public static class AutonConstants{
+        //contant for encoder ticks to inches (pulled from 2021, may be subject to change)
+        public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (18.85 / 15);
+        public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (18.85 / 7.92);
+
+        //constant for rotation error acceptance
+        public static final double ROTATE_BOUND = 0.1;
+    }
 }
