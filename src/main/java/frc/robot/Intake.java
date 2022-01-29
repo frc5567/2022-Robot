@@ -3,8 +3,6 @@ package frc.robot;
 //Import motors
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-//Import Encoders
-import com.ctre.phoenix.motorcontrol.SensorCollection;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
