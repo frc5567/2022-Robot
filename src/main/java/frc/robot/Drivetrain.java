@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 // This imports an enum that we will call later
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.SPI;
 
 // Import motor
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -84,12 +85,19 @@ public class Drivetrain {
 
         //instantiating the gear and setting it to unknown at the beginning 
         m_gear = Gear.kUnkown; 
+
+        //instantiating the gyro
+        m_gyro = new AHRS(SPI.Port.kMXP);   
     }
 
     public void zeroEncoders() {
     
         m_leftDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
         m_rightDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
+    }
+
+    public void zeroGyro(){
+        m_gyro.zeroYaw();
     }
     
     private void setPistons(DoubleSolenoid.Value value) {
@@ -133,5 +141,26 @@ public class Drivetrain {
         shiftGear(Gear.kHighGear);
         m_masterRightMotor.setInverted(true);
         m_slaveRightMotor.setInverted(true);
+    }
+
+    /**
+     * returns the position of the drivetrain's right encoder
+     */
+    public double getRightDriveEncoderPosition(){
+        return m_masterRightMotor.getSelectedSensorPosition();
+    }
+
+    /**
+     * returns the position of the drivetrain's left encoder
+     */
+    public double getLeftDriveEncoderPosition(){
+        return m_masterLeftMotor.getSelectedSensorPosition();
+    }
+
+    /**
+     * returns the angle of the robot in degrees
+     */
+    public float getGyro(){
+        return m_gyro.getYaw();
     }
 }
