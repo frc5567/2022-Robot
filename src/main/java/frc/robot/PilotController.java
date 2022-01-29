@@ -1,35 +1,25 @@
 package frc.robot;
+//Xbox controller import
 import edu.wpi.first.wpilibj.XboxController;
+//Drivetrain import
 import frc.robot.Drivetrain.Gear;
-import frc.robot.Intake.IntakeState;
-import edu.wpi.first.wpilibj.GenericHID;
-
-/**
- * Creating a PilotController following the framework below
-
-Interface
-init()
-periodic()
-arcadeDriveCmd() // helper method that calculates proper values and passes into drivetrain
-//specify a deadband and normalize the range
- */
-
 
 public class PilotController {
+    //Declares controller, drivetrain, and shuffleboard objects
     private XboxController m_controller;
     private Drivetrain m_drivetrain;
-    private Launcher m_launcher;
-    private Intake m_intake;
     private RobotShuffleboard m_shuffleboard;
+
+    //Declares scalars
     private double m_currentVelocityScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
     private double m_currentTurnScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
 
-    //constructor for Pilot Controller
+    /**
+     * Constuctor for the pilot controller
+     */
     public PilotController(){
         m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
         m_drivetrain = new Drivetrain();
-        m_launcher = new Launcher();
-        m_intake = new Intake();
         m_shuffleboard = new RobotShuffleboard();
 
         //puts input scalar widgets on the shuffleboard
@@ -56,6 +46,9 @@ public class PilotController {
         }
     }
 
+    /**
+     * Method to set our drivetrain motors to arcade drive controls. (Right trigger is forwards, left trigger is backwards, left stick is turn)
+     */
     private void arcadeDriveCmd(){
         // triggerInput is for the velocity input forward and backwards
         double triggerInput = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
@@ -74,6 +67,9 @@ public class PilotController {
         m_drivetrain.arcadeDrive(triggerInput, leftStickXInput);
     }
 
+    /**
+     * Method for changing the gear between high (X button) and low (Y button) (High for speed, low for torque)
+     */
     private void controlGear(){
         // When x botton is pressed, drivetrain is switched into high gear, and when Y button is pressed drivetrain is switched into low gear
         if (m_controller.getXButtonPressed()){
@@ -90,52 +86,18 @@ public class PilotController {
         }
     }
 
-    //current button setup is temporary before a copilot controller is completed
-    private void intakeCmd(){
-        //when right bumper is held, activate intake
-        if (m_controller.getRightBumperPressed()){
-            m_intake.takeIn();
-        }
-    }
-
-    //current button setup is temporary before a copilot controller is completed
-    private void unJamCmd(){
-        //when left bumper is held, reverse all magazine and intake motors to expell game pieces
-        if (m_controller.getLeftBumperPressed()){
-            m_intake.unJam();
-        }
-    }
-
-    //current button setup is temporary before a copilot controller is completed
-    private void magazineCmd(){
-        //when start button is held, run magazine
-        if (m_controller.getStartButtonPressed()){
-            m_intake.runMagazine();
-        }
-    }
-
-    //current button setup is temporary before a copilot controller is completed
-    private void toggleIntakeExtension(){
-        //when the left stick button is pressed down, retract the intake
-        if (m_controller.getLeftStickButtonPressed()){
-            m_intake.toggleIntakeExtension(IntakeState.kRetracted);
-        }
-        //when the right stick button is pressed down, retract the intake
-        else if (m_controller.getRightStickButtonPressed()){
-            m_intake.toggleIntakeExtension(IntakeState.kExtended);
-        }
-    }
-
+    /**
+     * Initialization method for the pilot controller
+     */
     public void init(){
         m_drivetrain.init();
-    }
 
+    }
+    /**
+     * Periodic method for the pilot controller
+     */
     public void periodic() {
         arcadeDriveCmd();
         controlGear();
-        intakeCmd();
-        unJamCmd();
-        magazineCmd();
-        toggleIntakeExtension();
     }
 }
