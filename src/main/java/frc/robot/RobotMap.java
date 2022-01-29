@@ -70,6 +70,8 @@ public class RobotMap {
 
         public static final double TRAJECTORY_ENCODER_LIMIT = 30000;
 
+        public static final double TURRET_ENCODER_LIMIT = 75000;
+
         public static final double TOLERATED_TURRET_ERROR = 0.08;
         public static final double TOLERATED_TRAJECTORY_ERROR = 1000;
     }
