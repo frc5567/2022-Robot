@@ -46,7 +46,9 @@ public class Launcher{
         m_trajectoryEncoder = new SensorCollection (m_trajectoryMotor);
     }
     
-    //method for preparing the launch sequence
+    /**
+     * Prepares launch sequence by turning turret towards the target, moving the trajectory controller to the required angle, and revving the launcher flywheel to the required speed
+     */
     public void prepareLaunch(){
         //this if statement makes it so if we don't see a target, don't run the method and instead print "No Target Detected"
         if(m_limelightVision.seeTarget()){
@@ -117,20 +119,26 @@ public class Launcher{
     }
     */
 
-    //method for feeding the ball into the flywheel once it's revved up to speed
+    /**
+     * feeds the ball into the flywheel and advances the magazine
+     */
     public void launch(){
         setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
         
     }
 
-    //method for getting rid of balls we don't want
+    /**
+     * Shoots any balls out at a low speed to eject balls we don't want
+     */
     public void expel(){
         setFlywheelSpeed(RobotMap.LauncherConstants.EXPEL_SPEED);
         setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
     }
 
-    //Zeros encoders
+    /**
+     * Zeros encoders
+     */
     public void zeroEncoders(){
         m_flywheelEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
         m_feederEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
@@ -138,33 +146,49 @@ public class Launcher{
         m_trajectoryEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
     }
 
-    //returns the current encoder ticks on the trajectory control motor
+    /**
+     * @return the current encoder ticks on the trajectory control motor
+     */
     public double getTrajectoryPosition(){
         return m_trajectoryEncoder.getQuadraturePosition();
     }
 
-    //Sets the speed of the feeder motor
+    /**
+     * Sets the speed of the feeder motor
+     * @param speed desired speed
+     */
     public void setFeederSpeed(double speed){
         m_feederMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    //Sets the speed of the launcher flywheel motor
+    /**
+     * Sets the speed of the launcher flywheel motor
+     * @param speed desired speed
+     */
     public void setFlywheelSpeed(double speed){
         m_masterFlywheelMotor.set(ControlMode.PercentOutput, speed);
         m_slaveFlywheelMotor.follow(m_masterFlywheelMotor);
     }
 
-    //Sets the speed of the motor that moves the turret
+    /**
+     * Sets the speed of the motor that moves the turret
+     * @param speed desired speed
+     */
     public void setTurretSpeed(double speed){
         m_turretMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    //Sets the speed of the motor that moves the trajectory control
+    /**
+     * Sets the speed of the motor that moves the trajectory control
+     * @param speed desired speed
+     */
     public void setTrajectorySpeed(double speed){
         m_trajectoryMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    //Returns current speed of flywheel motor
+    /**
+     * @return current speed of flywheel motor
+     */
     public double getRealSpeed(){
         return m_masterFlywheelMotor.getSelectedSensorVelocity();
     }
