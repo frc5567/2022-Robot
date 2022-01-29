@@ -126,4 +126,13 @@ public class RobotMap {
         public static final double WINCH_MOTOR_SPEED = 0.8;
     }
 
+    //constants for Auton
+    public static class AutonConstants{
+        //contant for encoder ticks to inches (pulled from 2021, may be subject to change)
+        public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (18.85 / 15);
+        public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (18.85 / 7.92);
+
+        //constant for rotation error acceptance
+        public static final double ROTATE_BOUND = 0.1;
+    }
 }
