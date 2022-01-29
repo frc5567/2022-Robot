@@ -9,6 +9,9 @@ import com.ctre.phoenix.motorcontrol.SensorCollection;
 import edu.wpi.first.wpilibj.Servo;
 
 public class Launcher{
+    //Declares intake to use magazine motors in launch method
+    private Intake m_intake;
+
     //Declares limelight object
     private LimelightVision m_limelightVision;
     
@@ -30,6 +33,8 @@ public class Launcher{
      * Constructor for Launcher objects
      */
     public Launcher(){
+        m_intake = new Intake();
+
         m_masterFlywheelMotor = new TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
         m_slaveFlywheelMotor = new TalonFX(RobotMap.LauncherConstants.SLAVE_FLYWHEEL_FALCON_ID);
         m_feederMotor = new TalonFX(RobotMap.LauncherConstants.FEEDER_FALCON_ID);
@@ -41,32 +46,51 @@ public class Launcher{
         m_trajectoryEncoder = new SensorCollection (m_trajectoryMotor);
     }
     
-    
     //method for preparing the launch sequence
     public void prepareLaunch(){
+        //this if statement makes it so if we don't see a target, don't run the method and instead print "No Target Detected"
         if(m_limelightVision.seeTarget()){
-            if(m_limelightVision.xAngleToTarget() != 0){
-                if(m_limelightVision.xAngleToTarget() > 0){
+            //this if statements checks to see if we are within the tolerated error range
+            if(m_limelightVision.xAngleToTarget() > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR || m_limelightVision.xAngleToTarget() < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                //if we are above the tolerated error range, turn the turret toward the tolerated error range
+                if(m_limelightVision.xAngleToTarget() > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
                     setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
                 }
-                else if(m_limelightVision.xAngleToTarget() < 0){
+                //if we are below the tolerated error range, turn the turret toward the tolerated error range
+                else if(m_limelightVision.xAngleToTarget() < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
                     setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
                 }
             }
 
-            //This will be inaccurate and will need to be enhanced to be more specific later, ideally with PID
+            //variable to find the target position of the trajectory control motor
+            double targetTrajectoryPosition = (-(m_limelightVision.yAngleToTarget()/2) + 0.5) * RobotMap.LauncherConstants.TRAJECTORY_ENCODER_LIMIT;
+
+            //checks if the encoder is within the range we want, for now 0 and 30000 but needs testing
             if(getTrajectoryPosition() > 0 && getTrajectoryPosition() < RobotMap.LauncherConstants.TRAJECTORY_ENCODER_LIMIT){
-                if(m_limelightVision.yAngleToTarget() > 0){
-                    setTrajectorySpeed(-RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
+                //checks to see if we are within the tolerated error range
+                if(Math.abs(getTrajectoryPosition() - targetTrajectoryPosition) >= RobotMap.LauncherConstants.TOLERATED_TRAJECTORY_ERROR){
+                    //move the trajectory control motor toward the target position
+                    if(getTrajectoryPosition() < targetTrajectoryPosition){
+                        setTrajectorySpeed(RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
+                    }
+                    else if(getTrajectoryPosition() > targetTrajectoryPosition){
+                        setTrajectorySpeed(-RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
+                    }
                 }
-                else if(m_limelightVision.yAngleToTarget() < 0){
-                    setTrajectorySpeed(RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
-                }
+            }
+            else if(getTrajectoryPosition() > RobotMap.LauncherConstants.TRAJECTORY_ENCODER_LIMIT){
+                setTrajectorySpeed(-RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
+            }
+            else if(getTrajectoryPosition() < 0){
+                setTrajectorySpeed(RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
             }
 
             // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
             // 100 is arbitrary and needs to be tested (more will probably need to be done so this is more fine tuned)
             setFlywheelSpeed(m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100);
+        }
+        else {
+            System.out.println("No Target Detected");
         }
     }
 
@@ -85,7 +109,6 @@ public class Launcher{
             
             //This will be inaccurate and will need to be enhanced to be more specific later, ideally with PID
             m_trajectoryServo.set(-(m_limelightVision.yAngleToTarget()/2) + 0.5);
-            
 
             // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
             // 100 is arbitrary and needs to be tested (more will probably need to be done so this is more fine tuned)
@@ -97,6 +120,8 @@ public class Launcher{
     //method for feeding the ball into the flywheel once it's revved up to speed
     public void launch(){
         setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+        
     }
 
     //method for getting rid of balls we don't want
@@ -113,6 +138,7 @@ public class Launcher{
         m_trajectoryEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
     }
 
+    //returns the current encoder ticks on the trajectory control motor
     public double getTrajectoryPosition(){
         return m_trajectoryEncoder.getQuadraturePosition();
     }
@@ -128,10 +154,12 @@ public class Launcher{
         m_slaveFlywheelMotor.follow(m_masterFlywheelMotor);
     }
 
+    //Sets the speed of the motor that moves the turret
     public void setTurretSpeed(double speed){
         m_turretMotor.set(ControlMode.PercentOutput, speed);
     }
 
+    //Sets the speed of the motor that moves the trajectory control
     public void setTrajectorySpeed(double speed){
         m_trajectoryMotor.set(ControlMode.PercentOutput, speed);
     }

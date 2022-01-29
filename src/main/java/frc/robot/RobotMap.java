@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
-
 public class RobotMap {
 
     /**
@@ -23,8 +21,8 @@ public class RobotMap {
         public static final int SLAVE_LEFT_FALCON_ID = 13;
 
         //constants for gearbox solenoid (on the PCM)
-        public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 0; 
-        public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 1;
+        public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 4; 
+        public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 5;
 
         //timeout in milliseconds for the CTRE config methods
         public static final int TIMEOUT_MS = 30;
@@ -71,6 +69,9 @@ public class RobotMap {
         public static final double NEGATIVE_TURRET_ROTATION_SPEED = -0.25;
 
         public static final double TRAJECTORY_ENCODER_LIMIT = 30000;
+
+        public static final double TOLERATED_TURRET_ERROR = 0.08;
+        public static final double TOLERATED_TRAJECTORY_ERROR = 1000;
     }
 
     //Constants for Intake
@@ -89,11 +90,11 @@ public class RobotMap {
         public static final double REVERSE_INTAKE_SPEED = -0.5;
         public static final double REVERSE_MAGAZINE_SPEED = -0.5;
 
-        //constants for gearbox solenoid (on the PCM)
-        public static final int LEFT_DOUBLESOLENOID_RETRACTED_PORT = 4;
-        public static final int LEFT_DOUBLESOLENOID_EXTENDED_PORT = 5;
-        public static final int RIGHT_DOUBLESOLENOID_RETRACTED_PORT = 6; 
-        public static final int RIGHT_DOUBLESOLENOID_EXTENDED_PORT = 7;
+        //constants for solenoids (on the PCM)
+        public static final int LEFT_DOUBLESOLENOID_RETRACTED_PORT = 0;
+        public static final int LEFT_DOUBLESOLENOID_EXTENDED_PORT = 1;
+        public static final int RIGHT_DOUBLESOLENOID_RETRACTED_PORT = 2; 
+        public static final int RIGHT_DOUBLESOLENOID_EXTENDED_PORT = 3;
     }
     /**
      * Constants for LimelightVision class
