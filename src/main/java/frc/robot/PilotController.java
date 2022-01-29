@@ -16,6 +16,7 @@ arcadeDriveCmd() // helper method that calculates proper values and passes into 
 
 
 public class PilotController {
+    private LimelightVision m_limelight;
     private XboxController m_controller;
     private Drivetrain m_drivetrain;
     private Launcher m_launcher;
@@ -31,6 +32,7 @@ public class PilotController {
         m_launcher = new Launcher();
         m_intake = new Intake();
         m_shuffleboard = new RobotShuffleboard();
+        m_limelight = new LimelightVision();
 
         //puts input scalar widgets on the shuffleboard
         m_shuffleboard.drivetrainShuffleboardConfig();
@@ -99,14 +101,6 @@ public class PilotController {
     }
 
     //current button setup is temporary before a copilot controller is completed
-    private void unJamCmd(){
-        //when left bumper is held, reverse all magazine and intake motors to expell game pieces
-        if (m_controller.getLeftBumperPressed()){
-            m_intake.unJam();
-        }
-    }
-
-    //current button setup is temporary before a copilot controller is completed
     private void magazineCmd(){
         //when start button is held, run magazine
         if (m_controller.getStartButtonPressed()){
@@ -125,16 +119,44 @@ public class PilotController {
             m_intake.toggleIntakeExtension(IntakeState.kExtended);
         }
     }
+    /**
+     * Turns to target when left bumper button is pressed
+     */
+    private void turnToTarget(){
+        // checks if left bumper button is pressed and executes code if it is
+        if(m_controller.getLeftBumperPressed()){
+            // change into low gear for defense and more accurate aim
+            m_drivetrain.shiftGear(Gear.kLowGear);
+            // checks if any part of the target is visible
+            if (m_limelight.seeTarget() == true){
+                // if target is outside of acceptable offset values, robot moves to aim at the target
+                if (m_limelight.xAngleToTarget() > 0.5 || m_limelight.xAngleToTarget() < -0.5 || m_limelight.yAngleToTarget() > 0.5 || m_limelight.yAngleToTarget() < -0.5){
+                    m_drivetrain.arcadeDrive(m_limelight.distanceAdjustToTargetSpeed(),m_limelight.turnAngleAdjustToTargetSpeed());
+                }
+                // if target is within acceptable offset range, the robot stops moving
+                else{
+                    m_drivetrain.arcadeDrive(0, 0);
+                    return;
+                }
+            } 
+            // if any part of the target is not visible, spin right until target is visible
+            else if(m_limelight.seeTarget() == false){
+                m_drivetrain.arcadeDrive(0, RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED);
+            }
+            // prints to let drivers know we are On Target
+            System.out.print("On Target");
+        }
+    }
 
     public void init(){
         m_drivetrain.init();
     }
 
     public void periodic() {
+        turnToTarget();
         arcadeDriveCmd();
         controlGear();
         intakeCmd();
-        unJamCmd();
         magazineCmd();
         toggleIntakeExtension();
     }

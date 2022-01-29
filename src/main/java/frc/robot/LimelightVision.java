@@ -136,5 +136,43 @@ public class LimelightVision {
         //returns calculated distance in inches
         return m_distance;
     }
+    /**
+     * Figures out where in the x direction (right or left) to go in terms of speed 
+     * @return The speed for turning to the target
+     */
+    public double turnAngleAdjustToTargetSpeed(){
+        // Sets initial speed to 0
+        double m_xTurnSpeed = 0.0;
+        // Checks to see if we are at an acceptable offset from the target
+        if (xAngleToTarget() > 0.5){
+            // If our offset is greater than acceptable maximum we set speed to negative to turn left until in acceptable range
+            m_xTurnSpeed = -RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
+    
+        }
+        else if (xAngleToTarget() < -0.5){
+            // If our offset is less than acceptable minimmum we set speed to positive to turn right until in acceptable range
+            m_xTurnSpeed = RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
+        }
+        return m_xTurnSpeed;
+
+    }
+    /**
+     * Figures out where in the y direction to go (forward or backward) to go in terms of speed
+     * @return The speed for moving to the target
+     */
+    public double distanceAdjustToTargetSpeed(){
+        // Sets initial speed to 0
+        double m_distanceAdjustSpeed = 0.0;
+        // Checks to see if we are at an acceptable offset distance from the target
+        if (yAngleToTarget() > 0.5){
+            // If our distance offset is greater than the acceptable range we set the speed to move backwards
+            m_distanceAdjustSpeed = -RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
+        }
+        else if (yAngleToTarget() < -0.5){
+            // If our distance offset is less than than the acceptable range we set the speed to move forwards
+            m_distanceAdjustSpeed = RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
+        }
+        return m_distanceAdjustSpeed;
+    }
 
 }
