@@ -2,7 +2,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Drivetrain.Gear;
 import frc.robot.Intake.IntakeState;
-import frc.robot.Launcher.LauncherState;
 import edu.wpi.first.wpilibj.GenericHID;
 
 /**
@@ -91,17 +90,6 @@ public class PilotController {
         }
     }
 
-    //This method is for testng the flywheel before the CoPilot Controller is ready
-    private void manualLauncherCmd(){
-        //when the a button is pressed, flywheel is revved to launch speed. when b button is pressed, flywheel returns to idle
-        if (m_controller.getAButtonPressed()){
-            m_launcher.setState(LauncherState.kLaunch);
-
-        } else if (m_controller.getBButtonPressed()){
-            m_launcher.setState(LauncherState.kIdle);
-        }
-    }
-
     //current button setup is temporary before a copilot controller is completed
     private void intakeCmd(){
         //when right bumper is held, activate intake
@@ -145,7 +133,6 @@ public class PilotController {
     public void periodic() {
         arcadeDriveCmd();
         controlGear();
-        manualLauncherCmd();
         intakeCmd();
         unJamCmd();
         magazineCmd();
