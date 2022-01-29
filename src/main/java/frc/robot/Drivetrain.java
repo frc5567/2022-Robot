@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 // Import motor
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FollowerType;
@@ -21,11 +21,11 @@ public class Drivetrain {
 
     // Insert object motor controllers 2 left TalonFX and 2 right TalonFX
 
-    private TalonFX m_masterRightMotor;
-    private TalonFX m_masterLeftMotor;
+    private WPI_TalonFX m_masterRightMotor;
+    private WPI_TalonFX m_masterLeftMotor;
 
-    private TalonFX m_slaveRightMotor;
-    private TalonFX m_slaveLeftMotor;
+    private WPI_TalonFX m_slaveRightMotor;
+    private WPI_TalonFX m_slaveLeftMotor;
 
     // Declare variables for encoders
     private SensorCollection m_leftDriveEncoder;
@@ -69,11 +69,11 @@ public class Drivetrain {
     public Drivetrain () {
 
         // Instantiate TalonFX Motors
-        m_masterRightMotor = new TalonFX(RobotMap.DrivetrainConstants.MASTER_RIGHT_FALCON_ID);
-        m_masterLeftMotor = new TalonFX(RobotMap.DrivetrainConstants.MASTER_LEFT_FALCON_ID);
+        m_masterRightMotor = new WPI_TalonFX(RobotMap.DrivetrainConstants.MASTER_RIGHT_FALCON_ID);
+        m_masterLeftMotor = new WPI_TalonFX(RobotMap.DrivetrainConstants.MASTER_LEFT_FALCON_ID);
 
-        m_slaveRightMotor = new TalonFX(RobotMap.DrivetrainConstants.SLAVE_RIGHT_FALCON_ID);
-        m_slaveLeftMotor = new TalonFX(RobotMap.DrivetrainConstants.SLAVE_LEFT_FALCON_ID);
+        m_slaveRightMotor = new WPI_TalonFX(RobotMap.DrivetrainConstants.SLAVE_RIGHT_FALCON_ID);
+        m_slaveLeftMotor = new WPI_TalonFX(RobotMap.DrivetrainConstants.SLAVE_LEFT_FALCON_ID);
 
         // Instantiate Encoders
         m_leftDriveEncoder = new SensorCollection (m_masterLeftMotor);
