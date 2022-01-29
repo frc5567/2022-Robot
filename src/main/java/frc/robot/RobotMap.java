@@ -77,17 +77,17 @@ public class RobotMap {
     //Constants for Intake
     public static class IntakeConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
-        public static final int ROLLER_FALCON_ID = 9;
-        public static final int INTAKE_FALCON_ID = 10;
+        public static final int FRONT_ROLLER_FALCON_ID = 9;
+        public static final int BACK_ROLLER_FALCON_ID = 10;
         public static final int MAGAZINE_FALCON_ID = 11;
         //These are untested placesholder values until we know what speed we actually need
-        public static final double ROLLER_SPEED = 0.5;
-        public static final double INTAKE_SPEED = 0.5;
+        public static final double FRONT_ROLLER_SPEED = 0.5;
+        public static final double BACK_ROLLER_SPEED = 0.35;
         public static final double MAGAZINE_SPEED = 0.5;
 
         //These are untested placesholder values until we know what speed we actually need but it is important that these are negative
-        public static final double REVERSE_ROLLER_SPEED = -0.5;
-        public static final double REVERSE_INTAKE_SPEED = -0.5;
+        public static final double REVERSE_FRONT_ROLLER_SPEED = -0.5;
+        public static final double REVERSE_BACK_ROLLER_SPEED = -0.5;
         public static final double REVERSE_MAGAZINE_SPEED = -0.5;
 
         //constants for solenoids (on the PCM)

@@ -33,23 +33,24 @@ public class Intake {
 
          
     }
-    //declares motors for the roller bar, intake, and interior magazine
-    private TalonFX m_rollerMotor;
-    private TalonFX m_intakeMotor;
+    //Declares motors for the roller bar, intake, and interior magazine
+    private TalonFX m_frontRollerMotor;
+    private TalonFX m_backRollerMotor;
     private TalonFX m_magazineMotor;
 
-    //declares solenoids for extension and retraction
+    //Declares solenoids for extension and retraction
     private DoubleSolenoid m_leftSolenoid;
     private DoubleSolenoid m_rightSolenoid;
 
+    //Declares a state enum
     private IntakeState m_state;
 
     /**
      * Constructor for intake and magazine mechanism
      */
     public Intake(){
-        m_rollerMotor = new TalonFX(RobotMap.IntakeConstants.ROLLER_FALCON_ID);
-        m_intakeMotor = new TalonFX(RobotMap.IntakeConstants.INTAKE_FALCON_ID);
+        m_frontRollerMotor = new TalonFX(RobotMap.IntakeConstants.FRONT_ROLLER_FALCON_ID);
+        m_backRollerMotor = new TalonFX(RobotMap.IntakeConstants.BACK_ROLLER_FALCON_ID);
         m_magazineMotor = new TalonFX(RobotMap.IntakeConstants.MAGAZINE_FALCON_ID);
 
         // Instantiate Right and Left Solenoids
@@ -59,40 +60,58 @@ public class Intake {
         m_state = IntakeState.kUnkown;
     }
 
-    //sets the speed of the roller motor
-    public void setRollerSpeed(double speed){
-        m_rollerMotor.set(ControlMode.PercentOutput, speed);
+    /**
+     * Sets the speed of the exterior intake motor
+     * @param speed desired speed
+     */
+    public void setFrontRollerSpeed(double speed){
+        m_frontRollerMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    //sets the speed of the intake motor
-    public void setIntakeSpeed(double speed){
-        m_intakeMotor.set(ControlMode.PercentOutput, speed);
+    /**
+     * Sets the speed of the interior intake motor
+     * @param speed desired speed
+     */
+    public void setBackRollerSpeed(double speed){
+        m_backRollerMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    //sets the speed of the magazine motor
+    /**
+     * Sets the speed of the magazine motor
+     * @param speed desired speed
+     */
     public void setMagazineSpeed(double speed){
         m_magazineMotor.set(ControlMode.PercentOutput, speed);
     }
     
-    //Method for activating the intake system
+    /**
+     * Activates intake system by powering both sets of roller wheels
+     */
     public void takeIn(){
-        setRollerSpeed(RobotMap.IntakeConstants.ROLLER_SPEED);
-        setIntakeSpeed(RobotMap.IntakeConstants.INTAKE_SPEED);
+        setFrontRollerSpeed(RobotMap.IntakeConstants.FRONT_ROLLER_SPEED);
+        setBackRollerSpeed(RobotMap.IntakeConstants.BACK_ROLLER_SPEED);
     }
 
-    //method for activating the magazine
+    /**
+     * Activates just the magazine
+     */
     public void runMagazine(){
         setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
     }
 
-    //method for reversing all intake/magazine motors to unjam game pieces
+    /**
+     * Reverses all intake and magazine motors to unjam the robot
+     */
     public void unJam(){
-        setRollerSpeed(RobotMap.IntakeConstants.REVERSE_ROLLER_SPEED);
-        setIntakeSpeed(RobotMap.IntakeConstants.REVERSE_INTAKE_SPEED);
+        setFrontRollerSpeed(RobotMap.IntakeConstants.REVERSE_FRONT_ROLLER_SPEED);
+        setBackRollerSpeed(RobotMap.IntakeConstants.REVERSE_BACK_ROLLER_SPEED);
         setMagazineSpeed(RobotMap.IntakeConstants.REVERSE_MAGAZINE_SPEED);
     }
 
-    //method for toggling between extended and retracted modes on the intake
+    /**
+     * Toggles the intake system between extended and retracted modes
+     * @param intakeState desired state (Extended, Retracted)
+     */
     public void toggleIntakeExtension(IntakeState intakeState){
         if (intakeState == m_state){
             return;
@@ -108,7 +127,10 @@ public class Intake {
 
     }
 
-    //method for setting the pistons to a given value
+    /**
+     * Sets pistons to a specific value
+     * @param value Off, Forward, Reverse
+     */
     private void setPistons(DoubleSolenoid.Value value) {
         m_leftSolenoid.set(value);
         m_rightSolenoid.set(value);
