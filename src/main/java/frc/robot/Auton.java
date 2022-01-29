@@ -172,11 +172,9 @@ public class Auton{
         double rightEncoder = m_drivetrain.getRightDriveEncoderPosition();
         double leftEncoder = m_drivetrain.getLeftDriveEncoderPosition();
         target = target * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
-        /** print lines used for testing, commented out to avoid unnececary prints
         System.out.println("EncoderTarget: " + target);
         System.out.println("Right Encoder Ticks: " + rightEncoder);
         System.out.println("Left Encoder Ticks: " + leftEncoder);
-        */
 
         if(speed < 0){
             target = target * -1;
@@ -255,46 +253,38 @@ public class Auton{
         //if target is on the left, this if statement will run
         if(speed <0){
             target = target * -1;
-            /** 
             System.out.println("Target Angle: " + target);
             System.out.println("Current Angle " + currentAngle);
-            */
             if(currentAngle < (target * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
                 m_drivetrain.arcadeDrive(0,0);
                 m_drivetrain.zeroGyro();
                 m_drivetrain.zeroEncoders();
-                return true;
-                /**
                 System.out.println("Zero Gyro " + m_drivetrain.getGyro()); 
                 System.out.println("At Target Angle " + currentAngle);
-                */
+                return true;
             }
             else{
                 m_drivetrain.arcadeDrive(0, speed);
-                //System.out.println("Not At Target Angle " + currentAngle);
+                System.out.println("Not At Target Angle " + currentAngle);
                 return false;
             }
         }
         //if target is on the right, this if statement will run
         else{
-            /**
             System.out.println("Target Angle: " + target);
             System.out.println("Current Angle: " + currentAngle);
-            */
             if(currentAngle > (target * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
                 m_drivetrain.arcadeDrive(0, 0);
                 m_drivetrain.zeroEncoders();
                 m_drivetrain.zeroGyro();
-                return true;
-                /**
                 System.out.println("zero Gyro" + m_drivetrain.getGyro());
                 System.out.println("At Target Angle " + currentAngle);
-                */
+                return true;
             }
             else{
                 m_drivetrain.arcadeDrive(0, speed);
+                System.out.println("Not At Target Angle " + currentAngle);
                 return false;
-                //System.out.println("Not At Target Angle " + currentAngle);
             }
         }
     }
