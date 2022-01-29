@@ -52,16 +52,30 @@ public class Launcher{
     public void prepareLaunch(){
         //this if statement makes it so if we don't see a target, don't run the method and instead print "No Target Detected"
         if(m_limelightVision.seeTarget()){
-            //this if statements checks to see if we are within the tolerated error range
-            if(m_limelightVision.xAngleToTarget() > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR || m_limelightVision.xAngleToTarget() < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
-                //if we are above the tolerated error range, turn the turret toward the tolerated error range
-                if(m_limelightVision.xAngleToTarget() > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
-                    setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
+            System.out.println("Target Detected");
+
+            //checks if the turret encoder is within the range we want, for now -75000 and 75000 but needs testing
+            if(getTurretPosition() > -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT && getTurretPosition() < RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
+                //this if statements checks to see if we are within the tolerated error range
+                if(m_limelightVision.xAngleToTarget() > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR || m_limelightVision.xAngleToTarget() < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                    //Prints out a message telling the driver that our robot is not yet ready to launch
+                    System.out.println("Not Ready to Launch");
+    
+                    //if we are above the tolerated error range, turn the turret toward the tolerated error range
+                    if(m_limelightVision.xAngleToTarget() > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                        setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
+                    }
+                    //if we are below the tolerated error range, turn the turret toward the tolerated error range
+                    else if(m_limelightVision.xAngleToTarget() < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                        setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
+                    }
                 }
-                //if we are below the tolerated error range, turn the turret toward the tolerated error range
-                else if(m_limelightVision.xAngleToTarget() < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
-                    setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
-                }
+            }
+            else if(getTurretPosition() < -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
+                setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
+            }
+            else if(getTurretPosition() > RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
+                setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
             }
 
             //variable to find the target position of the trajectory control motor
@@ -71,6 +85,9 @@ public class Launcher{
             if(getTrajectoryPosition() > 0 && getTrajectoryPosition() < RobotMap.LauncherConstants.TRAJECTORY_ENCODER_LIMIT){
                 //checks to see if we are within the tolerated error range
                 if(Math.abs(getTrajectoryPosition() - targetTrajectoryPosition) >= RobotMap.LauncherConstants.TOLERATED_TRAJECTORY_ERROR){
+                    //Prints out a message telling the driver that our robot is not yet ready to launch
+                    System.out.println("Not Ready to Launch");
+
                     //move the trajectory control motor toward the target position
                     if(getTrajectoryPosition() < targetTrajectoryPosition){
                         setTrajectorySpeed(RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
@@ -89,7 +106,13 @@ public class Launcher{
 
             // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
             // 100 is arbitrary and needs to be tested (more will probably need to be done so this is more fine tuned)
-            setFlywheelSpeed(m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100);
+            double targetFlywheelSpeed = m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100;
+            setFlywheelSpeed(targetFlywheelSpeed);
+
+            //Prints out a message telling the driver when our robot is ready to launch
+            if(m_limelightVision.xAngleToTarget() < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR && m_limelightVision.xAngleToTarget() > -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR && Math.abs(getTrajectoryPosition() - targetTrajectoryPosition) <= RobotMap.LauncherConstants.TOLERATED_TRAJECTORY_ERROR && getRealSpeed() == targetFlywheelSpeed){
+                System.out.println("Ready to Launch");
+            }
         }
         else {
             System.out.println("No Target Detected");
@@ -151,6 +174,13 @@ public class Launcher{
      */
     public double getTrajectoryPosition(){
         return m_trajectoryEncoder.getQuadraturePosition();
+    }
+
+    /**
+     * @return the current encoder ticks on the turret motor
+     */
+    public double getTurretPosition(){
+        return m_turretEncoder.getQuadraturePosition();
     }
 
     /**
