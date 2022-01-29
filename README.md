@@ -20,19 +20,15 @@
 | Turn Control   | Left Stick X  |
 | High Gear      | X Button      |
 | Low Gear       | Y Button      |
-| Launch         | a Button      |
-| Idle Launcher  | b Button      |
-| Intake         | Right Bumper  |
-| Unjam          | Left Bumper   |
-| Run Magazine   | Start Button  |
-| Extend Intake  | RStick Button |
-| Retract Intake | LStick Button |
 
 ##### Copilot
 | System         | Control (ID)  |
 | -------------- | ------------- |
-| Climber Up     |       4       |
-| Climber Down   |       5       |
-| Winch Forward  |       6       |
-| Rev Launcher   |       7       |
-| Idle Cli.+Win. |       8       |
+| Extend Intake  |       1       |
+| Retract Intake |       2       |
+| Intake         |       3       |
+| Prepare Launch |       4       |
+| Launch         |       5       |
+| Climber Up     |       6       |
+| Climber Down   |       7       |
+| Robot up       |       8       |
