@@ -106,6 +106,9 @@ public class RobotMap {
         public static final double CAMERA_HEIGHT = 12.0; //in inches
         public static final double HUB_HEIGHT = 104.0; //in inches
         public static final double CAMERA_DEGREES_FROM_GROUND = 45;
+        // constant for the minimum speed for aiming at target
+        //TODO tune the speed we move at
+        public static final double MINIMUM_SEEKING_TARGET_SPEED = 0.2;
     }
 
     /**
