@@ -34,6 +34,7 @@ public class Intake {
          
     }
     //Declares motors for the roller bar, intake, and interior magazine
+    //TODO: rename talonFX to the propper motor that will be used
     private TalonFX m_frontRollerMotor;
     private TalonFX m_magazineMotor;
 
@@ -47,6 +48,7 @@ public class Intake {
      * Constructor for intake and magazine mechanism
      */
     public Intake(){
+        //TODO: rename talonFX to the propper motor that will be used
         m_frontRollerMotor = new TalonFX(RobotMap.IntakeConstants.FRONT_ROLLER_FALCON_ID);
         m_magazineMotor = new TalonFX(RobotMap.IntakeConstants.MAGAZINE_FALCON_ID);
 
