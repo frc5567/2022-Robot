@@ -243,7 +243,7 @@ public class Auton{
     }
 
     /**
-     * code taken from 2021 auton (protobranch) with prints commented out.
+     * code taken from 2021 auton (protobranch)
      * @param speed speed at which we want to turn
      * @param target target angle in degrees we want to turn to
      * @return whether or not we have reached our target angle

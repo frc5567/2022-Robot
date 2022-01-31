@@ -10,16 +10,21 @@ public class CopilotController {
     private Intake m_intake;
     private Climber m_climber;
 
-    //constructor for copilot controller
-    public CopilotController(Drivetrain drivetrain){
+    /**
+     * constructor for copilot controller- instantiates all of the systems that we interact with in this class.
+     */
+    public CopilotController(){
         m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
         m_intake = new Intake();
         m_launcher = new Launcher();
         //pass in turret here?
         m_climber = new Climber();
-        m_drivetrain = drivetrain;
+        m_drivetrain = new Drivetrain();
     }
 
+    /**
+     * this method should be called once in robot
+     */
     public void initCopilot(){
         m_drivetrain.init();
     }
@@ -36,7 +41,7 @@ public class CopilotController {
     /**
      * This method controlls the intake using three buttons
      */
-    public void controlIntake(){
+    private void controlIntake(){
         //two if statements to determine intake position
         if(m_gamePad.getExtendIntakePressed()){
             m_intake.toggleIntakeExtension(IntakeState.kExtended);
@@ -53,7 +58,7 @@ public class CopilotController {
     /**
      * This method controls the launcher (and turret) with two buttons, one for revving and one for advancing balls into the launcher
      */
-    public void controlLauncher(){
+    private void controlLauncher(){
         //uses one button to aim and rev
         if (m_gamePad.getRevPressed()){
             m_launcher.launch();
@@ -63,7 +68,7 @@ public class CopilotController {
     /**
      * This method controlls the climber using three buttons to pass in values of power to two motors; the climber motor and the winch motor.
      */
-    public void controlClimber(){
+    private void controlClimber(){
         //controls Climber motor with two buttons, up or down
         if(m_gamePad.getMoveClimberUp()){
             m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
