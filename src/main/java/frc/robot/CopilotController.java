@@ -41,7 +41,7 @@ public class CopilotController {
     /**
      * This method controlls the intake using three buttons
      */
-    public void controlIntake(){
+    private void controlIntake(){
         //two if statements to determine intake position
         if(m_gamePad.getExtendIntakePressed()){
             m_intake.toggleIntakeExtension(IntakeState.kExtended);
@@ -58,7 +58,7 @@ public class CopilotController {
     /**
      * This method controls the launcher (and turret) with two buttons, one for revving and one for advancing balls into the launcher
      */
-    public void controlLauncher(){
+    private void controlLauncher(){
         //uses one button to aim and rev
         if (m_gamePad.getRevPressed()){
             m_launcher.prepareLaunch();
@@ -72,7 +72,7 @@ public class CopilotController {
     /**
      * This method controlls the climber using three buttons to pass in values of power to two motors; the climber motor and the winch motor.
      */
-    public void controlClimber(){
+    private void controlClimber(){
         //controls Climber motor with two buttons, up or down
         if(m_gamePad.getMoveClimberUp()){
             m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
