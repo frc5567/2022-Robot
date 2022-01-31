@@ -10,16 +10,21 @@ public class CopilotController {
     private Intake m_intake;
     private Climber m_climber;
 
-    //constructor for copilot controller
-    public CopilotController(Drivetrain drivetrain){
+    /**
+     * constructor for copilot controller- instantiates all of the systems that we interact with in this class.
+     */
+    public CopilotController(){
         m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
         m_intake = new Intake();
         m_launcher = new Launcher();
         //pass in turret here?
         m_climber = new Climber();
-        m_drivetrain = drivetrain;
+        m_drivetrain = new Drivetrain();
     }
 
+    /**
+     * this method should be called once in robot
+     */
     public void initCopilot(){
         m_drivetrain.init();
     }
