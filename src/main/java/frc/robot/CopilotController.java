@@ -56,10 +56,6 @@ public class CopilotController {
     public void controlLauncher(){
         //uses one button to aim and rev
         if (m_gamePad.getRevPressed()){
-            m_launcher.prepareLaunch();
-        }
-        //uses one button to advance the feeder wheel
-        if (m_gamePad.getLaunchCMD()){
             m_launcher.launch();
         }
     }
