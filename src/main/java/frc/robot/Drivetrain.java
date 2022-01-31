@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 // This imports an enum that we will call later
@@ -12,7 +11,6 @@ import edu.wpi.first.wpilibj.SPI;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.FollowerType;
 //Import Motor controller
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 
@@ -66,7 +64,10 @@ public class Drivetrain {
 
          
     }
-    //constructor for drivetrain objects
+    
+    /**
+     * constructor for drivetrain objects
+     */
     public Drivetrain () {
 
         // Instantiate TalonFX Motors
@@ -90,23 +91,33 @@ public class Drivetrain {
         m_gyro = new AHRS(SPI.Port.kMXP);   
     }
 
+    /**
+     * zeroEncoders is a method to set the encoders to 0
+     */
     public void zeroEncoders() {
     
         m_leftDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
         m_rightDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
     }
 
+    /**
+     * zeroGyro is a method to set the gyro to 0
+     */
     public void zeroGyro(){
         m_gyro.zeroYaw();
     }
-    
+
+    /**
+     * setPiston is a method for changing the state between Forward and reverse
+     * @param value what state state to set the pistons to (Forward, Reverse)
+     */
     private void setPistons(DoubleSolenoid.Value value) {
         m_solenoid.set(value);
     }
 
     /**
-     * shiftGear is a method for changing between low and high gears
-     * @param gear which gear to change to
+     * shiftGear is a method for changing between Gear.kLowGear and Gear.kHighGear
+     * @param gear which gear to change to (Gear.kLowGear, Gear.kHighGear)
      */
     public void shiftGear(Gear gear) {
         if (m_gear == gear) {
@@ -135,7 +146,9 @@ public class Drivetrain {
         m_slaveRightMotor.follow(m_masterRightMotor);
     }
 
-    
+    /**
+     * Initialization method for the drivetrain
+     */
     public void init(){
         zeroEncoders();
         shiftGear(Gear.kHighGear);
@@ -144,21 +157,21 @@ public class Drivetrain {
     }
 
     /**
-     * returns the position of the drivetrain's right encoder
+     * @return the position of the drivetrain's right encoder
      */
     public double getRightDriveEncoderPosition(){
         return m_masterRightMotor.getSelectedSensorPosition();
     }
 
     /**
-     * returns the position of the drivetrain's left encoder
+     * @return the position of the drivetrain's left encoder
      */
     public double getLeftDriveEncoderPosition(){
         return m_masterLeftMotor.getSelectedSensorPosition();
     }
 
     /**
-     * returns the angle of the robot in degrees
+     * @return the angle of the robot in degrees
      */
     public float getGyro(){
         return m_gyro.getYaw();
