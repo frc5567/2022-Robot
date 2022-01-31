@@ -29,7 +29,11 @@ public class PilotController {
         m_shuffleboard.drivetrainShuffleboardConfig();
     }
 
-    // this method takes away the deadband value from any input (creates a deadband close to 0)
+    /**
+     * Takes away the deadband value from any input (creates a deadband close to 0)
+     * @param stickInput value that you want to pass through the deadband, likely only used for the left stick on the pilot controller
+     * @return adjusted stick value
+     */
     private double adjustForDeadband(double stickInput){
         double absoluteStickInput = Math.abs(stickInput);
         //if value is within deadband, return 0
@@ -89,9 +93,9 @@ public class PilotController {
         }
     }
 
-
     /**
      * Turns to target when left bumper button is pressed
+     * TODO: Remove this method once we know turret autotargeting works because this method will be redundant 
      */
     private void turnToTarget(){
         // checks if left bumper button is pressed and executes code if it is
@@ -101,21 +105,22 @@ public class PilotController {
             // checks if any part of the target is visible
             if (m_limelight.seeTarget() == true){
                 // if target is outside of acceptable offset values, robot moves to aim at the target
-                if (m_limelight.xAngleToTarget() > 0.5 || m_limelight.xAngleToTarget() < -0.5 || m_limelight.yAngleToTarget() > 0.5 || m_limelight.yAngleToTarget() < -0.5){
-                    m_drivetrain.arcadeDrive(m_limelight.distanceAdjustToTargetSpeed(),m_limelight.turnAngleAdjustToTargetSpeed());
+                if (m_limelight.xAngleToTarget() < RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelight.xAngleToTarget() > -RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelight.yAngleToTarget() < RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelight.yAngleToTarget() > -RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR){
+                    m_drivetrain.arcadeDrive(0, 0);
+                    // prints to let drivers know we are On Target
+                    System.out.print("On Target");
+                    return;  
                 }
                 // if target is within acceptable offset range, the robot stops moving
                 else{
-                    m_drivetrain.arcadeDrive(0, 0);
-                    return;
+                    m_drivetrain.arcadeDrive(m_limelight.distanceAdjustToTargetSpeed(),m_limelight.turnAngleAdjustToTargetSpeed());
                 }
             } 
             // if any part of the target is not visible, spin right until target is visible
             else if(m_limelight.seeTarget() == false){
                 m_drivetrain.arcadeDrive(0, RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED);
             }
-            // prints to let drivers know we are On Target
-            System.out.print("On Target");
+            
         }
     }
 

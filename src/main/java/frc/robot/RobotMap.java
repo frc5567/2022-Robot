@@ -35,6 +35,8 @@ public class RobotMap {
         public static final int XBOX_CONTROLLER_PORT = 0;
 
         public static final double STICK_DEADBAND = 0.09;
+
+        public static final double TOLERATED_TARGET_ERROR = 0.5;
     }
 
     /**
