@@ -97,6 +97,7 @@ public class RobotMap {
         public static final int DOUBLESOLENOID_RETRACTED_PORT = 0;
         public static final int DOUBLESOLENOID_EXTENDED_PORT = 1;
     }
+    
     /**
      * Constants for LimelightVision class
      */
