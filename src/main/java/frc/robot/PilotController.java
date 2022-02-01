@@ -1,6 +1,7 @@
 package frc.robot;
 //Xbox controller import
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 //Drivetrain import
 import frc.robot.Drivetrain.Gear;
 
@@ -15,6 +16,9 @@ public class PilotController {
     //Declares scalars
     private double m_currentVelocityScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
     private double m_currentTurnScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
+
+    // Creates a SlewRateLimiter that limits the rate of change of the signal to 0.5 units per second (Constant is untested)
+    SlewRateLimiter filter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
 
     /**
      * Constuctor for the pilot controller
@@ -58,9 +62,11 @@ public class PilotController {
      */
     private void arcadeDriveCmd(){
         // triggerInput is for the velocity input forward and backwards
-        double triggerInput = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
+        double triggerInput = filter.calculate(m_controller.getRightTriggerAxis()) - filter.calculate(m_controller.getLeftTriggerAxis());
+        //double triggerInput = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
         // leftStickXInput is for our current turn input
-        double leftStickXInput = m_controller.getLeftX();
+        double leftStickXInput = filter.calculate(m_controller.getLeftX());
+        //double leftStickXInput = m_controller.getLeftX();
 
         // applies deadband method 
         leftStickXInput = adjustForDeadband(leftStickXInput);
