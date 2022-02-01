@@ -42,18 +42,26 @@ public class CopilotController {
      * This method controlls the intake using three buttons
      */
     private void controlIntake(){
+        // Initially sets the boolean to check if the intake is extended as null (don't know initial intake position)
+        Boolean m_intakeExtended = null;
         //two if statements to determine intake position
         if(m_gamePad.getExtendIntakePressed()){
             m_intake.setIntakeExtension(IntakeState.kExtended);
+            // Sets boolean for intake extended as true to let us know the intake is extended
+            m_intakeExtended = true;
         }
         else if(m_gamePad.getRetractIntakePressed()){
             m_intake.setIntakeExtension(IntakeState.kRetracted);
+            // Sets boolean for intake extended as false to let us know the intake is not extended
+            m_intakeExtended = false;
         }
         //if statement to control the power of the intake
-        if (m_gamePad.getIntakeCMDPressed()){
+        if (m_gamePad.getIntakeCMDPressed() && m_intakeExtended == true){
+            // If the button getInakeCMD is pressed and the intake is extended, we activate the intake
             m_intake.takeIn();
         }
         else{
+            // If the button is not pressed or the intake is not extended, intake and magazine motors don't run
             m_intake.setFrontRollerSpeed(0);
             m_intake.setMagazineSpeed(0);
         }
