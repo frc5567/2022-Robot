@@ -34,12 +34,13 @@ public class Intake {
          
     }
     //Declares motors for the roller bar, intake, and interior magazine
+    //TODO: rename talonFX to the propper motor that will be used
     private TalonFX m_frontRollerMotor;
-    private TalonFX m_backRollerMotor;
     private TalonFX m_magazineMotor;
 
     //Declares solenoids for extension and retraction
     private DoubleSolenoid m_solenoid;
+
 
     //Declares a state enum
     private IntakeState m_state;
@@ -48,8 +49,8 @@ public class Intake {
      * Constructor for intake and magazine mechanism
      */
     public Intake(){
+        //TODO: rename talonFX to the propper motor that will be used
         m_frontRollerMotor = new TalonFX(RobotMap.IntakeConstants.FRONT_ROLLER_FALCON_ID);
-        m_backRollerMotor = new TalonFX(RobotMap.IntakeConstants.BACK_ROLLER_FALCON_ID);
         m_magazineMotor = new TalonFX(RobotMap.IntakeConstants.MAGAZINE_FALCON_ID);
 
         // Instantiate Right and Left Solenoids
@@ -67,14 +68,6 @@ public class Intake {
     }
 
     /**
-     * Sets the speed of the interior intake motor
-     * @param speed desired speed
-     */
-    public void setBackRollerSpeed(double speed){
-        m_backRollerMotor.set(ControlMode.PercentOutput, speed);
-    }
-
-    /**
      * Sets the speed of the magazine motor
      * @param speed desired speed
      */
@@ -87,7 +80,6 @@ public class Intake {
      */
     public void takeIn(){
         setFrontRollerSpeed(RobotMap.IntakeConstants.FRONT_ROLLER_SPEED);
-        setBackRollerSpeed(RobotMap.IntakeConstants.BACK_ROLLER_SPEED);
     }
 
     /**
@@ -102,25 +94,24 @@ public class Intake {
      */
     public void unJam(){
         setFrontRollerSpeed(RobotMap.IntakeConstants.REVERSE_FRONT_ROLLER_SPEED);
-        setBackRollerSpeed(RobotMap.IntakeConstants.REVERSE_BACK_ROLLER_SPEED);
         setMagazineSpeed(RobotMap.IntakeConstants.REVERSE_MAGAZINE_SPEED);
     }
 
     /**
-     * Toggles the intake system between extended and retracted modes
-     * @param intakeState desired state (Extended, Retracted)
+     * sets the intake system between extended/retracted states
+     * @param intakeState desired state (intakeExtension.kExtended, intakeExtension.kRetracted)
      */
-    public void toggleIntakeExtension(IntakeState intakeState){
+    public void setIntakeExtension(IntakeState intakeState){
         if (intakeState == m_state){
             return;
         }
         m_state = intakeState;
 
         if(m_state == IntakeState.kExtended){
-            setPistons(Value.kForward);
+            setPiston(Value.kForward);
         }
         else if (m_state == IntakeState.kRetracted){
-            setPistons(Value.kReverse);
+            setPiston(Value.kReverse);
         }
     }
 

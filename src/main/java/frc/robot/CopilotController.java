@@ -44,14 +44,18 @@ public class CopilotController {
     private void controlIntake(){
         //two if statements to determine intake position
         if(m_gamePad.getExtendIntakePressed()){
-            m_intake.toggleIntakeExtension(IntakeState.kExtended);
+            m_intake.setIntakeExtension(IntakeState.kExtended);
         }
         else if(m_gamePad.getRetractIntakePressed()){
-            m_intake.toggleIntakeExtension(IntakeState.kRetracted);
+            m_intake.setIntakeExtension(IntakeState.kRetracted);
         }
         //if statement to control the power of the intake
         if (m_gamePad.getIntakeCMDPressed()){
             m_intake.takeIn();
+        }
+        else{
+            m_intake.setFrontRollerSpeed(0);
+            m_intake.setMagazineSpeed(0);
         }
     }
 
