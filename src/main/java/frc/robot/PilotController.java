@@ -18,8 +18,7 @@ public class PilotController {
     private double m_currentTurnScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
 
     // Creates a SlewRateLimiter that limits the rate of change of the signal to 0.5 units per second (Constant is untested)
-    SlewRateLimiter leftTriggerFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
-    SlewRateLimiter rightTriggerFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
+    SlewRateLimiter triggerFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
     SlewRateLimiter stickFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
 
     /**
@@ -64,7 +63,7 @@ public class PilotController {
      */
     private void arcadeDriveCmd(){
         // triggerInput is for the velocity input forward and backwards
-        double triggerInput = rightTriggerFilter.calculate(m_controller.getRightTriggerAxis()) - leftTriggerFilter.calculate(m_controller.getLeftTriggerAxis());
+        double triggerInput = triggerFilter.calculate(m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
         //double triggerInput = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
         // leftStickXInput is for our current turn input
         double leftStickXInput = stickFilter.calculate(m_controller.getLeftX());
