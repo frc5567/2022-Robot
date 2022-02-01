@@ -37,6 +37,8 @@ public class RobotMap {
         public static final double STICK_DEADBAND = 0.09;
 
         public static final double TOLERATED_TARGET_ERROR = 0.5;
+
+        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.5;
     }
 
     /**
