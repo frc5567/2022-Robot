@@ -51,7 +51,6 @@ public class Intake {
 
     /**
      * Constructor for intake and magazine mechanism
-     * @param intakeSensor the sensor mounted near the input to index our balls
      */
     public Intake(){
         //TODO: rename talonFX to the propper motor that will be used
