@@ -39,8 +39,7 @@ public class Intake {
     private TalonFX m_magazineMotor;
 
     //Declares solenoids for extension and retraction
-    private DoubleSolenoid m_leftSolenoid;
-    private DoubleSolenoid m_rightSolenoid;
+    private DoubleSolenoid m_solenoid;
 
     //Declares a state enum
     private IntakeState m_state;
@@ -54,8 +53,7 @@ public class Intake {
         m_magazineMotor = new TalonFX(RobotMap.IntakeConstants.MAGAZINE_FALCON_ID);
 
         // Instantiate Right and Left Solenoids
-        m_rightSolenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.LEFT_DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.LEFT_DOUBLESOLENOID_EXTENDED_PORT);
-        m_leftSolenoid  = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.RIGHT_DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.RIGHT_DOUBLESOLENOID_EXTENDED_PORT);
+        m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.DOUBLESOLENOID_EXTENDED_PORT);
 
         m_state = IntakeState.kUnkown;
     }
@@ -124,15 +122,13 @@ public class Intake {
         else if (m_state == IntakeState.kRetracted){
             setPistons(Value.kReverse);
         }
-
     }
 
     /**
      * Sets pistons to a specific value
-     * @param value Off, Forward, Reverse
+     * @param value Forward, Reverse
      */
     private void setPistons(DoubleSolenoid.Value value) {
-        m_leftSolenoid.set(value);
-        m_rightSolenoid.set(value);
+        m_solenoid.set(value);
     }
 }

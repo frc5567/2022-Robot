@@ -95,11 +95,10 @@ public class RobotMap {
         public static final double REVERSE_MAGAZINE_SPEED = -0.5;
 
         //constants for solenoids (on the PCM)
-        public static final int LEFT_DOUBLESOLENOID_RETRACTED_PORT = 0;
-        public static final int LEFT_DOUBLESOLENOID_EXTENDED_PORT = 1;
-        public static final int RIGHT_DOUBLESOLENOID_RETRACTED_PORT = 2; 
-        public static final int RIGHT_DOUBLESOLENOID_EXTENDED_PORT = 3;
+        public static final int DOUBLESOLENOID_RETRACTED_PORT = 0;
+        public static final int DOUBLESOLENOID_EXTENDED_PORT = 1;
     }
+    
     /**
      * Constants for LimelightVision class
      */
