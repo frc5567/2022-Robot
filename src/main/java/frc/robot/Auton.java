@@ -1,6 +1,5 @@
 package frc.robot;
 
-import javax.naming.ldap.LdapReferralException;
 import frc.robot.Intake.IntakeState;
 
 
@@ -55,14 +54,18 @@ public class Auton{
         m_path = AutonPath.kLeftWall;
     }
 
-    //this method will be run at the start of every auton period
+    /**
+     * this method will be run at the start of every auton period
+     */
     public void init(){
         m_drivetrain.zeroEncoders();
         m_launcher.zeroEncoders();
         m_step = AutonStep.kStep1;
     }
 
-    //this method will be called many times a second during the auton period. currently all pseudo-code, need to create driveToTarget and turnToAngle methods 
+    /**
+     * this method will be called many times a second during the auton period. currently all pseudo-code, need to create driveToTarget and turnToAngle methods 
+     */
     public void periodic(){
         if (m_path == AutonPath.kLeftWall){
             if(m_step == AutonStep.kStep1){

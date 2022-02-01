@@ -50,8 +50,9 @@ public class RobotMap {
         public static final double STICK_DEADBAND = 0.09;
     }
 
-
-    //Constants for Launcher 
+    /**
+     * Constants for Launcher 
+     */
     public static class LauncherConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
         public static final int MASTER_FLYWHEEL_FALCON_ID = 5;
@@ -83,7 +84,9 @@ public class RobotMap {
         public static final int LAUNCH_SENSOR_PORT = 8;
     }
 
-    //Constants for Intake
+    /**
+     * Constants for Intake
+     */
     public static class IntakeConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
         public static final int FRONT_ROLLER_FALCON_ID = 9;
@@ -125,7 +128,9 @@ public class RobotMap {
     }
 
 
-    //Constants for Climber
+    /**
+     * Constants for Climber
+     */
     public static class ClimberConstants{
         //constants for motor IDs (on the CAN bus)
         public static final int CLIMBER_MOTOR_ID = 12;
@@ -137,7 +142,9 @@ public class RobotMap {
         public static final double WINCH_MOTOR_SPEED = 0.8;
     }
 
-    //constants for Auton
+    /**
+     * constants for Auton
+     */
     public static class AutonConstants{
         //contant for encoder ticks to inches (pulled from 2021, may be subject to change)
         public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (18.85 / 15);
