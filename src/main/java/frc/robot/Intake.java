@@ -119,7 +119,7 @@ public class Intake {
      * Sets pistons to a specific value
      * @param value Forward, Reverse
      */
-    private void setPistons(DoubleSolenoid.Value value) {
+    private void setPiston(DoubleSolenoid.Value value) {
         m_solenoid.set(value);
     }
 }
