@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
+//Import for sensor 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 public class Intake {
 
     // Create Enum for intake state
@@ -41,12 +44,14 @@ public class Intake {
     //Declares solenoids for extension and retraction
     private DoubleSolenoid m_solenoid;
 
+    private DigitalInput m_magazineSensor;
 
     //Declares a state enum
     private IntakeState m_state;
 
     /**
      * Constructor for intake and magazine mechanism
+     * @param intakeSensor the sensor mounted near the input to index our balls
      */
     public Intake(){
         //TODO: rename talonFX to the propper motor that will be used
@@ -57,6 +62,8 @@ public class Intake {
         m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.DOUBLESOLENOID_EXTENDED_PORT);
 
         m_state = IntakeState.kUnkown;
+
+        m_magazineSensor = new DigitalInput(RobotMap.IntakeConstants.MAGAZINE_SENSOR_PORT);
     }
 
     /**
@@ -121,5 +128,12 @@ public class Intake {
      */
     private void setPiston(DoubleSolenoid.Value value) {
         m_solenoid.set(value);
+    }
+
+    /**
+     * @return whether or not the intake sensor is being activated
+     */
+    public boolean checkMagazineSensor(){
+        return m_magazineSensor.get();
     }
 }

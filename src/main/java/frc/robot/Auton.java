@@ -1,6 +1,8 @@
 package frc.robot;
 
 import javax.naming.ldap.LdapReferralException;
+import frc.robot.Intake.IntakeState;
+
 
 public class Auton{    
     //enum for what path we are going to take in auton
@@ -63,102 +65,134 @@ public class Auton{
     //this method will be called many times a second during the auton period. currently all pseudo-code, need to create driveToTarget and turnToAngle methods 
     public void periodic(){
         if (m_path == AutonPath.kLeftWall){
-            /*
             if(m_step == AutonStep.kStep1){
-
-                if(driveToTarget(Speed, Distance)){
-                    m_step = AutonStep.kStep2;
-                }
-
-                else{
-                    return;
-                }
+                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                m_step = AutonStep.kStep2;
             }
             else if(m_step == AutonStep.kStep2){
-                
-                if(turnToAngle(Clockwise Speed, target angle)){
-                    m_step = AutonStep.kStep3;
-                }
-
-                else{
-                    return;
-                }
+                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_ANGLE_CLOCKWISE);
+                m_step = AutonStep.kStep3;
             }
             else if(m_step == AutonStep.kStep3){
-
-                if(toggleIntakeExtension(m_intake.kExtended)){
-                    m_step = AutonStep.kStep4;
-                }
-
-                else{
-                    return;
-                }
+                m_intake.setIntakeExtension(IntakeState.kExtended);
+                m_step = AutonStep.kStep4;
             }
             else if(m_step == AutonStep.kStep4){
-
-                if(turn on intake)){
+                
+                if(m_intake.checkMagazineSensor()){
                     m_step = AutonStep.kStep5;
                 }
-
                 else{
-                    return;
+                    m_drivetrain.arcadeDrive(1, 0);
+                    m_intake.takeIn();
                 }
             }
             else if(m_step == AutonStep.kStep5){
-
-                if(driveToTarget(Speed, Distance)){
-                    m_step = AutonStep.kStep6;
-                }
-
-                else{
-                    return;
-                }
+                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                m_step = AutonStep.kStep6;
             }
             else if(m_step == AutonStep.kStep6){
-
-                if(turnToAngle(Clockwise Speed, 180)){
-                    m_step = AutonStep.kStep7;
-                }
-
-                else{
-                    return;
-                }
+                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.FULL_TURN);
+                m_step = AutonStep.kStep7;
             }
             else if(m_step == AutonStep.kStep7){
-
-                if(target and launch both balls)){
+                if(m_launcher.checkLaunchSensor()){
                     m_step = AutonStep.kStop;
                 }
-
                 else{
-                    return;
+                    m_launcher.launch();
                 }
             }
             else if(m_step == AutonStep.kStop){
                 m_drivetrain.arcadeDrive(0, 0);
             }
-            */
-
         }
         else if (m_path == AutonPath.kRightWall){
-            /*
-            -drive forward
-            -turn slightly left
-            -drive forward to ball
-            -intake ball
-            -turn about 180 degress back towards the hub
-            -target and shoot both the pre-loaded ball and the picked-up ball
-            */
+            if(m_step == AutonStep.kStep1){
+                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                m_step = AutonStep.kStep2;
+            }
+            else if(m_step == AutonStep.kStep2){
+                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE);
+                m_step = AutonStep.kStep3;
+            }
+            else if(m_step == AutonStep.kStep3){
+                m_intake.setIntakeExtension(IntakeState.kExtended);
+                m_step = AutonStep.kStep4;
+            }
+            else if(m_step == AutonStep.kStep4){
+                
+                if(m_intake.checkMagazineSensor()){
+                    m_step = AutonStep.kStep5;
+                }
+                else{
+                    m_drivetrain.arcadeDrive(1, 0);
+                    m_intake.takeIn();
+                }
+            }
+            else if(m_step == AutonStep.kStep5){
+                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                m_step = AutonStep.kStep6;
+            }
+            else if(m_step == AutonStep.kStep6){
+                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.FULL_TURN);
+                m_step = AutonStep.kStep7;
+            }
+            else if(m_step == AutonStep.kStep7){
+                if(m_launcher.checkLaunchSensor()){
+                    m_step = AutonStep.kStop;
+                }
+                else{
+                    m_launcher.launch();
+                }
+            }
+            else if(m_step == AutonStep.kStop){
+                m_drivetrain.arcadeDrive(0, 0);
+            }
         }
-        else if (m_path == AutonPath.kRightLine){
-            /*  
-            -drive forward a much smaller amount
-            -turn slightly right
-            -drive forward to ball
-            -intake ball
-            -turn about 180 degress back towards the hub
-            -target and shoot both the pre-loaded ball and the picked-up ball
-            */
+        else if (m_path == AutonPath.kRightLine){ 
+            //drive forward a much smaller amount than other paths
+            if(m_step == AutonStep.kStep1){
+                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                m_step = AutonStep.kStep2;
+            }
+            else if(m_step == AutonStep.kStep2){
+                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_ANGLE_CLOCKWISE);
+                m_step = AutonStep.kStep3;
+            }
+            else if(m_step == AutonStep.kStep3){
+                m_intake.setIntakeExtension(IntakeState.kExtended);
+                m_step = AutonStep.kStep4;
+            }
+            else if(m_step == AutonStep.kStep4){
+                
+                if(m_intake.checkMagazineSensor()){
+                    m_step = AutonStep.kStep5;
+                }
+                else{
+                    m_drivetrain.arcadeDrive(1, 0);
+                    m_intake.takeIn();
+                }
+            }
+            else if(m_step == AutonStep.kStep5){
+                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                m_step = AutonStep.kStep6;
+            }
+            else if(m_step == AutonStep.kStep6){
+                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.FULL_TURN);
+                m_step = AutonStep.kStep7;
+            }
+            else if(m_step == AutonStep.kStep7){
+                if(m_launcher.checkLaunchSensor()){
+                    m_step = AutonStep.kStop;
+                }
+                else{
+                    m_launcher.launch();
+                }
+            }
+            else if(m_step == AutonStep.kStop){
+                m_drivetrain.arcadeDrive(0, 0);
+            }
         }
     }
 
