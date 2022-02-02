@@ -143,6 +143,7 @@ public class Intake {
      */
     public void init(){
         setIntakeExtension(IntakeState.kRetracted);
+    }
 
     /**
      * @return whether or not the intake sensor is being activated
