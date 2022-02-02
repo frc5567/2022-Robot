@@ -85,7 +85,15 @@ public class Intake {
      * Activates intake system by powering both sets of roller wheels
      */
     public void takeIn(){
-        setFrontRollerSpeed(RobotMap.IntakeConstants.FRONT_ROLLER_SPEED);
+        // Check to see if the intake is extended before activating the front roller motors
+        if(m_state == IntakeState.kExtended){
+            setFrontRollerSpeed(RobotMap.IntakeConstants.FRONT_ROLLER_SPEED);
+        } 
+        else {
+            setFrontRollerSpeed(0);
+            setMagazineSpeed(0);
+        }
+            
     }
 
     /**
@@ -130,9 +138,16 @@ public class Intake {
     }
 
     /**
+     * Initialization method for the intake
+     * Sets intake initially to retracted
+     */
+    public void init(){
+        setIntakeExtension(IntakeState.kRetracted);
+
+    /**
      * @return whether or not the intake sensor is being activated
      */
-    public boolean checkMagazineSensor(){
+    public boolean checkMagazineSensor() {
         return m_magazineSensor.get();
     }
 }

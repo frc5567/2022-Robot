@@ -5,7 +5,6 @@ import frc.robot.Intake.IntakeState;
 public class CopilotController {
     //declarations
     private GamePad m_gamePad;
-    private Drivetrain m_drivetrain;
     private Launcher m_launcher;
     private Intake m_intake;
     private Climber m_climber;
@@ -19,14 +18,14 @@ public class CopilotController {
         m_launcher = new Launcher();
         //pass in turret here?
         m_climber = new Climber();
-        m_drivetrain = new Drivetrain();
     }
 
     /**
-     * this method should be called once in robot
+     * This method should be called in robot init
+     * Sets intake state
      */
     public void initCopilot(){
-        m_drivetrain.init();
+        m_intake.init();
     }
 
     /**
@@ -51,9 +50,11 @@ public class CopilotController {
         }
         //if statement to control the power of the intake
         if (m_gamePad.getIntakeCMDPressed()){
+            // If the button getInakeCMD is pressed and the intake is extended, we activate the intake
             m_intake.takeIn();
         }
         else{
+            // If the button is not pressed or the intake is not extended, intake and magazine motors don't run
             m_intake.setFrontRollerSpeed(0);
             m_intake.setMagazineSpeed(0);
         }

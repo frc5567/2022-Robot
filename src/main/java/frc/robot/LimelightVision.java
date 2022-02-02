@@ -114,7 +114,7 @@ public class LimelightVision {
      * Tells the percent of the screen that the target takes up 
      * @return The percentage of the screen that the target takes up (0 to 1)
      */
-    public double targetPercentVisible(){
+    private double targetPercentVisible(){
         return(m_areaOfScreen);
     }
 
@@ -173,6 +173,25 @@ public class LimelightVision {
             m_distanceAdjustSpeed = RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
         }
         return m_distanceAdjustSpeed;
+    }
+
+    /**
+     * Periodically updates the x and y angle offsets and the area of the screen taken up by the target
+     */
+    public void periodic(){
+        // Updates the x angle offset from the target
+        m_xAngleOffset = m_tableXOffset.getDouble(0.0);
+        // Updates the y angle offset from the target
+        m_yAngleOffset = m_tableYOffset.getDouble(0.0);
+        // Updates the percentage of the screen that the target takes up
+        m_areaOfScreen = m_tableScreenArea.getDouble(0.0);
+
+        // Puts the x angle offset value on the shuffleboard
+        SmartDashboard.putNumber("LimelightX Offset", m_xAngleOffset);
+        // Puts the y angle offset value on the shuffleboard
+        SmartDashboard.putNumber("LimelightY Offset", m_yAngleOffset);
+        // Puts the percentage of the screen that the target takes up on the shuffleboard
+        SmartDashboard.putNumber("LimelightArea Percentage", m_areaOfScreen);
     }
 
 }
