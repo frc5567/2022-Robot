@@ -5,7 +5,6 @@ import frc.robot.Intake.IntakeState;
 public class CopilotController {
     //declarations
     private GamePad m_gamePad;
-    private Drivetrain m_drivetrain;
     private Launcher m_launcher;
     private Intake m_intake;
     private Climber m_climber;
@@ -19,14 +18,14 @@ public class CopilotController {
         m_launcher = new Launcher();
         //pass in turret here?
         m_climber = new Climber();
-        m_drivetrain = new Drivetrain();
     }
 
     /**
-     * this method should be called once in robot
+     * This method should be called in robot init
+     * Sets intake state
      */
     public void initCopilot(){
-        m_drivetrain.init();
+        m_intake.init();
     }
 
     /**
@@ -42,21 +41,15 @@ public class CopilotController {
      * This method controlls the intake using three buttons
      */
     private void controlIntake(){
-        // Initially sets the boolean to check if the intake is extended as null (don't know initial intake position)
-        Boolean m_intakeExtended = null;
         //two if statements to determine intake position
         if(m_gamePad.getExtendIntakePressed()){
             m_intake.setIntakeExtension(IntakeState.kExtended);
-            // Sets boolean for intake extended as true to let us know the intake is extended
-            m_intakeExtended = true;
         }
         else if(m_gamePad.getRetractIntakePressed()){
             m_intake.setIntakeExtension(IntakeState.kRetracted);
-            // Sets boolean for intake extended as false to let us know the intake is not extended
-            m_intakeExtended = false;
         }
         //if statement to control the power of the intake
-        if (m_gamePad.getIntakeCMDPressed() && m_intakeExtended == true){
+        if (m_gamePad.getIntakeCMDPressed()){
             // If the button getInakeCMD is pressed and the intake is extended, we activate the intake
             m_intake.takeIn();
         }

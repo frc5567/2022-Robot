@@ -21,7 +21,9 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   //added for testing
   private PilotController m_pilotController;
+  private CopilotController m_copilotController;
   private LimelightVision m_limelight;
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -97,6 +99,9 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     m_pilotController.init();
+    m_copilotController.initCopilot();
+    
+
   }
 
   /** This function is called periodically during test mode. */
