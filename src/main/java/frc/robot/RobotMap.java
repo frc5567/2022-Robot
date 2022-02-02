@@ -50,8 +50,9 @@ public class RobotMap {
         public static final double STICK_DEADBAND = 0.09;
     }
 
-
-    //Constants for Launcher 
+    /**
+     * Constants for Launcher 
+     */
     public static class LauncherConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
         public static final int MASTER_FLYWHEEL_FALCON_ID = 5;
@@ -78,9 +79,14 @@ public class RobotMap {
 
         public static final double TOLERATED_TURRET_ERROR = 0.08;
         public static final double TOLERATED_TRAJECTORY_ERROR = 1000;
+
+        //TODO: Change to actual port number once we know what it is
+        public static final int LAUNCH_SENSOR_PORT = 8;
     }
 
-    //Constants for Intake
+    /**
+     * Constants for Intake
+     */
     public static class IntakeConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
         public static final int FRONT_ROLLER_FALCON_ID = 9;
@@ -96,6 +102,9 @@ public class RobotMap {
         //constants for solenoids (on the PCM)
         public static final int DOUBLESOLENOID_RETRACTED_PORT = 0;
         public static final int DOUBLESOLENOID_EXTENDED_PORT = 1;
+
+        //TODO: Change to actual port number once we know what it is
+        public static final int MAGAZINE_SENSOR_PORT = 7;
     }
     
     /**
@@ -119,7 +128,9 @@ public class RobotMap {
     }
 
 
-    //Constants for Climber
+    /**
+     * Constants for Climber
+     */
     public static class ClimberConstants{
         //constants for motor IDs (on the CAN bus)
         public static final int CLIMBER_MOTOR_ID = 12;
@@ -131,13 +142,22 @@ public class RobotMap {
         public static final double WINCH_MOTOR_SPEED = 0.8;
     }
 
-    //constants for Auton
+    /**
+     * constants for Auton
+     */
     public static class AutonConstants{
         //contant for encoder ticks to inches (pulled from 2021, may be subject to change)
         public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (18.85 / 15);
         public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (18.85 / 7.92);
 
+        public static final double PLACEHOLDER_VALUE_SPEED = 1;
+        public static final double PLACEHOLDER_VALUE_DISTANCE = 1;
+        public static final double PLACEHOLDER_VALUE_ANGLE_CLOCKWISE = 1;
+        public static final double PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE = -1;
+
         //constant for rotation error acceptance
         public static final double ROTATE_BOUND = 0.1;
+
+        public static final double FULL_TURN = 180;
     }
 }

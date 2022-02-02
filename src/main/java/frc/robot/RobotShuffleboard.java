@@ -1,7 +1,5 @@
 package frc.robot;
 
-import java.util.Map;
-
 // Imports for our shuffleboard so we can make new tabs and entries for them
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;

@@ -5,6 +5,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 //Import Encoders
 import com.ctre.phoenix.motorcontrol.SensorCollection;
+//Import for sensor 
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Launcher{
     //Declares intake to use magazine motors in launch method
@@ -27,6 +29,8 @@ public class Launcher{
     private SensorCollection m_turretEncoder;
     private SensorCollection m_trajectoryEncoder;
 
+    private DigitalInput m_launchSensor;
+
     /**
      * Constructor for Launcher objects
      */
@@ -41,6 +45,8 @@ public class Launcher{
         m_limelightVision = new LimelightVision();
 
         m_trajectoryEncoder = new SensorCollection (m_trajectoryMotor);
+
+        m_launchSensor = new DigitalInput(RobotMap.LauncherConstants.LAUNCH_SENSOR_PORT);
     }
     
     /**
@@ -222,5 +228,12 @@ public class Launcher{
      */
     public double getRealSpeed(){
         return m_masterFlywheelMotor.getSelectedSensorVelocity();
+    }
+
+    /**
+     * @return whether or not the launch snesor is being activated
+     */
+    public boolean checkLaunchSensor(){
+        return m_launchSensor.get();
     }
 }
