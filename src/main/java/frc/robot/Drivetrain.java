@@ -96,8 +96,8 @@ public class Drivetrain {
      */
     public void zeroEncoders() {
     
-        m_leftDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
-        m_rightDriveEncoder.setQuadraturePosition(0, RobotMap.DrivetrainConstants.TIMEOUT_MS);
+        m_leftDriveEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
+        m_rightDriveEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
     }
 
     /**

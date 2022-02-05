@@ -39,8 +39,8 @@ public class Launcher{
 
         m_masterFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
         m_slaveFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.SLAVE_FLYWHEEL_FALCON_ID);
-        m_feederMotor = new WPI_TalonFX(RobotMap.LauncherConstants.FEEDER_FALCON_ID);
-        m_turretMotor = new WPI_TalonFX(RobotMap.LauncherConstants.TURRET_FALCON_ID);
+        m_feederMotor = new WPI_TalonFX(RobotMap.LauncherConstants.FEEDER_MOTOR_ID);
+        m_turretMotor = new WPI_TalonFX(RobotMap.LauncherConstants.TURRET_MOTOR_ID);
 
         m_limelightVision = new LimelightVision();
 
@@ -170,10 +170,10 @@ public class Launcher{
      * Zeros encoders
      */
     public void zeroEncoders(){
-        m_flywheelEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
-        m_feederEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
-        m_turretEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
-        m_trajectoryEncoder.setQuadraturePosition(0, RobotMap.LauncherConstants.CONFIG_TIMEOUT_MS);
+        m_flywheelEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
+        m_feederEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
+        m_turretEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
+        m_trajectoryEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
     }
 
     /**
