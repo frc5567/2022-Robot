@@ -73,7 +73,7 @@ public class Auton{
             if(m_step == AutonStep.kStep1){
                 System.out.println("Current Step: " + m_step);
                 System.out.println("Current Step: 1");
-                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, 84.75);
+                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, 12);
                 m_step = AutonStep.kStep2;
             }
             else if(m_step == AutonStep.kStep2){
@@ -85,19 +85,13 @@ public class Auton{
             else if(m_step == AutonStep.kStep3){
                 System.out.println("Current Step: " + m_step);
                 System.out.println("Current Step: 3");
-                m_intake.setIntakeExtension(IntakeState.kExtended);
-                m_step = AutonStep.kStep4;
+                System.out.println("Extend Intake");
             }
             else if(m_step == AutonStep.kStep4){
                 System.out.println("Current Step: " + m_step);
                 System.out.println("Current Step: 4");
-                if(m_intake.checkMagazineSensor()){
-                    m_step = AutonStep.kStep5;
-                }
-                else{
-                    m_drivetrain.arcadeDrive(0.5, 0);
-                    m_intake.takeIn();
-                }
+                System.out.println("Drive forward until intake picks up ball");
+                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, 12);
             }
             else if(m_step == AutonStep.kStep5){
                 System.out.println("Current Step: " + m_step);
@@ -108,12 +102,7 @@ public class Auton{
             else if(m_step == AutonStep.kStep6){
                 System.out.println("Current Step: " + m_step);
                 System.out.println("Current Step: 6");
-                if(m_launcher.checkLaunchSensor()){
-                    m_step = AutonStep.kStop;
-                }
-                else{
-                    m_launcher.launch();
-                }
+                System.out.println("Launch both balls");
             }
             else if(m_step == AutonStep.kStop){
                 System.out.println("Current Step: " + m_step);
