@@ -23,7 +23,10 @@ public class Robot extends TimedRobot {
   private PilotController m_pilotController;
   private CopilotController m_copilotController;
   private LimelightVision m_limelight;
-
+  private Drivetrain m_drivetrain;
+  private Auton m_auton;
+  private Launcher m_launcher;
+  private Intake m_intake;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,7 +37,8 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    m_pilotController = new PilotController();
+    m_pilotController = new PilotController(m_drivetrain);
+    m_auton = new Auton(m_drivetrain, m_launcher, m_intake);
     m_limelight = new LimelightVision();
   }
 
