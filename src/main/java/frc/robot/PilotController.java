@@ -24,9 +24,9 @@ public class PilotController {
     /**
      * Constuctor for the pilot controller
      */
-    public PilotController(){
+    public PilotController(Drivetrain drivetrain){
         m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
-        m_drivetrain = new Drivetrain();
+        m_drivetrain = drivetrain;
         m_shuffleboard = new RobotShuffleboard();
         m_limelight = new LimelightVision();
 

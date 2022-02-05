@@ -21,7 +21,16 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   //added for testing
   private PilotController m_pilotController;
+<<<<<<< HEAD
   private Auton m_auton;
+=======
+  private CopilotController m_copilotController;
+  private LimelightVision m_limelight;
+  private Drivetrain m_drivetrain;
+  private Auton m_auton;
+  private Launcher m_launcher;
+  private Intake m_intake;
+>>>>>>> 841d5c26be33e6895755285a53dff7e2181e30b8
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -32,8 +41,14 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+<<<<<<< HEAD
     m_pilotController = new PilotController();
     m_auton = new Auton();
+=======
+    m_pilotController = new PilotController(m_drivetrain);
+    m_auton = new Auton(m_drivetrain, m_launcher, m_intake);
+    m_limelight = new LimelightVision();
+>>>>>>> 841d5c26be33e6895755285a53dff7e2181e30b8
   }
 
   /**
