@@ -46,10 +46,10 @@ public class Auton{
      * constructor for auton
      * @param drivetrain drivetrain mechanism on the robot
      */
-    public Auton(Drivetrain drivetrain, Launcher launcher, Intake intake){
-        m_drivetrain = drivetrain;
-        m_launcher = launcher;
-        m_intake = intake;
+    public Auton(){
+        m_drivetrain = new Drivetrain();
+        m_launcher = new Launcher();
+        m_intake = new Intake();
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kLeftWall;
     }

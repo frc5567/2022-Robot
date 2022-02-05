@@ -21,9 +21,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   //added for testing
   private PilotController m_pilotController;
-  private CopilotController m_copilotController;
-  private LimelightVision m_limelight;
-
+  private Auton m_auton;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -35,7 +33,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     m_pilotController = new PilotController();
-    m_limelight = new LimelightVision();
+    m_auton = new Auton();
   }
 
   /**
@@ -99,16 +97,11 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     m_pilotController.init();
-    m_copilotController.initCopilot();
-    
-
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_pilotController.periodic();
-    m_limelight.periodic();
-    
+    m_auton.periodic();
   }
 }
