@@ -54,8 +54,8 @@ public class Intake {
      */
     public Intake(){
         //TODO: rename talonFX to the propper motor that will be used
-        m_frontRollerMotor = new TalonFX(RobotMap.IntakeConstants.FRONT_ROLLER_FALCON_ID);
-        m_magazineMotor = new TalonFX(RobotMap.IntakeConstants.MAGAZINE_FALCON_ID);
+        m_frontRollerMotor = new TalonFX(RobotMap.IntakeConstants.FRONT_ROLLER_MOTOR_ID);
+        m_magazineMotor = new TalonFX(RobotMap.IntakeConstants.MAGAZINE_MOTOR_ID);
 
         // Instantiate Right and Left Solenoids
         m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.DOUBLESOLENOID_EXTENDED_PORT);

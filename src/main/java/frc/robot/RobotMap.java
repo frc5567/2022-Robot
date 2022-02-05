@@ -2,6 +2,9 @@ package frc.robot;
 
 public class RobotMap {
 
+    //timeout in milliseconds for the CTRE config methods
+    public static final int TIMEOUT_MS = 30;
+
     /**
      * constant for PCM location on the CAN bus
      */
@@ -23,9 +26,6 @@ public class RobotMap {
         //constants for gearbox solenoid (on the PCM)
         public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 4; 
         public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 5;
-
-        //timeout in milliseconds for the CTRE config methods
-        public static final int TIMEOUT_MS = 30;
     }
 
     /**
@@ -57,8 +57,8 @@ public class RobotMap {
         //constants for drivetrain motor IDs (on the CAN bus)
         public static final int MASTER_FLYWHEEL_FALCON_ID = 5;
         public static final int SLAVE_FLYWHEEL_FALCON_ID = 6;
-        public static final int FEEDER_FALCON_ID = 7;
-        public static final int TURRET_FALCON_ID = 8;
+        public static final int FEEDER_MOTOR_ID = 7;
+        public static final int TURRET_MOTOR_ID = 8;
         
         //These are untested placesholder values until we know what speed we actually need
         public static final double IDLE_SPEED = 0.0;
@@ -66,9 +66,6 @@ public class RobotMap {
         public static final double FEEDING_SPEED = 0.5;
         public static final double TRAJECTORY_MOTOR_SPEED = 0.25;
         public static final double EXPEL_SPEED = 0.25;
-
-        //the launcher timeout for running confing methods
-        public static final int CONFIG_TIMEOUT_MS = 30;
 
         public static final double POSITIVE_TURRET_ROTATION_SPEED = 0.25;
         public static final double NEGATIVE_TURRET_ROTATION_SPEED = -0.25;
@@ -89,8 +86,8 @@ public class RobotMap {
      */
     public static class IntakeConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
-        public static final int FRONT_ROLLER_FALCON_ID = 9;
-        public static final int MAGAZINE_FALCON_ID = 11;
+        public static final int FRONT_ROLLER_MOTOR_ID = 9;
+        public static final int MAGAZINE_MOTOR_ID = 11;
         //These are untested placesholder values until we know what speed we actually need
         public static final double FRONT_ROLLER_SPEED = 0.5;
         public static final double MAGAZINE_SPEED = 0.5;
@@ -150,7 +147,7 @@ public class RobotMap {
         public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (18.85 / 15);
         public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (18.85 / 7.92);
 
-        public static final double PLACEHOLDER_VALUE_SPEED = 1;
+        public static final double PLACEHOLDER_VALUE_SPEED = 0.5;
         public static final double PLACEHOLDER_VALUE_DISTANCE = 1;
         public static final double PLACEHOLDER_VALUE_ANGLE_CLOCKWISE = 1;
         public static final double PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE = -1;

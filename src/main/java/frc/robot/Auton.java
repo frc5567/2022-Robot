@@ -68,43 +68,46 @@ public class Auton{
      */
     public void periodic(){
         if (m_path == AutonPath.kLeftWall){
+            System.out.println("Starting Auton. Path: " + m_path);
+            System.out.println("Starting Auton. Path: Left Wall");
             if(m_step == AutonStep.kStep1){
                 System.out.println("Current Step: " + m_step);
-                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                System.out.println("Current Step: 1");
+                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, 84.75);
                 m_step = AutonStep.kStep2;
             }
             else if(m_step == AutonStep.kStep2){
                 System.out.println("Current Step: " + m_step);
-                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_ANGLE_CLOCKWISE);
+                System.out.println("Current Step: 2");
+                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, -30);
                 m_step = AutonStep.kStep3;
             }
             else if(m_step == AutonStep.kStep3){
                 System.out.println("Current Step: " + m_step);
+                System.out.println("Current Step: 3");
                 m_intake.setIntakeExtension(IntakeState.kExtended);
                 m_step = AutonStep.kStep4;
             }
             else if(m_step == AutonStep.kStep4){
                 System.out.println("Current Step: " + m_step);
+                System.out.println("Current Step: 4");
                 if(m_intake.checkMagazineSensor()){
                     m_step = AutonStep.kStep5;
                 }
                 else{
-                    m_drivetrain.arcadeDrive(1, 0);
+                    m_drivetrain.arcadeDrive(0.5, 0);
                     m_intake.takeIn();
                 }
             }
             else if(m_step == AutonStep.kStep5){
                 System.out.println("Current Step: " + m_step);
-                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                System.out.println("Current Step: 5");
+                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.FULL_TURN);
                 m_step = AutonStep.kStep6;
             }
             else if(m_step == AutonStep.kStep6){
                 System.out.println("Current Step: " + m_step);
-                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.FULL_TURN);
-                m_step = AutonStep.kStep7;
-            }
-            else if(m_step == AutonStep.kStep7){
-                System.out.println("Current Step: " + m_step);
+                System.out.println("Current Step: 6");
                 if(m_launcher.checkLaunchSensor()){
                     m_step = AutonStep.kStop;
                 }
@@ -113,6 +116,7 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStop){
+                System.out.println("Current Step: " + m_step);
                 System.out.println("Auton completed");
                 m_drivetrain.arcadeDrive(0, 0);
             }
