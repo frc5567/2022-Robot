@@ -6,7 +6,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import frc.robot.Drivetrain.Gear;
 
 public class PilotController {
-    private LimelightVision m_limelight;
+    private LimelightVision m_limelightVision;
 
     //Declares controller, drivetrain, and shuffleboard objects
     private XboxController m_controller;
@@ -24,11 +24,13 @@ public class PilotController {
     /**
      * Constuctor for the pilot controller
      */
-    public PilotController(Drivetrain drivetrain){
-        m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
+    public PilotController(Drivetrain drivetrain, LimelightVision limelightVision){
         m_drivetrain = drivetrain;
+        m_limelightVision = limelightVision;
+
+        m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
+        
         m_shuffleboard = new RobotShuffleboard();
-        m_limelight = new LimelightVision();
 
         //puts input scalar widgets on the shuffleboard
         m_shuffleboard.drivetrainShuffleboardConfig();
@@ -110,9 +112,9 @@ public class PilotController {
             // change into low gear for defense and more accurate aim
             m_drivetrain.shiftGear(Gear.kLowGear);
             // checks if any part of the target is visible
-            if (m_limelight.seeTarget() == true){
+            if (m_limelightVision.seeTarget() == true){
                 // if target is outside of acceptable offset values, robot moves to aim at the target
-                if (m_limelight.xAngleToTarget() < RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelight.xAngleToTarget() > -RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelight.yAngleToTarget() < RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelight.yAngleToTarget() > -RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR){
+                if (m_limelightVision.xAngleToTarget() < RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelightVision.xAngleToTarget() > -RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelightVision.yAngleToTarget() < RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelightVision.yAngleToTarget() > -RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR){
                     m_drivetrain.arcadeDrive(0, 0);
                     // prints to let drivers know we are On Target
                     System.out.print("On Target");
@@ -120,11 +122,11 @@ public class PilotController {
                 }
                 // if target is within acceptable offset range, the robot stops moving
                 else{
-                    m_drivetrain.arcadeDrive(m_limelight.distanceAdjustToTargetSpeed(),m_limelight.turnAngleAdjustToTargetSpeed());
+                    m_drivetrain.arcadeDrive(m_limelightVision.distanceAdjustToTargetSpeed(),m_limelightVision.turnAngleAdjustToTargetSpeed());
                 }
             } 
             // if any part of the target is not visible, spin right until target is visible
-            else if(m_limelight.seeTarget() == false){
+            else if(m_limelightVision.seeTarget() == false){
                 m_drivetrain.arcadeDrive(0, RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED);
             }
             

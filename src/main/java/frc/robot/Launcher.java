@@ -9,9 +9,6 @@ import com.ctre.phoenix.motorcontrol.SensorCollection;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Launcher{
-    //Declares intake to use magazine motors in launch method
-    private Intake m_intake;
-
     //Declares limelight object
     private LimelightVision m_limelightVision;
     
@@ -34,16 +31,19 @@ public class Launcher{
     /**
      * Constructor for Launcher objects
      */
-    public Launcher(){
-        m_intake = new Intake();
+    public Launcher(LimelightVision limelightVision){
+        m_limelightVision = limelightVision;
 
         m_masterFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
         m_slaveFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.SLAVE_FLYWHEEL_FALCON_ID);
+        //TODO: THESE WILL NOT BE FALCONS - CHANGE
         m_feederMotor = new WPI_TalonFX(RobotMap.LauncherConstants.FEEDER_MOTOR_ID);
         m_turretMotor = new WPI_TalonFX(RobotMap.LauncherConstants.TURRET_MOTOR_ID);
+        m_trajectoryMotor = new WPI_TalonFX(RobotMap.LauncherConstants.TRAJECTORY_MOTOR_ID);
 
-        m_limelightVision = new LimelightVision();
-
+        m_flywheelEncoder = new SensorCollection (m_masterFlywheelMotor);
+        m_feederEncoder = new SensorCollection (m_feederMotor);
+        m_turretEncoder = new SensorCollection (m_turretMotor);
         m_trajectoryEncoder = new SensorCollection (m_trajectoryMotor);
 
         m_launchSensor = new DigitalInput(RobotMap.LauncherConstants.LAUNCH_SENSOR_PORT);
@@ -154,8 +154,6 @@ public class Launcher{
      */
     private void advanceBalls(){
         setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-        m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
-        
     }
 
     /**

@@ -22,11 +22,13 @@ public class Robot extends TimedRobot {
   //added for testing
   private PilotController m_pilotController;
   private CopilotController m_copilotController;
-  private LimelightVision m_limelight;
-  private Drivetrain m_drivetrain;
   private Auton m_auton;
+
+  private LimelightVision m_limelightVision;
+  private Drivetrain m_drivetrain;
   private Launcher m_launcher;
   private Intake m_intake;
+  private Climber m_climber;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -37,9 +39,15 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    m_pilotController = new PilotController(m_drivetrain);
+    
+    m_intake = new Intake();
+    m_limelightVision = new LimelightVision();
+    m_drivetrain = new Drivetrain();
+    m_launcher = new Launcher(m_limelightVision);
+    
+    m_pilotController = new PilotController(m_drivetrain, m_limelightVision);
+    m_copilotController = new CopilotController(m_limelightVision, m_intake, m_launcher, m_climber);
     m_auton = new Auton(m_drivetrain, m_launcher, m_intake);
-    m_limelight = new LimelightVision();
   }
 
   /**
@@ -102,17 +110,14 @@ public class Robot extends TimedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    m_pilotController.init();
-    m_copilotController.initCopilot();
-    
-
+    m_auton.init();
+    //m_pilotController.init();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_pilotController.periodic();
-    m_limelight.periodic();
-    
+    m_auton.periodic();
+    //m_pilotController.periodic();
   }
 }
