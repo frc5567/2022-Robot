@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 // This imports an enum that we will call later
@@ -38,6 +39,8 @@ public class Drivetrain {
 
     // Declares the NavX gyro
     private AHRS m_gyro;
+
+    private PIDController m_PIDController;
 
     // Arcade Drive method 1 trigger to give gas, 1 thumbstick to turn
 
@@ -176,4 +179,12 @@ public class Drivetrain {
     public float getGyro(){
         return m_gyro.getYaw();
     }
+    
+    private void PIDConfig(){
+        m_PIDController = new PIDController(RobotMap.DrivetrainConstants.DRIVETRAIN_GAINS.kP, RobotMap.DrivetrainConstants.DRIVETRAIN_GAINS.kI, RobotMap.DrivetrainConstants.DRIVETRAIN_GAINS.kD);
+        m_PIDController.enableContinuousInput(-RobotMap.DrivetrainConstants.PID_INPUT_RANGE, RobotMap.DrivetrainConstants.PID_INPUT_RANGE);
+        m_PIDController.setIntegratorRange(-RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE, RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE);
+        m_PIDController.setTolerance(RobotMap.DrivetrainConstants.TOLERANCE_ROTATE_CONTROLLER);
+    }
+
 }
