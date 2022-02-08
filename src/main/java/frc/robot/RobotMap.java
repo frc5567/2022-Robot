@@ -26,8 +26,11 @@ public class RobotMap {
         //constants for gearbox solenoid (on the PCM)
         public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 4; 
         public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 5;
-        public static final Gains DRIVETRAIN_GAINS = new Gains(0.3, 0.0, 0.0, 0.0, 100, 1.0);
+        
+        //constants for Turn Gains for the PID controller
+        public static final Gains TURN_GAINS = new Gains(0.3, 0.0, 0.0, 0.0, 100, 1.0);
 
+        //constants for PID controller
         public static final double PID_INPUT_RANGE = 180.00;
         public static final double ROTATE_PID_INTEGRATOR_RANGE = 0.10;
         public static final double TOLERANCE_ROTATE_CONTROLLER = 2.00;

@@ -1,5 +1,8 @@
 package frc.robot;
 
+/**
+ * Class for holding PID constants as well as gains in robot map
+ */
 public class Gains {
     //Declares the variables to be passed into the gains function
     public final double kP;
