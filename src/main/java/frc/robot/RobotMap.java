@@ -67,6 +67,7 @@ public class RobotMap {
         public static final int SLAVE_FLYWHEEL_FALCON_ID = 6;
         public static final int FEEDER_MOTOR_ID = 7;
         public static final int TURRET_MOTOR_ID = 8;
+        public static final int TRAJECTORY_MOTOR_ID = 9;
         
         //These are untested placesholder values until we know what speed we actually need
         public static final double IDLE_SPEED = 0.0;
@@ -86,7 +87,7 @@ public class RobotMap {
         public static final double TOLERATED_TRAJECTORY_ERROR = 1000;
 
         //TODO: Change to actual port number once we know what it is
-        public static final int LAUNCH_SENSOR_PORT = 8;
+        public static final int LAUNCH_SENSOR_PORT = 10;
     }
 
     /**
@@ -94,8 +95,8 @@ public class RobotMap {
      */
     public static class IntakeConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
-        public static final int FRONT_ROLLER_MOTOR_ID = 9;
-        public static final int MAGAZINE_MOTOR_ID = 11;
+        public static final int FRONT_ROLLER_MOTOR_ID = 11;
+        public static final int MAGAZINE_MOTOR_ID = 12;
         //These are untested placesholder values until we know what speed we actually need
         public static final double FRONT_ROLLER_SPEED = 0.5;
         public static final double MAGAZINE_SPEED = 0.5;
@@ -109,7 +110,7 @@ public class RobotMap {
         public static final int DOUBLESOLENOID_EXTENDED_PORT = 1;
 
         //TODO: Change to actual port number once we know what it is
-        public static final int MAGAZINE_SENSOR_PORT = 7;
+        public static final int MAGAZINE_SENSOR_PORT = 9;
     }
     
     /**
@@ -138,8 +139,8 @@ public class RobotMap {
      */
     public static class ClimberConstants{
         //constants for motor IDs (on the CAN bus)
-        public static final int CLIMBER_MOTOR_ID = 12;
-        public static final int CLIMBER_WINCH_ID = 13;
+        public static final int CLIMBER_MOTOR_ID = 16;
+        public static final int CLIMBER_WINCH_ID = 17;
 
         //constants for motor speeds 
         public static final double CLIMBER_MOTOR_SPEED = 0.8;
@@ -152,10 +153,10 @@ public class RobotMap {
      */
     public static class AutonConstants{
         //contant for encoder ticks to inches (pulled from 2021, may be subject to change)
-        public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (18.85 / 15);
-        public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (18.85 / 7.92);
+        public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 1024 / (18.85 / 15);
+        public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 1024 / (18.85 / 7.92);
 
-        public static final double PLACEHOLDER_VALUE_SPEED = 0.5;
+        public static final double PLACEHOLDER_VALUE_SPEED = 0.2;
         public static final double PLACEHOLDER_VALUE_DISTANCE = 1;
         public static final double PLACEHOLDER_VALUE_ANGLE_CLOCKWISE = 1;
         public static final double PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE = -1;

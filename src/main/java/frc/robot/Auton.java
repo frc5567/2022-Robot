@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.robot.Drivetrain.Gear;
 import frc.robot.Intake.IntakeState;
 
 
@@ -41,6 +42,7 @@ public class Auton{
     private Drivetrain m_drivetrain;
     private Launcher m_launcher;
     private Intake m_intake;
+    private LimelightVision m_limelightVision;
 
     /**
      * constructor for auton
@@ -50,6 +52,7 @@ public class Auton{
         m_drivetrain = drivetrain;
         m_launcher = launcher;
         m_intake = intake;
+
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kLeftWall;
     }
@@ -58,23 +61,42 @@ public class Auton{
      * this method will be run at the start of every auton period
      */
     public void init(){
+        m_drivetrain.init();
         m_drivetrain.zeroEncoders();
         m_launcher.zeroEncoders();
         m_step = AutonStep.kStep1;
+        m_path = AutonPath.kLeftWall;
+        m_drivetrain.shiftGear(Gear.kLowGear);
+        System.out.println("left encoder " + m_drivetrain.getLeftDriveEncoderPosition());
+        System.out.println(" Right encoder " + m_drivetrain.getRightDriveEncoderPosition());
     }
 
     /**
      * this method will be called many times a second during the auton period. currently all pseudo-code, need to create driveToTarget and turnToAngle methods 
      */
     public void periodic(){
+        double targetEncoderTicks;
+        double currentRightEncoderTicks;
+        double currentLeftEncoderTicks;
+        //m_drivetrain.zeroEncoders();
         if (m_path == AutonPath.kLeftWall){
             System.out.println("Starting Auton. Path: " + m_path);
             System.out.println("Starting Auton. Path: Left Wall");
+            m_step = AutonStep.kStep1;
             if(m_step == AutonStep.kStep1){
                 System.out.println("Current Step: " + m_step);
                 System.out.println("Current Step: 1");
-                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, 84.75);
-                m_step = AutonStep.kStep2;
+                currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
+                currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
+                targetEncoderTicks = 24 * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
+                
+                if((targetEncoderTicks <= currentLeftEncoderTicks) && (targetEncoderTicks <= currentRightEncoderTicks)){
+                    m_step = AutonStep.kStep2;
+                    m_drivetrain.zeroEncoders();
+                }
+                else{
+                    driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, 24);
+                }
             }
             else if(m_step == AutonStep.kStep2){
                 System.out.println("Current Step: " + m_step);
@@ -270,7 +292,7 @@ public class Auton{
                 return false;
             }
         }
-        //if speed is greater than 0 (or 0)
+        //if speed is greater than 0
         else{
             if((target > 0) && (speed > 0)){
                 if((leftEncoder < target) || (rightEncoder < target)){

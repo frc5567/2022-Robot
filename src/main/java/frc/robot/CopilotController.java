@@ -8,16 +8,18 @@ public class CopilotController {
     private Launcher m_launcher;
     private Intake m_intake;
     private Climber m_climber;
+    private LimelightVision m_limelightVision;
 
     /**
      * constructor for copilot controller- instantiates all of the systems that we interact with in this class.
      */
-    public CopilotController(){
+    public CopilotController(LimelightVision limelightVision, Intake intake, Launcher launcher, Climber climber){
+        m_limelightVision = limelightVision;
+        m_intake = intake;
+        m_launcher = launcher;
+        m_climber = climber;
+        
         m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
-        m_intake = new Intake();
-        m_launcher = new Launcher();
-        //pass in turret here?
-        m_climber = new Climber();
     }
 
     /**
