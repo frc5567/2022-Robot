@@ -47,15 +47,21 @@ public class Auton{
     double targetEncoderTicks;
     double currentRightEncoderTicks;
     double currentLeftEncoderTicks;
+    double targetGyro;
+    double currentGyro;
+    boolean canSeeTarget = false;
+    double visionAngleToTarget;
+    boolean limelightOff;
 
     /**
      * constructor for auton
      * @param drivetrain drivetrain mechanism on the robot
      */
-    public Auton(Drivetrain drivetrain, Launcher launcher, Intake intake){
+    public Auton(Drivetrain drivetrain, Launcher launcher, Intake intake, LimelightVision limelightVision){
         m_drivetrain = drivetrain;
         m_launcher = launcher;
         m_intake = intake;
+        m_limelightVision = limelightVision;
 
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kLeftWall;
@@ -67,18 +73,22 @@ public class Auton{
     public void init(){
         m_drivetrain.init();
         m_drivetrain.zeroEncoders();
+        m_drivetrain.zeroGyro();
         m_launcher.zeroEncoders();
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kLeftWall;
         m_drivetrain.shiftGear(Gear.kLowGear);
         System.out.println("left encoder " + m_drivetrain.getLeftDriveEncoderPosition());
         System.out.println(" Right encoder " + m_drivetrain.getRightDriveEncoderPosition());
+        m_limelightVision.limelightInit();
+        limelightOff = true;
     }
 
     /**
      * this method will be called many times a second during the auton period. currently all pseudo-code, need to create driveToTarget and turnToAngle methods 
      */
     public void periodic(){
+        m_limelightVision.periodic();
         if(autonStartFlag){
             m_step = AutonStep.kStep1;
             System.out.println("STARTING AUTON");
@@ -95,38 +105,63 @@ public class Auton{
                 System.out.println("Current Step: 1");
                 currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
                 currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-                targetEncoderTicks = 50 * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
+                targetEncoderTicks = RobotMap.AutonConstants.STEP_ONE_TARGET * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
                 
-                if((targetEncoderTicks - 400 <= currentLeftEncoderTicks) && (targetEncoderTicks - 400 <= currentRightEncoderTicks)){
+                if((targetEncoderTicks <= currentLeftEncoderTicks) && (targetEncoderTicks <= currentRightEncoderTicks)){
                     m_drivetrain.arcadeDrive(0,0);
-                    m_step = AutonStep.kStop;
+                    m_step = AutonStep.kStep2;
                     m_drivetrain.zeroEncoders();
                 }
                 else{
-                    driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, 50);
+                    driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.STEP_ONE_TARGET);
                 }
             }
             else if(m_step == AutonStep.kStep2){
                 System.out.println("Current Step: " + m_step);
                 System.out.println("Current Step: 2");
-                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, -30);
-                m_step = AutonStep.kStep3;
+                currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
+                currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
+                targetGyro = -RobotMap.AutonConstants.STEP_TWO_TARGET * (1 - RobotMap.AutonConstants.ROTATE_BOUND);
+                currentGyro = m_drivetrain.getGyro();
+                if(currentGyro < (targetGyro * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
+                    m_drivetrain.arcadeDrive(0,0);
+                    m_step = AutonStep.kStep3;
+                    m_drivetrain.zeroEncoders();
+                    m_drivetrain.zeroGyro();
+                }
+                turnToAngle(-RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.STEP_TWO_TARGET);
+                
             }
             else if(m_step == AutonStep.kStep3){
+                if(limelightOff){
+                    m_limelightVision.enableLEDs();
+                    limelightOff = false;
+                }
                 System.out.println("Current Step: " + m_step);
                 System.out.println("Current Step: 3");
-                m_intake.setIntakeExtension(IntakeState.kExtended);
-                m_step = AutonStep.kStep4;
+                currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
+                currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
+                visionAngleToTarget = m_limelightVision.xAngleToTarget();
+                targetGyro = -visionAngleToTarget * (1 - RobotMap.AutonConstants.ROTATE_BOUND);
+                currentGyro = m_drivetrain.getGyro();
+                if(currentGyro > Math.abs(targetGyro * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
+                    m_drivetrain.arcadeDrive(0,0);
+                    m_step = AutonStep.kStop;
+                    m_drivetrain.zeroEncoders();
+                }
+                turnToAngle(-RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, visionAngleToTarget);
             }
             else if(m_step == AutonStep.kStep4){
+
                 System.out.println("Current Step: " + m_step);
                 System.out.println("Current Step: 4");
-                if(m_intake.checkMagazineSensor()){
-                    m_step = AutonStep.kStep5;
+                if(canSeeTarget){
+                    System.out.println("Target Detected!!!!!!!!!!!!");
+                    m_step = AutonStep.kStop;
                 }
                 else{
-                    m_drivetrain.arcadeDrive(0.5, 0);
-                    m_intake.takeIn();
+                    System.out.println("No Target Detected!!!!!!!!!!!!");
+                    canSeeTarget = m_limelightVision.seeTarget();
                 }
             }
             else if(m_step == AutonStep.kStep5){
@@ -346,9 +381,9 @@ public class Auton{
      * @return whether or not we have reached our target angle
      */
     public boolean turnToAngle(double speed, double target){
-        float currentAngle = m_drivetrain.getGyro();
+        double currentAngle = m_drivetrain.getGyro();
         //if target is on the left, this if statement will run
-        if(speed <0){
+        if(speed < 0){
             target = target * -1;
             System.out.println("Target Angle: " + target);
             System.out.println("Current Angle " + currentAngle);

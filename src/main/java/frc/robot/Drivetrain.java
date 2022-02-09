@@ -151,6 +151,8 @@ public class Drivetrain {
     public void arcadeDrive(double forward, double turn){
         m_masterLeftMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
         m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, -turn);
+        m_slaveLeftMotor.follow(m_masterLeftMotor);
+        m_slaveRightMotor.follow(m_masterRightMotor);
 
         System.out.println("Arcade Drive: [" + forward + "][" + turn + "]");
     }
