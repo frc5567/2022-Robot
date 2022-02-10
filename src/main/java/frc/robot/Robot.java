@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
     
     m_pilotController = new PilotController(m_drivetrain, m_limelightVision);
     m_copilotController = new CopilotController(m_limelightVision, m_intake, m_launcher, m_climber);
-    m_auton = new Auton(m_drivetrain, m_launcher, m_intake);
+    m_auton = new Auton(m_drivetrain, m_launcher, m_intake, m_limelightVision);
   }
 
   /**
@@ -75,11 +75,14 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+    m_auton.init();
+    
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    m_auton.periodic();
     switch (m_autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
@@ -110,14 +113,12 @@ public class Robot extends TimedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    m_auton.init();
-    //m_pilotController.init();
+    m_pilotController.init();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_auton.periodic();
-    //m_pilotController.periodic();
+    m_pilotController.periodic();
   }
 }

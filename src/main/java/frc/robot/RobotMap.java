@@ -46,7 +46,7 @@ public class RobotMap {
 
         public static final double TOLERATED_TARGET_ERROR = 0.5;
 
-        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.5;
+        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.1;
     }
 
     /**
@@ -162,8 +162,12 @@ public class RobotMap {
         public static final double PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE = -1;
 
         //constant for rotation error acceptance
-        public static final double ROTATE_BOUND = 0.1;
+        public static final double ROTATE_BOUND = 0.05;
 
         public static final double FULL_TURN = 180;
+
+        public static final double STEP_ONE_TARGET = 60;
+        public static final double STEP_TWO_TARGET = 180;
+        public static final double STEP_THREE_TARGET = 10;
     }
 }

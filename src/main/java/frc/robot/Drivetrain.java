@@ -13,11 +13,15 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 //Import Motor controller
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import edu.wpi.first.wpilibj.Encoder;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 public class Drivetrain {
 
@@ -92,18 +96,24 @@ public class Drivetrain {
         //instantiating the gyro
         m_gyro = new AHRS(SPI.Port.kMXP);   
 
+        //configSensor();
+
         // Instantiate PID Controller
         m_PIDTurnController = new PIDController(RobotMap.DrivetrainConstants.TURN_GAINS.kP, RobotMap.DrivetrainConstants.TURN_GAINS.kI, RobotMap.DrivetrainConstants.TURN_GAINS.kD);
+
     }
 
     /**
      * zeroEncoders is a method to set the encoders to 0
      */
     public void zeroEncoders() {
-        ErrorCode errorLeft = m_leftDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
-        ErrorCode errorRight = m_rightDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+        //ErrorCode errorLeft = m_leftDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+        //ErrorCode errorRight = m_rightDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+
+        m_leftDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+        m_rightDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
         
-        System.out.println("Resetting encoders. Result: R[" + errorRight.toString() + "] L[" + errorLeft.toString() + "]");
+        //System.out.println("Resetting encoders. Result: R[" + errorRight.toString() + "] L[" + errorLeft.toString() + "]");
     
     }
 
@@ -148,6 +158,8 @@ public class Drivetrain {
     public void arcadeDrive(double forward, double turn){
         m_masterLeftMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
         m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, -turn);
+        m_slaveLeftMotor.follow(m_masterLeftMotor);
+        m_slaveRightMotor.follow(m_masterRightMotor);
 
         System.out.println("Arcade Drive: [" + forward + "][" + turn + "]");
     }
@@ -156,10 +168,19 @@ public class Drivetrain {
      * Initialization method for the drivetrain
      */
     public void init(){
+        m_masterRightMotor.setNeutralMode(NeutralMode.Brake);
+        m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
+        m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
+        m_slaveRightMotor.setNeutralMode(NeutralMode.Brake);
+        m_masterRightMotor.configFactoryDefault();
+        m_slaveRightMotor.configFactoryDefault();
+        m_masterLeftMotor.configFactoryDefault();
+        m_slaveLeftMotor.configFactoryDefault();
         zeroEncoders();
         shiftGear(Gear.kHighGear);
         m_masterRightMotor.setInverted(true);
-        m_slaveRightMotor.setInverted(true);
+        m_slaveRightMotor.setInverted(InvertType.FollowMaster);
+        m_slaveLeftMotor.setInverted(InvertType.FollowMaster);
         m_slaveLeftMotor.follow(m_masterLeftMotor);
         m_slaveRightMotor.follow(m_masterRightMotor);
     }
@@ -169,6 +190,7 @@ public class Drivetrain {
      */
     public double getRightDriveEncoderPosition(){
         return m_masterRightMotor.getSelectedSensorPosition();
+        //return m_rightDriveEncoder.getIntegratedSensorPosition();
     }
 
     /**
@@ -176,6 +198,13 @@ public class Drivetrain {
      */
     public double getLeftDriveEncoderPosition(){
         return m_masterLeftMotor.getSelectedSensorPosition();
+        //return m_leftDriveEncoder.getIntegratedSensorPosition();
+    }
+
+    public void configSensor(){
+        m_masterLeftMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, RobotMap.TIMEOUT_MS);
+        m_masterRightMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, RobotMap.TIMEOUT_MS);
+
     }
 
     /**

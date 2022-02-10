@@ -65,19 +65,16 @@ public class PilotController {
      */
     private void arcadeDriveCmd(){
         // triggerInput is for the velocity input forward and backwards
-        double triggerInput = triggerFilter.calculate(m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
+        double triggerInput = (m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis() * m_currentVelocityScalar);
         //double triggerInput = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
         // leftStickXInput is for our current turn input
-        double leftStickXInput = stickFilter.calculate(m_controller.getLeftX());
-        //double leftStickXInput = m_controller.getLeftX();
+        //double leftStickXInput = stickFilter.calculate(m_controller.getLeftX());
+        double leftStickXInput = (m_controller.getLeftX() * m_currentTurnScalar);
 
         // applies deadband method 
         leftStickXInput = adjustForDeadband(leftStickXInput);
 
-        // Multiplies triggerInput and currentVelocityScalar and sets triggerInput equal to product
-        triggerInput *= m_currentVelocityScalar;
-        // Multiplies triggerInput and currentTurnScalar and sets triggerInput equal to the product.
-        leftStickXInput *= m_currentTurnScalar;
+        triggerFilter.calculate(triggerInput);
 
         // passes in our variables from this method (calculations) into our arcade drive in drivetrain
         m_drivetrain.arcadeDrive(triggerInput, leftStickXInput);
