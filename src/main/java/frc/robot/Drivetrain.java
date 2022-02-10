@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 // This imports an enum that we will call later
@@ -21,7 +22,7 @@ import com.kauailabs.navx.frc.AHRS;
 public class Drivetrain {
 
     // Insert object motor controllers 2 left TalonFX and 2 right TalonFX
-
+    
     private WPI_TalonFX m_masterRightMotor;
     private WPI_TalonFX m_masterLeftMotor;
 
@@ -40,6 +41,8 @@ public class Drivetrain {
 
     // Declares the NavX gyro
     private AHRS m_gyro;
+
+    private PIDController m_PIDTurnController;
 
     // Arcade Drive method 1 trigger to give gas, 1 thumbstick to turn
 
@@ -88,6 +91,9 @@ public class Drivetrain {
 
         //instantiating the gyro
         m_gyro = new AHRS(SPI.Port.kMXP);   
+
+        // Instantiate PID Controller
+        m_PIDTurnController = new PIDController(RobotMap.DrivetrainConstants.TURN_GAINS.kP, RobotMap.DrivetrainConstants.TURN_GAINS.kI, RobotMap.DrivetrainConstants.TURN_GAINS.kD);
     }
 
     /**
@@ -178,4 +184,15 @@ public class Drivetrain {
     public float getGyro(){
         return m_gyro.getYaw();
     }
+    
+    /**
+     * This class configures the PID controller and allows it to recieve continuous input as well as setting the 
+     * integrator range to stop us from turning too far and it also sets the tolerance to determine in we need to stop or replan the input.
+     */
+    private void PIDConfig(){
+        m_PIDTurnController.enableContinuousInput(-RobotMap.DrivetrainConstants.PID_INPUT_RANGE, RobotMap.DrivetrainConstants.PID_INPUT_RANGE);
+        m_PIDTurnController.setIntegratorRange(-RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE, RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE);
+        m_PIDTurnController.setTolerance(RobotMap.DrivetrainConstants.TOLERANCE_ROTATE_CONTROLLER);
+    }
+
 }
