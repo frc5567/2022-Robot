@@ -21,6 +21,8 @@ public class PilotController {
     SlewRateLimiter triggerFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
     SlewRateLimiter stickFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
 
+    // Sysout counter
+    int m_sysOutCounter = 0;
     /**
      * Constuctor for the pilot controller
      */
@@ -75,6 +77,7 @@ public class PilotController {
         leftStickXInput = adjustForDeadband(leftStickXInput);
 
         triggerFilter.calculate(triggerInput);
+        stickFilter.calculate(leftStickXInput);
 
         // passes in our variables from this method (calculations) into our arcade drive in drivetrain
         m_drivetrain.arcadeDrive(triggerInput, leftStickXInput);
@@ -144,5 +147,13 @@ public class PilotController {
         turnToTarget();
         arcadeDriveCmd();
         controlGear();
+
+        double currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
+        double currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
+
+        if ((++m_sysOutCounter % 50) == 0){
+            System.out.println("Right Encoder Ticks: " + currentRightEncoderTicks);
+            System.out.println("Left Encoder Ticks: " + currentLeftEncoderTicks);
+        }
     }
 }
