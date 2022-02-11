@@ -21,16 +21,12 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   //added for testing
   private PilotController m_pilotController;
-<<<<<<< HEAD
-  private Auton m_auton;
-=======
   private CopilotController m_copilotController;
   private LimelightVision m_limelight;
   private Drivetrain m_drivetrain;
   private Auton m_auton;
   private Launcher m_launcher;
   private Intake m_intake;
->>>>>>> 841d5c26be33e6895755285a53dff7e2181e30b8
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -41,14 +37,9 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-<<<<<<< HEAD
-    m_pilotController = new PilotController();
-    m_auton = new Auton();
-=======
-    m_pilotController = new PilotController(m_drivetrain);
-    m_auton = new Auton(m_drivetrain, m_launcher, m_intake);
+    m_pilotController = new PilotController(m_drivetrain, m_limelight);
+    m_auton = new Auton(m_drivetrain, m_launcher, m_intake, m_limelight);
     m_limelight = new LimelightVision();
->>>>>>> 841d5c26be33e6895755285a53dff7e2181e30b8
   }
 
   /**
@@ -73,6 +64,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_auton.init();
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
@@ -81,6 +73,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    m_auton.periodic();
     switch (m_autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
@@ -117,6 +110,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_auton.periodic();
+    m_pilotController.periodic();
   }
 }

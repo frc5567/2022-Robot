@@ -9,12 +9,18 @@ import edu.wpi.first.wpilibj.SPI;
 
 // Import motor
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 //Import Motor controller
-import com.ctre.phoenix.motorcontrol.SensorCollection;
+import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
+import edu.wpi.first.wpilibj.Encoder;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 public class Drivetrain {
 
@@ -27,8 +33,8 @@ public class Drivetrain {
     private WPI_TalonFX m_slaveLeftMotor;
 
     // Declare variables for encoders
-    private SensorCollection m_leftDriveEncoder;
-    private SensorCollection m_rightDriveEncoder;
+    private TalonFXSensorCollection m_leftDriveEncoder;
+    private TalonFXSensorCollection m_rightDriveEncoder;
 
     // Pneumatic controller for gear box
     private DoubleSolenoid m_solenoid;
@@ -59,10 +65,7 @@ public class Drivetrain {
 
         public String toString(){
             return this.GearName;
-
-        }
-
-         
+        }         
     }
     
     /**
@@ -78,8 +81,8 @@ public class Drivetrain {
         m_slaveLeftMotor = new WPI_TalonFX(RobotMap.DrivetrainConstants.SLAVE_LEFT_FALCON_ID);
 
         // Instantiate Encoders
-        m_leftDriveEncoder = new SensorCollection (m_masterLeftMotor);
-        m_rightDriveEncoder = new SensorCollection (m_masterRightMotor); 
+        m_leftDriveEncoder = m_masterLeftMotor.getSensorCollection();
+        m_rightDriveEncoder = m_masterRightMotor.getSensorCollection(); 
 
         // Instantiate Solenoid
         m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.DrivetrainConstants.DOUBLESOLENOID_LOW_GEAR_PORT, RobotMap.DrivetrainConstants.DOUBLESOLENOID_HIGH_GEAR_PORT);
@@ -89,15 +92,22 @@ public class Drivetrain {
 
         //instantiating the gyro
         m_gyro = new AHRS(SPI.Port.kMXP);   
+
+        //configSensor();
     }
 
     /**
      * zeroEncoders is a method to set the encoders to 0
      */
     public void zeroEncoders() {
+        //ErrorCode errorLeft = m_leftDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+        //ErrorCode errorRight = m_rightDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+
+        m_leftDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+        m_rightDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+        
+        //System.out.println("Resetting encoders. Result: R[" + errorRight.toString() + "] L[" + errorLeft.toString() + "]");
     
-        m_leftDriveEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
-        m_rightDriveEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
     }
 
     /**
@@ -141,19 +151,31 @@ public class Drivetrain {
     public void arcadeDrive(double forward, double turn){
         m_masterLeftMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
         m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, -turn);
-
         m_slaveLeftMotor.follow(m_masterLeftMotor);
         m_slaveRightMotor.follow(m_masterRightMotor);
+
+        System.out.println("Arcade Drive: [" + forward + "][" + turn + "]");
     }
 
     /**
      * Initialization method for the drivetrain
      */
     public void init(){
+        m_masterRightMotor.setNeutralMode(NeutralMode.Brake);
+        m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
+        m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
+        m_slaveRightMotor.setNeutralMode(NeutralMode.Brake);
+        m_masterRightMotor.configFactoryDefault();
+        m_slaveRightMotor.configFactoryDefault();
+        m_masterLeftMotor.configFactoryDefault();
+        m_slaveLeftMotor.configFactoryDefault();
         zeroEncoders();
         shiftGear(Gear.kHighGear);
         m_masterRightMotor.setInverted(true);
-        m_slaveRightMotor.setInverted(true);
+        m_slaveRightMotor.setInverted(InvertType.FollowMaster);
+        m_slaveLeftMotor.setInverted(InvertType.FollowMaster);
+        m_slaveLeftMotor.follow(m_masterLeftMotor);
+        m_slaveRightMotor.follow(m_masterRightMotor);
     }
 
     /**
@@ -161,6 +183,7 @@ public class Drivetrain {
      */
     public double getRightDriveEncoderPosition(){
         return m_masterRightMotor.getSelectedSensorPosition();
+        //return m_rightDriveEncoder.getIntegratedSensorPosition();
     }
 
     /**
@@ -168,6 +191,13 @@ public class Drivetrain {
      */
     public double getLeftDriveEncoderPosition(){
         return m_masterLeftMotor.getSelectedSensorPosition();
+        //return m_leftDriveEncoder.getIntegratedSensorPosition();
+    }
+
+    public void configSensor(){
+        m_masterLeftMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, RobotMap.TIMEOUT_MS);
+        m_masterRightMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, RobotMap.TIMEOUT_MS);
+
     }
 
     /**

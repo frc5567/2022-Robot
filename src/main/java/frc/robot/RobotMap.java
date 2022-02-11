@@ -38,7 +38,7 @@ public class RobotMap {
 
         public static final double TOLERATED_TARGET_ERROR = 0.5;
 
-        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.5;
+        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.3;
     }
 
     /**
@@ -59,6 +59,7 @@ public class RobotMap {
         public static final int SLAVE_FLYWHEEL_FALCON_ID = 6;
         public static final int FEEDER_MOTOR_ID = 7;
         public static final int TURRET_MOTOR_ID = 8;
+        public static final int TRAJECTORY_MOTOR_ID = 9;
         
         //These are untested placesholder values until we know what speed we actually need
         public static final double IDLE_SPEED = 0.0;
@@ -78,7 +79,7 @@ public class RobotMap {
         public static final double TOLERATED_TRAJECTORY_ERROR = 1000;
 
         //TODO: Change to actual port number once we know what it is
-        public static final int LAUNCH_SENSOR_PORT = 8;
+        public static final int LAUNCH_SENSOR_PORT = 10;
     }
 
     /**
@@ -86,8 +87,8 @@ public class RobotMap {
      */
     public static class IntakeConstants{
         //constants for drivetrain motor IDs (on the CAN bus)
-        public static final int FRONT_ROLLER_MOTOR_ID = 9;
-        public static final int MAGAZINE_MOTOR_ID = 11;
+        public static final int FRONT_ROLLER_MOTOR_ID = 11;
+        public static final int MAGAZINE_MOTOR_ID = 12;
         //These are untested placesholder values until we know what speed we actually need
         public static final double FRONT_ROLLER_SPEED = 0.5;
         public static final double MAGAZINE_SPEED = 0.5;
@@ -101,7 +102,7 @@ public class RobotMap {
         public static final int DOUBLESOLENOID_EXTENDED_PORT = 1;
 
         //TODO: Change to actual port number once we know what it is
-        public static final int MAGAZINE_SENSOR_PORT = 7;
+        public static final int MAGAZINE_SENSOR_PORT = 9;
     }
     
     /**
@@ -114,14 +115,14 @@ public class RobotMap {
         public static final double CAMERA_DEGREES_FROM_GROUND = 45;
         // constant for the minimum speed for aiming at target
         //TODO tune the speed we move at
-        public static final double MINIMUM_SEEKING_TARGET_SPEED = 0.2;
+        public static final double MINIMUM_SEEKING_TARGET_SPEED = 0.15;
     }
 
     /**
      * Constants used in RobotShuffelbaard class (also used in Pilot controller when initial scalars are set)
      */
     public static class ShuffleboardConstants {
-        public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.6;
+        public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.5;
     }
 
 
@@ -130,8 +131,8 @@ public class RobotMap {
      */
     public static class ClimberConstants{
         //constants for motor IDs (on the CAN bus)
-        public static final int CLIMBER_MOTOR_ID = 12;
-        public static final int CLIMBER_WINCH_ID = 13;
+        public static final int CLIMBER_MOTOR_ID = 16;
+        public static final int CLIMBER_WINCH_ID = 17;
 
         //constants for motor speeds 
         public static final double CLIMBER_MOTOR_SPEED = 0.8;
@@ -144,17 +145,21 @@ public class RobotMap {
      */
     public static class AutonConstants{
         //contant for encoder ticks to inches (pulled from 2021, may be subject to change)
-        public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (18.85 / 15);
-        public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (18.85 / 7.92);
+        public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (21.125 / 15);
+        public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (21.125 / 7.92);
 
-        public static final double PLACEHOLDER_VALUE_SPEED = 0.5;
+        public static final double PLACEHOLDER_VALUE_SPEED = 0.2;
         public static final double PLACEHOLDER_VALUE_DISTANCE = 1;
         public static final double PLACEHOLDER_VALUE_ANGLE_CLOCKWISE = 1;
         public static final double PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE = -1;
 
         //constant for rotation error acceptance
-        public static final double ROTATE_BOUND = 0.1;
+        public static final double ROTATE_BOUND = 0.03;
 
         public static final double FULL_TURN = 180;
+
+        public static final double STEP_ONE_TARGET = 60;
+        public static final double STEP_TWO_TARGET = 180;
+        public static final double STEP_THREE_TARGET = 10;
     }
 }
