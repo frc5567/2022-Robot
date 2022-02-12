@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Drivetrain.Gear;
 import frc.robot.Intake.IntakeState;
 
@@ -51,7 +52,8 @@ public class Auton{
     double currentGyro;
     boolean canSeeTarget = false;
     double visionAngleToTarget;
-    boolean limelightOff;
+    boolean m_limelightOff;
+    double m_xToTarget;
 
     /**
      * constructor for auton
@@ -78,10 +80,10 @@ public class Auton{
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kLeftWall;
         m_drivetrain.shiftGear(Gear.kLowGear);
-        System.out.println("left encoder " + m_drivetrain.getLeftDriveEncoderPosition());
-        System.out.println(" Right encoder " + m_drivetrain.getRightDriveEncoderPosition());
+        // System.out.println("left encoder " + m_drivetrain.getLeftDriveEncoderPosition());
+        // System.out.println(" Right encoder " + m_drivetrain.getRightDriveEncoderPosition());
         m_limelightVision.limelightInit();
-        limelightOff = true;
+        m_limelightOff = true;
     }
 
     /**
@@ -93,6 +95,7 @@ public class Auton{
             m_drivetrain.zeroEncoders();
             m_step = AutonStep.kStep1;
             System.out.println("STARTING AUTON");
+            m_limelightOff = true;
             autonStartFlag = false;
         }
         currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
@@ -101,16 +104,16 @@ public class Auton{
 //        System.out.println("Left Encoder Ticks: " + currentLeftEncoderTicks);
         //m_drivetrain.zeroEncoders();
         if (m_path == AutonPath.kLeftWall){
-            //System.out.println("Starting Auton. Path: " + m_path);
-            //System.out.println("Starting Auton. Path: Left Wall");
+            // System.out.println("Starting Auton. Path: " + m_path);
+            // System.out.println("Starting Auton. Path: Left Wall");
             if(m_step == AutonStep.kStep1){
-                //System.out.println("Current Step: " + m_step);
-                //System.out.println("Current Step: 1");
+                // System.out.println("Current Step: " + m_step);
+                // System.out.println("Current Step: 1");
                 targetEncoderTicks = RobotMap.AutonConstants.STEP_ONE_TARGET * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
                 
-                if(driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.STEP_ONE_TARGET)){
+                if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.STEP_ONE_TARGET)){
                     m_drivetrain.arcadeDrive(0,0);
-                    m_step = AutonStep.kStop;
+                    m_step = AutonStep.kStep2;
                     m_drivetrain.zeroEncoders();
                 }
                 else{
@@ -118,39 +121,52 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStep2){
-                System.out.println("Current Step: " + m_step);
-                System.out.println("Current Step: 2");
+                // System.out.println("Current Step: " + m_step);
+                // System.out.println("Current Step: 2");
                 currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
                 currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
                 targetGyro = -RobotMap.AutonConstants.STEP_TWO_TARGET * (1 - RobotMap.AutonConstants.ROTATE_BOUND);
                 currentGyro = m_drivetrain.getGyro();
-                if(currentGyro < (targetGyro * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
+                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.STEP_TWO_TARGET)){
                     m_drivetrain.arcadeDrive(0,0);
-                    m_step = AutonStep.kStop;
+                    m_step = AutonStep.kStep3;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
                 }
-                turnToAngle(-RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.STEP_TWO_TARGET);
-                
+                else{
+                    return;
+                }
             }
             else if(m_step == AutonStep.kStep3){
-                if(limelightOff){
+                if(m_limelightOff){
+                    System.out.println("Turning on LEDS");
+                    //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
                     m_limelightVision.enableLEDs();
-                    limelightOff = false;
+                    m_limelightOff = false;
                 }
-                System.out.println("Current Step: " + m_step);
-                System.out.println("Current Step: 3");
-                currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
-                currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-                visionAngleToTarget = m_limelightVision.xAngleToTarget();
-                targetGyro = -visionAngleToTarget * (1 - RobotMap.AutonConstants.ROTATE_BOUND);
-                currentGyro = m_drivetrain.getGyro();
-                if(currentGyro > Math.abs(targetGyro * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
-                    m_drivetrain.arcadeDrive(0,0);
-                    m_step = AutonStep.kStop;
-                    m_drivetrain.zeroEncoders();
+                m_xToTarget = m_limelightVision.xAngleToTarget();
+                System.out.println(m_xToTarget);
+                if(m_limelightVision.seeTarget()){
+                    if(m_xToTarget < RobotMap.TOLERATED_TARGET_ERROR && m_xToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
+                        System.out.println("On Target");
+                        m_drivetrain.arcadeDrive(0,0);
+                         m_drivetrain.zeroEncoders();
+                         m_limelightVision.disableLEDs();
+                         m_limelightOff = true;
+                         m_step = AutonStep.kStop;
+                    }
+                    else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
+                        System.out.println("Not On Target");
+                        m_drivetrain.arcadeDrive(0, RobotMap.AutonConstants.TARGETING_SPEED);
+                    }
+                    else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
+                        System.out.println("Not On Target");
+                        m_drivetrain.arcadeDrive(0, -RobotMap.AutonConstants.TARGETING_SPEED);
+                    }
                 }
-                turnToAngle(-RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, visionAngleToTarget);
+                else{
+                    System.out.println("No Target Detected");
+                }
             }
             else if(m_step == AutonStep.kStep4){
 
@@ -168,7 +184,7 @@ public class Auton{
             else if(m_step == AutonStep.kStep5){
                 System.out.println("Current Step: " + m_step);
                 System.out.println("Current Step: 5");
-                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.FULL_TURN);
+                turnToAngle(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.FULL_TURN);
                 m_step = AutonStep.kStep6;
             }
             else if(m_step == AutonStep.kStep6){
@@ -188,12 +204,12 @@ public class Auton{
         else if (m_path == AutonPath.kRightWall){
             if(m_step == AutonStep.kStep1){
                 System.out.println("Current Step: " + m_step);
-                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
                 m_step = AutonStep.kStep2;
             }
             else if(m_step == AutonStep.kStep2){
                 System.out.println("Current Step: " + m_step);
-                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE);
+                turnToAngle(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE);
                 m_step = AutonStep.kStep3;
             }
             else if(m_step == AutonStep.kStep3){
@@ -213,12 +229,12 @@ public class Auton{
             }
             else if(m_step == AutonStep.kStep5){
                 System.out.println("Current Step: " + m_step);
-                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
                 m_step = AutonStep.kStep6;
             }
             else if(m_step == AutonStep.kStep6){
                 System.out.println("Current Step: " + m_step);
-                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.FULL_TURN);
+                turnToAngle(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.FULL_TURN);
                 m_step = AutonStep.kStep7;
             }
             else if(m_step == AutonStep.kStep7){
@@ -239,12 +255,12 @@ public class Auton{
             //drive forward a much smaller amount than other paths
             if(m_step == AutonStep.kStep1){
                 System.out.println("Current Step: " + m_step);
-                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
                 m_step = AutonStep.kStep2;
             }
             else if(m_step == AutonStep.kStep2){
                 System.out.println("Current Step: " + m_step);
-                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_ANGLE_CLOCKWISE);
+                turnToAngle(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_ANGLE_CLOCKWISE);
                 m_step = AutonStep.kStep3;
             }
             else if(m_step == AutonStep.kStep3){
@@ -264,12 +280,12 @@ public class Auton{
             }
             else if(m_step == AutonStep.kStep5){
                 System.out.println("Current Step: " + m_step);
-                driveToTarget(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
+                driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.PLACEHOLDER_VALUE_DISTANCE);
                 m_step = AutonStep.kStep6;
             }
             else if(m_step == AutonStep.kStep6){
                 System.out.println("Current Step: " + m_step);
-                turnToAngle(RobotMap.AutonConstants.PLACEHOLDER_VALUE_SPEED, RobotMap.AutonConstants.FULL_TURN);
+                turnToAngle(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.FULL_TURN);
                 m_step = AutonStep.kStep7;
             }
             else if(m_step == AutonStep.kStep7){

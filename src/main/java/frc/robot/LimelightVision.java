@@ -44,7 +44,7 @@ public class LimelightVision {
     
     //Constructor for limelight
     public LimelightVision (){
-        m_limelightTable = NetworkTableInstance.getDefault().getTable("Limelight");
+        m_limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
         // assigns the variable as all the possible entries
         m_tableXOffset = m_limelightTable.getEntry("tx");
@@ -64,8 +64,8 @@ public class LimelightVision {
     }
 
     public void limelightInit(){
-        disableLEDs();
-        setPipeline(Pipeline.kStandard);
+        //disableLEDs();
+        //setPipeline(Pipeline.kStandard);
     }
     /**
      * Sets pipeline number (0-9 value)
@@ -80,14 +80,21 @@ public class LimelightVision {
      * Forces the LEDs to turn off on the limelight
      */
     public void disableLEDs() {
-        m_limelightTable.getEntry("ledMode").setNumber(1d);
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+        NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
+        double value = (double)ledMode.getNumber(0);
+        System.out.println(value);
     }
 
     /**
-     * Restores the LED to pipeline control
+     * Force the LED to turn on
      */
     public void enableLEDs() {
-        m_limelightTable.getEntry("ledMode").setNumber(3d);
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+        NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
+        double value = (double)ledMode.getNumber(0);
+        System.out.println(value);
+
     }
 
 
@@ -96,8 +103,13 @@ public class LimelightVision {
      * @return true if we can see the target, false if we cannot
      */
     public boolean seeTarget(){
-        return(m_limelightTable.getEntry("tv").getBoolean(false));
-    }
+        boolean returnVal = false;
+        double retFromTable = (double)m_limelightTable.getEntry("tv").getNumber(0);
+        if (retFromTable == 1){
+            returnVal = true;
+        }
+        return returnVal;
+        }
 
     /**
      * Tells how far off to the left or right the target
@@ -105,7 +117,7 @@ public class LimelightVision {
      */
 
     public double xAngleToTarget(){
-        return(m_xAngleOffset);
+        return(NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0));
     }
 
     /**
@@ -185,11 +197,11 @@ public class LimelightVision {
      */
     public void periodic(){
         // Updates the x angle offset from the target
-        m_xAngleOffset = m_tableXOffset.getDouble(0.0);
+        m_tableXOffset = m_limelightTable.getEntry("tx");
         // Updates the y angle offset from the target
-        m_yAngleOffset = m_tableYOffset.getDouble(0.0);
+        m_tableYOffset = m_limelightTable.getEntry("ty");
         // Updates the percentage of the screen that the target takes up
-        m_areaOfScreen = m_tableScreenArea.getDouble(0.0);
+        m_tableScreenArea = m_limelightTable.getEntry("ta"); 
 
         // Puts the x angle offset value on the shuffleboard
         SmartDashboard.putNumber("LimelightX Offset", m_xAngleOffset);

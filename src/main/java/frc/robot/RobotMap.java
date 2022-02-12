@@ -5,6 +5,9 @@ public class RobotMap {
     //timeout in milliseconds for the CTRE config methods
     public static final int TIMEOUT_MS = 30;
 
+    //constant for alotted error for turning to a target
+    public static final double TOLERATED_TARGET_ERROR = 0.3;
+
     /**
      * constant for PCM location on the CAN bus
      */
@@ -43,8 +46,6 @@ public class RobotMap {
         public static final int XBOX_CONTROLLER_PORT = 0;
 
         public static final double STICK_DEADBAND = 0.09;
-
-        public static final double TOLERATED_TARGET_ERROR = 0.5;
 
         public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.3;
     }
@@ -156,7 +157,9 @@ public class RobotMap {
         public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (21.125 / 15);
         public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (21.125 / 7.92);
 
-        public static final double PLACEHOLDER_VALUE_SPEED = 0.2;
+        public static final double DRIVE_SPEED = 0.2;
+        public static final double TURN_SPEED = 0.2;
+        public static final double TARGETING_SPEED = 0.1;
         public static final double PLACEHOLDER_VALUE_DISTANCE = 1;
         public static final double PLACEHOLDER_VALUE_ANGLE_CLOCKWISE = 1;
         public static final double PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE = -1;
