@@ -5,6 +5,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 public class GamePad extends GenericHID {
 
 	/**
+	 * Initialization method for GamePad
+	 */
+	public void initGamePad(){
+	}
+
+	/**
 	 * Constructor, used for calling super constructor
 	 * @param port Port the gamepad is connected to
 	 */

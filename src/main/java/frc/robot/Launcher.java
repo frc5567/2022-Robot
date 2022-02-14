@@ -29,6 +29,13 @@ public class Launcher{
     private DigitalInput m_launchSensor;
 
     /**
+     * Initialization method for Launcher
+     */
+    public void initLauncher(){
+        zeroEncoders();
+    }
+
+    /**
      * Constructor for Launcher objects
      */
     public Launcher(LimelightVision limelightVision){
