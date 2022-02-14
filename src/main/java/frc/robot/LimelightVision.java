@@ -56,6 +56,11 @@ public class LimelightVision {
         SmartDashboard.putNumber("LimelightArea Percentage", m_areaOfScreen);
 
     }
+
+    public void limelightInit(){
+        disableLEDs();
+        setPipeline(Pipeline.kStandard);
+    }
     /**
      * Sets pipeline number (0-9 value)
      * @param Pipeline Pipeline type to get ID number from
@@ -69,14 +74,14 @@ public class LimelightVision {
      * Forces the LEDs to turn off on the limelight
      */
     public void disableLEDs() {
-        m_limelightTable.getEntry("ledMode").setDouble(1d);
+        m_limelightTable.getEntry("ledMode").setNumber(1d);
     }
 
     /**
      * Restores the LED to pipeline control
      */
     public void enableLEDs() {
-        m_limelightTable.getEntry("ledMode").setDouble(0d);
+        m_limelightTable.getEntry("ledMode").setNumber(3d);
     }
 
 

@@ -13,11 +13,15 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 //Import Motor controller
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import edu.wpi.first.wpilibj.Encoder;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 public class Drivetrain {
 
@@ -102,10 +106,13 @@ public class Drivetrain {
      * zeroEncoders is a method to set the encoders to 0
      */
     public void zeroEncoders() {
-        ErrorCode errorLeft = m_leftDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
-        ErrorCode errorRight = m_rightDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+        //ErrorCode errorLeft = m_leftDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+        //ErrorCode errorRight = m_rightDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+
+        m_leftDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
+        m_rightDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
         
-        System.out.println("Resetting encoders. Result: R[" + errorRight.toString() + "] L[" + errorLeft.toString() + "]");
+        //System.out.println("Resetting encoders. Result: R[" + errorRight.toString() + "] L[" + errorLeft.toString() + "]");
     
     }
 
@@ -150,6 +157,8 @@ public class Drivetrain {
     public void arcadeDrive(double forward, double turn){
         m_masterLeftMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
         m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, -turn);
+        m_slaveLeftMotor.follow(m_masterLeftMotor);
+        m_slaveRightMotor.follow(m_masterRightMotor);
 
         System.out.println("Arcade Drive: [" + forward + "][" + turn + "]");
     }
@@ -158,12 +167,18 @@ public class Drivetrain {
      * Initialization method for the drivetrain
      */
     public void init(){
+        m_masterRightMotor.setNeutralMode(NeutralMode.Brake);
+        m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
+        m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
+        m_slaveRightMotor.setNeutralMode(NeutralMode.Brake);
+        m_masterRightMotor.configFactoryDefault();
+        m_slaveRightMotor.configFactoryDefault();
+        m_masterLeftMotor.configFactoryDefault();
+        m_slaveLeftMotor.configFactoryDefault();
         zeroEncoders();
         shiftGear(Gear.kHighGear);
         m_masterRightMotor.setInverted(true);
-        m_slaveRightMotor.setInverted(true);
-        m_slaveLeftMotor.follow(m_masterLeftMotor);
-        m_slaveRightMotor.follow(m_masterRightMotor);
+        m_slaveRightMotor.setInverted(InvertType.FollowMaster);
     }
 
     /**
@@ -171,6 +186,7 @@ public class Drivetrain {
      */
     public double getRightDriveEncoderPosition(){
         return m_masterRightMotor.getSelectedSensorPosition();
+        //return m_rightDriveEncoder.getIntegratedSensorPosition();
     }
 
     /**
@@ -178,6 +194,7 @@ public class Drivetrain {
      */
     public double getLeftDriveEncoderPosition(){
         return m_masterLeftMotor.getSelectedSensorPosition();
+        //return m_leftDriveEncoder.getIntegratedSensorPosition();
     }
 
     /**
@@ -192,10 +209,12 @@ public class Drivetrain {
      * integrator range to stop us from turning too far and it also sets the tolerance to determine in we need to stop or replan the input.
      */
     private void turnPIDConfig(){
+
         m_PIDTurnController.enableContinuousInput(-RobotMap.DrivetrainConstants.PID_INPUT_RANGE, RobotMap.DrivetrainConstants.PID_INPUT_RANGE);
         m_PIDTurnController.setIntegratorRange(-RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE, RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE);
         m_PIDTurnController.setTolerance(RobotMap.DrivetrainConstants.TOLERANCE_ROTATE_CONTROLLER);
     }
+
 
     /**
      * This method returns the output of the PID controller scaled back to match our expected drivetrain input range
@@ -205,5 +224,4 @@ public class Drivetrain {
     public double scaledTurnPIDOutput (double currentAngle){
         return m_PIDTurnController.calculate(currentAngle) / RobotMap.DrivetrainConstants.DRIVE_PID_OUTPUT_SCALAR;
     }
-
 }
