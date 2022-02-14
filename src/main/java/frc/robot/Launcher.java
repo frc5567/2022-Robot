@@ -198,18 +198,20 @@ public class Launcher{
 
     /**
      * Sets the speed of the launcher flywheel motor
-     * @param speed desired speed
+     * This method is public for manual turret testing
+     * @param speed desired speed 
      */
-    private void setFlywheelSpeed(double speed){
+    public void setFlywheelSpeed(double speed){
         m_masterFlywheelMotor.set(ControlMode.PercentOutput, speed);
         m_slaveFlywheelMotor.follow(m_masterFlywheelMotor);
     }
 
     /**
      * Sets the speed of the motor that moves the turret
-     * @param speed desired speed
+     * This is method is public for manual turret testing
+     * @param speed desired speed (Positive for one direction, negative for the other)
      */
-    private void setTurretSpeed(double speed){
+    public void setTurretSpeed(double speed){
         m_turretMotor.set(ControlMode.PercentOutput, speed);
     }
 
@@ -233,5 +235,15 @@ public class Launcher{
      */
     public boolean checkLaunchSensor(){
         return m_launchSensor.get();
+    }
+
+    //ALL METHODS BEYOND THIS POINT WERE CREATED FOR MANUAL TURRET/LAUNCHER TESTING
+
+    /**
+     * Allows the turret to be controlled manually
+     * @param speed Desired speed of the turret (Positive for one direction, negative for the other)
+     */
+    public void manualTurretControl(double speed){
+
     }
 }

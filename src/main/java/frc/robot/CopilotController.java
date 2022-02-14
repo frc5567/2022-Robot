@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Intake.IntakeState;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class CopilotController {
     //declarations
@@ -9,6 +10,11 @@ public class CopilotController {
     private Intake m_intake;
     private Climber m_climber;
     private LimelightVision m_limelightVision;
+    private RobotShuffleboard m_shuffleboard;
+    //for testing until we have a real gamepad
+    private XboxController m_controller;
+    
+    private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
 
     /**
      * constructor for copilot controller- instantiates all of the systems that we interact with in this class.
@@ -20,6 +26,8 @@ public class CopilotController {
         m_climber = climber;
         
         m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
+
+        m_shuffleboard.drivetrainShuffleboardConfig();
     }
 
     /**
@@ -28,6 +36,7 @@ public class CopilotController {
      */
     public void initCopilot(){
         m_intake.init();
+        m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
     }
 
     /**
@@ -37,6 +46,7 @@ public class CopilotController {
         controlClimber();
         controlIntake();
         controlLauncher();
+        manualLauncherCmd();
     }
 
     /**
@@ -69,6 +79,19 @@ public class CopilotController {
         //uses one button to aim and rev
         if (m_gamePad.getRevPressed()){
             m_launcher.launch();
+        }
+    }
+
+    private void manualLauncherCmd(){
+        if(m_controller.getLeftBumperPressed()){
+            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
+        }
+        else if(m_controller.getRightBumperPressed()){
+            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
+        }
+
+        if(m_controller.getAButtonPressed()){
+            m_launcher.setFlywheelSpeed(m_currentFlywheelVelocity);
         }
     }
 

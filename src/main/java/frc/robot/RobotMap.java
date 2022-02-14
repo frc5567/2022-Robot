@@ -134,6 +134,7 @@ public class RobotMap {
      */
     public static class ShuffleboardConstants {
         public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.5;
+        public static final double FLYWHEEL_DEFAULT_VELOCITY = 0.5;
     }
 
 
