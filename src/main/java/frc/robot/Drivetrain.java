@@ -142,10 +142,10 @@ public class Drivetrain {
         m_gear = gear;
         
         if (m_gear == Gear.kLowGear) {
-            setPistons(Value.kForward);
+            setPistons(Value.kReverse);
         }
         else if (m_gear == Gear.kHighGear) {
-            setPistons(Value.kReverse);
+            setPistons(Value.kForward);
         }
     }
 
@@ -160,7 +160,7 @@ public class Drivetrain {
         m_slaveLeftMotor.follow(m_masterLeftMotor);
         m_slaveRightMotor.follow(m_masterRightMotor);
 
-        System.out.println("Arcade Drive: [" + forward + "][" + turn + "]");
+        //System.out.println("Arcade Drive: [" + forward + "][" + turn + "]");
     }
 
     /**
@@ -176,7 +176,7 @@ public class Drivetrain {
         m_masterLeftMotor.configFactoryDefault();
         m_slaveLeftMotor.configFactoryDefault();
         zeroEncoders();
-        shiftGear(Gear.kHighGear);
+        shiftGear(Gear.kLowGear);
         m_masterRightMotor.setInverted(true);
         m_slaveRightMotor.setInverted(InvertType.FollowMaster);
     }

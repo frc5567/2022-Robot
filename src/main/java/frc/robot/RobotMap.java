@@ -5,6 +5,9 @@ public class RobotMap {
     //timeout in milliseconds for the CTRE config methods
     public static final int TIMEOUT_MS = 30;
 
+    //constant for alotted error for turning to a target
+    public static final double TOLERATED_TARGET_ERROR = 0.3;
+
     /**
      * constant for PCM location on the CAN bus
      */
@@ -46,9 +49,7 @@ public class RobotMap {
 
         public static final double STICK_DEADBAND = 0.09;
 
-        public static final double TOLERATED_TARGET_ERROR = 0.5;
-
-        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.1;
+        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.3;
     }
 
     /**
@@ -125,14 +126,14 @@ public class RobotMap {
         public static final double CAMERA_DEGREES_FROM_GROUND = 45;
         // constant for the minimum speed for aiming at target
         //TODO tune the speed we move at
-        public static final double MINIMUM_SEEKING_TARGET_SPEED = 0.2;
+        public static final double MINIMUM_SEEKING_TARGET_SPEED = 0.15;
     }
 
     /**
      * Constants used in RobotShuffelbaard class (also used in Pilot controller when initial scalars are set)
      */
     public static class ShuffleboardConstants {
-        public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.6;
+        public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.5;
     }
 
 
@@ -155,16 +156,18 @@ public class RobotMap {
      */
     public static class AutonConstants{
         //contant for encoder ticks to inches (pulled from 2021, may be subject to change)
-        public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 1024 / (18.85 / 15);
-        public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 1024 / (18.85 / 7.92);
+        public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (21.125 / 15);
+        public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (21.125 / 7.92);
 
-        public static final double PLACEHOLDER_VALUE_SPEED = 0.2;
+        public static final double DRIVE_SPEED = 0.2;
+        public static final double TURN_SPEED = 0.2;
+        public static final double TARGETING_SPEED = 0.1;
         public static final double PLACEHOLDER_VALUE_DISTANCE = 1;
         public static final double PLACEHOLDER_VALUE_ANGLE_CLOCKWISE = 1;
         public static final double PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE = -1;
 
         //constant for rotation error acceptance
-        public static final double ROTATE_BOUND = 0.05;
+        public static final double ROTATE_BOUND = 0.03;
 
         public static final double FULL_TURN = 180;
 

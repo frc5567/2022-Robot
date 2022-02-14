@@ -5,6 +5,10 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 //Drivetrain import
 import frc.robot.Drivetrain.Gear;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 public class PilotController {
     private LimelightVision m_limelightVision;
 
@@ -21,6 +25,8 @@ public class PilotController {
     SlewRateLimiter triggerFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
     SlewRateLimiter stickFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
 
+    // Sysout counter
+    int m_sysOutCounter = 0;
     /**
      * Constuctor for the pilot controller
      */
@@ -75,6 +81,7 @@ public class PilotController {
         leftStickXInput = adjustForDeadband(leftStickXInput);
 
         triggerFilter.calculate(triggerInput);
+        stickFilter.calculate(leftStickXInput);
 
         // passes in our variables from this method (calculations) into our arcade drive in drivetrain
         m_drivetrain.arcadeDrive(triggerInput, leftStickXInput);
@@ -111,7 +118,7 @@ public class PilotController {
             // checks if any part of the target is visible
             if (m_limelightVision.seeTarget() == true){
                 // if target is outside of acceptable offset values, robot moves to aim at the target
-                if (m_limelightVision.xAngleToTarget() < RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelightVision.xAngleToTarget() > -RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelightVision.yAngleToTarget() < RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR && m_limelightVision.yAngleToTarget() > -RobotMap.PilotControllerConstants.TOLERATED_TARGET_ERROR){
+                if (m_limelightVision.xAngleToTarget() < RobotMap.TOLERATED_TARGET_ERROR && m_limelightVision.xAngleToTarget() > -RobotMap.TOLERATED_TARGET_ERROR && m_limelightVision.yAngleToTarget() < RobotMap.TOLERATED_TARGET_ERROR && m_limelightVision.yAngleToTarget() > -RobotMap.TOLERATED_TARGET_ERROR){
                     m_drivetrain.arcadeDrive(0, 0);
                     // prints to let drivers know we are On Target
                     System.out.print("On Target");
@@ -131,6 +138,27 @@ public class PilotController {
     }
 
     /**
+     * Manual limelight activation for testing
+     */
+    public void manualLimelightCmd(){
+        if(m_controller.getAButtonPressed()){
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+            System.out.println("A Button Pressed, Limelight on");
+            NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
+            double value = (double)ledMode.getNumber(0);
+            System.out.println(value);
+
+        }
+        else if(m_controller.getBButtonPressed()){
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+            System.out.println("B Button Pressed, Limelight off");
+            NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
+            double value = (double)ledMode.getNumber(0);
+            System.out.println(value);
+        }
+    }
+
+    /**
      * Initialization method for the pilot controller
      */
     public void init(){
@@ -144,5 +172,14 @@ public class PilotController {
         turnToTarget();
         arcadeDriveCmd();
         controlGear();
+        manualLimelightCmd();
+
+        double currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
+        double currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
+
+        if ((++m_sysOutCounter % 50) == 0){
+            System.out.println("Right Encoder Ticks: " + currentRightEncoderTicks);
+            System.out.println("Left Encoder Ticks: " + currentLeftEncoderTicks);
+        }
     }
 }
