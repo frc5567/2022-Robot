@@ -96,8 +96,6 @@ public class Drivetrain {
         //instantiating the gyro
         m_gyro = new AHRS(SPI.Port.kMXP);   
 
-        //configSensor();
-
         // Instantiate PID Controller
         m_PIDTurnController = new PIDController(RobotMap.DrivetrainConstants.TURN_GAINS.kP, RobotMap.DrivetrainConstants.TURN_GAINS.kI, RobotMap.DrivetrainConstants.TURN_GAINS.kD);
 
@@ -180,9 +178,6 @@ public class Drivetrain {
         shiftGear(Gear.kHighGear);
         m_masterRightMotor.setInverted(true);
         m_slaveRightMotor.setInverted(InvertType.FollowMaster);
-        m_slaveLeftMotor.setInverted(InvertType.FollowMaster);
-        m_slaveLeftMotor.follow(m_masterLeftMotor);
-        m_slaveRightMotor.follow(m_masterRightMotor);
     }
 
     /**
@@ -199,12 +194,6 @@ public class Drivetrain {
     public double getLeftDriveEncoderPosition(){
         return m_masterLeftMotor.getSelectedSensorPosition();
         //return m_leftDriveEncoder.getIntegratedSensorPosition();
-    }
-
-    public void configSensor(){
-        m_masterLeftMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, RobotMap.TIMEOUT_MS);
-        m_masterRightMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, RobotMap.TIMEOUT_MS);
-
     }
 
     /**
