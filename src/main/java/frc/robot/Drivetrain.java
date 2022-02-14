@@ -96,11 +96,10 @@ public class Drivetrain {
         //instantiating the gyro
         m_gyro = new AHRS(SPI.Port.kMXP);   
 
-        //configSensor();
-
         // Instantiate PID Controller
         m_PIDTurnController = new PIDController(RobotMap.DrivetrainConstants.TURN_GAINS.kP, RobotMap.DrivetrainConstants.TURN_GAINS.kI, RobotMap.DrivetrainConstants.TURN_GAINS.kD);
 
+        turnPIDConfig();
     }
 
     /**
@@ -180,9 +179,6 @@ public class Drivetrain {
         shiftGear(Gear.kLowGear);
         m_masterRightMotor.setInverted(true);
         m_slaveRightMotor.setInverted(InvertType.FollowMaster);
-        m_slaveLeftMotor.setInverted(InvertType.FollowMaster);
-        m_slaveLeftMotor.follow(m_masterLeftMotor);
-        m_slaveRightMotor.follow(m_masterRightMotor);
     }
 
     /**
@@ -201,12 +197,6 @@ public class Drivetrain {
         //return m_leftDriveEncoder.getIntegratedSensorPosition();
     }
 
-    public void configSensor(){
-        m_masterLeftMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, RobotMap.TIMEOUT_MS);
-        m_masterRightMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, RobotMap.TIMEOUT_MS);
-
-    }
-
     /**
      * @return the angle of the robot in degrees
      */
@@ -218,10 +208,20 @@ public class Drivetrain {
      * This class configures the PID controller and allows it to recieve continuous input as well as setting the 
      * integrator range to stop us from turning too far and it also sets the tolerance to determine in we need to stop or replan the input.
      */
-    private void PIDConfig(){
+    private void turnPIDConfig(){
+
         m_PIDTurnController.enableContinuousInput(-RobotMap.DrivetrainConstants.PID_INPUT_RANGE, RobotMap.DrivetrainConstants.PID_INPUT_RANGE);
         m_PIDTurnController.setIntegratorRange(-RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE, RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE);
         m_PIDTurnController.setTolerance(RobotMap.DrivetrainConstants.TOLERANCE_ROTATE_CONTROLLER);
     }
 
+
+    /**
+     * This method returns the output of the PID controller scaled back to match our expected drivetrain input range
+     * @param currentAngle
+     * @return
+     */
+    public double scaledTurnPIDOutput (double currentAngle){
+        return m_PIDTurnController.calculate(currentAngle) / RobotMap.DrivetrainConstants.DRIVE_PID_OUTPUT_SCALAR;
+    }
 }

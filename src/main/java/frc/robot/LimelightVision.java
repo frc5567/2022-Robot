@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 
@@ -30,31 +29,22 @@ public class LimelightVision {
     NetworkTable m_limelightTable;
 
     // Horizontal offset from Crosshair to target (LL1: -27 to 27 degrees; LL2 -29.8 to 29.8 degrees)
-    NetworkTableEntry m_tableXOffset;
+    double m_xAngleOffset;
 
     // Vertical offset from crosshair to target (LL1: -20.5 to 20.5 degrees; LL2: -24.85 to 24.85 degrees)
-    NetworkTableEntry m_tableYOffset;
+    double m_yAngleOffset;
 
     // Target Area (0% to 100% of image)
-    NetworkTableEntry m_tableScreenArea;
-
-    double m_xAngleOffset;
-    double m_yAngleOffset;
     double m_areaOfScreen;
     
     //Constructor for limelight
     public LimelightVision (){
         m_limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
-        // assigns the variable as all the possible entries
-        m_tableXOffset = m_limelightTable.getEntry("tx");
-        m_tableYOffset = m_limelightTable.getEntry("ty");
-        m_tableScreenArea = m_limelightTable.getEntry("ta"); 
-
-        // gets the offset values for x and y direction and the area of the image that is within the camera's frame
-        m_xAngleOffset = m_tableXOffset.getDouble(0.0);
-        m_yAngleOffset = m_tableYOffset.getDouble(0.0);
-        m_areaOfScreen = m_tableScreenArea.getDouble(0.0);
+        // assigns and gets the variable for each entry
+        m_xAngleOffset = m_limelightTable.getEntry("tx").getDouble(0.0);
+        m_yAngleOffset = m_limelightTable.getEntry("ty").getDouble(0.0);
+        m_areaOfScreen = m_limelightTable.getEntry("ta").getDouble(0.0); 
 
         // Creates/assigns the offset and area variables onto the dashboard table
         SmartDashboard.putNumber("LimelightX Offset", m_xAngleOffset);
@@ -64,13 +54,12 @@ public class LimelightVision {
     }
 
     public void limelightInit(){
-        //disableLEDs();
-        //setPipeline(Pipeline.kStandard);
+        disableLEDs();
+        setPipeline(Pipeline.kStandard);
     }
     /**
      * Sets pipeline number (0-9 value)
      * @param Pipeline Pipeline type to get ID number from
-
      */
     public static void setPipeline(Pipeline pipeline) {
         NetworkTableInstance.getDefault().getEntry("pipeline").setNumber(pipeline.getID());
@@ -81,9 +70,9 @@ public class LimelightVision {
      */
     public void disableLEDs() {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
-        NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
-        double value = (double)ledMode.getNumber(0);
-        System.out.println(value);
+        //NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
+        //double value = (double)ledMode.getNumber(0);
+        //System.out.println(value);
     }
 
     /**
@@ -91,10 +80,9 @@ public class LimelightVision {
      */
     public void enableLEDs() {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
-        NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
-        double value = (double)ledMode.getNumber(0);
-        System.out.println(value);
-
+        //NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
+        //double value = (double)ledMode.getNumber(0);
+        //System.out.println(value);
     }
 
 
@@ -109,13 +97,12 @@ public class LimelightVision {
             returnVal = true;
         }
         return returnVal;
-        }
+    }
 
     /**
      * Tells how far off to the left or right the target
      * @return It returns the angular value in the x direction from the target from -29.8 to 29.8
      */
-
     public double xAngleToTarget(){
         return(NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0));
     }
@@ -127,6 +114,7 @@ public class LimelightVision {
     public double yAngleToTarget(){
         return(m_yAngleOffset);
     }
+  
     /**
      * Tells the percent of the screen that the target takes up 
      * @return The percentage of the screen that the target takes up (0 to 1)
@@ -153,6 +141,7 @@ public class LimelightVision {
         //returns calculated distance in inches
         return m_distance;
     }
+  
     /**
      * Figures out where in the x direction (right or left) to go in terms of speed 
      * @return The speed for turning to the target
@@ -171,8 +160,8 @@ public class LimelightVision {
             m_xTurnSpeed = RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
         }
         return m_xTurnSpeed;
-
     }
+  
     /**
      * Figures out where in the y direction to go (forward or backward) to go in terms of speed
      * @return The speed for moving to the target
@@ -196,12 +185,12 @@ public class LimelightVision {
      * Periodically updates the x and y angle offsets and the area of the screen taken up by the target
      */
     public void periodic(){
-        // Updates the x angle offset from the target
-        m_tableXOffset = m_limelightTable.getEntry("tx");
-        // Updates the y angle offset from the target
-        m_tableYOffset = m_limelightTable.getEntry("ty");
-        // Updates the percentage of the screen that the target takes up
-        m_tableScreenArea = m_limelightTable.getEntry("ta"); 
+        // Updates the table entry for the x offset
+        m_xAngleOffset = m_limelightTable.getEntry("tx").getDouble(0.0);
+        // Updates the table entry for the y offset
+        m_yAngleOffset = m_limelightTable.getEntry("ty").getDouble(0.0);
+        // Updates the table entry for the area of the screen taken up by the target
+        m_areaOfScreen = m_limelightTable.getEntry("ta").getDouble(0.0); 
 
         // Puts the x angle offset value on the shuffleboard
         SmartDashboard.putNumber("LimelightX Offset", m_xAngleOffset);
