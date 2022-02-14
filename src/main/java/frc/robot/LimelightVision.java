@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 
@@ -30,13 +29,13 @@ public class LimelightVision {
     NetworkTable m_limelightTable;
 
     // Horizontal offset from Crosshair to target (LL1: -27 to 27 degrees; LL2 -29.8 to 29.8 degrees)
-    NetworkTableEntry m_tableXOffset;
+    double m_tableXOffset;
 
     // Vertical offset from crosshair to target (LL1: -20.5 to 20.5 degrees; LL2: -24.85 to 24.85 degrees)
-    NetworkTableEntry m_tableYOffset;
+    double m_tableYOffset;
 
     // Target Area (0% to 100% of image)
-    NetworkTableEntry m_tableScreenArea;
+    double m_tableScreenArea;
 
     double m_xAngleOffset;
     double m_yAngleOffset;
@@ -46,15 +45,10 @@ public class LimelightVision {
     public LimelightVision (){
         m_limelightTable = NetworkTableInstance.getDefault().getTable("Limelight");
 
-        // assigns the variable as all the possible entries
-        m_tableXOffset = m_limelightTable.getEntry("tx");
-        m_tableYOffset = m_limelightTable.getEntry("ty");
-        m_tableScreenArea = m_limelightTable.getEntry("ta"); 
-
-        // gets the offset values for x and y direction and the area of the image that is within the camera's frame
-        m_xAngleOffset = m_tableXOffset.getDouble(0.0);
-        m_yAngleOffset = m_tableYOffset.getDouble(0.0);
-        m_areaOfScreen = m_tableScreenArea.getDouble(0.0);
+        // assigns and gets the variable for each entry
+        m_tableXOffset = m_limelightTable.getEntry("tx").getDouble(0.0);
+        m_tableYOffset = m_limelightTable.getEntry("ty").getDouble(0.0);
+        m_tableScreenArea = m_limelightTable.getEntry("ta").getDouble(0.0); 
 
         // Creates/assigns the offset and area variables onto the dashboard table
         SmartDashboard.putNumber("LimelightX Offset", m_xAngleOffset);
@@ -184,12 +178,12 @@ public class LimelightVision {
      * Periodically updates the x and y angle offsets and the area of the screen taken up by the target
      */
     public void periodic(){
-        // Updates the x angle offset from the target
-        m_xAngleOffset = m_tableXOffset.getDouble(0.0);
-        // Updates the y angle offset from the target
-        m_yAngleOffset = m_tableYOffset.getDouble(0.0);
-        // Updates the percentage of the screen that the target takes up
-        m_areaOfScreen = m_tableScreenArea.getDouble(0.0);
+        // Updates the table entry for the x offset
+        m_tableXOffset = m_limelightTable.getEntry("tx").getDouble(0.0);
+        // Updates the table entry for the y offset
+        m_tableYOffset = m_limelightTable.getEntry("ty").getDouble(0.0);
+        // Updates the table entry for the area of the screen taken up by the target
+        m_tableScreenArea = m_limelightTable.getEntry("ta").getDouble(0.0); 
 
         // Puts the x angle offset value on the shuffleboard
         SmartDashboard.putNumber("LimelightX Offset", m_xAngleOffset);
