@@ -19,6 +19,14 @@ public class RobotShuffleboard {
     private NetworkTableEntry m_lowVelocityScalarEntry;
     private NetworkTableEntry m_highTurnScalarEntry;
     private NetworkTableEntry m_lowTurnScalarEntry;
+
+    /**
+     * Initialization method for RobotShuffleBoard
+     */
+    public void initRobotShuffleboard(){
+        drivetrainShuffleboardConfig();
+        setDrivetrainInputScalar();
+    }
  
     /**
      * Constructor for robot shuffleboard class
