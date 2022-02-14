@@ -74,9 +74,7 @@ public class Auton{
      */
     public void init(){
         m_drivetrain.init();
-        m_drivetrain.zeroEncoders();
-        m_drivetrain.zeroGyro();
-        m_launcher.zeroEncoders();
+        m_launcher.init();
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kLeftWall;
         m_drivetrain.shiftGear(Gear.kLowGear);
