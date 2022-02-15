@@ -14,11 +14,14 @@ public class RobotShuffleboard {
     double m_lowVelocityScalar;
     double m_highTurnScalar;
     double m_lowTurnScalar;
+    // Declares member variable for manual launcher testing
+    double m_flywheelVelocity;
     // Declares member variables for the entries on the table
     private NetworkTableEntry m_highVelocityScalarEntry;
     private NetworkTableEntry m_lowVelocityScalarEntry;
     private NetworkTableEntry m_highTurnScalarEntry;
     private NetworkTableEntry m_lowTurnScalarEntry;
+    private NetworkTableEntry m_flywheelVelocityEntry;
 
     /**
      * Initialization method for RobotShuffleBoard
@@ -27,6 +30,7 @@ public class RobotShuffleboard {
         drivetrainShuffleboardConfig();
         setDrivetrainInputScalar();
     }
+
  
     /**
      * Constructor for robot shuffleboard class
@@ -55,6 +59,9 @@ public class RobotShuffleboard {
         m_lowTurnScalarEntry = m_driverTab.addPersistent("Low Gear Turn Scalar", RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
+        m_flywheelVelocityEntry = m_driverTab.addPersistent("Flywheel Velocity", RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY)
+                                    .withWidget(BuiltInWidgets.kTextView)
+                                    .getEntry();
     }
 
     private void setDrivetrainInputScalar(){
@@ -63,6 +70,15 @@ public class RobotShuffleboard {
         m_lowVelocityScalar = m_lowVelocityScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
         m_highTurnScalar = m_highTurnScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
         m_lowTurnScalar = m_lowTurnScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
+    }
+
+    private void setFlywheelVelocity(){
+        m_flywheelVelocity = m_flywheelVelocityEntry.getDouble(RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY);
+    }
+    
+    public double getFlywheelVelocity(){
+        setFlywheelVelocity();
+        return m_flywheelVelocity;
     }
 
 /**
