@@ -57,7 +57,7 @@ public class Auton{
     boolean m_limelightOff;
     double m_xToTarget;
     int m_sysOutCounter;
-    boolean doSysOut;
+    boolean m_doSysOut;
 
     /**
      * constructor for auton
@@ -86,7 +86,7 @@ public class Auton{
         // System.out.println(" Right encoder " + m_drivetrain.getRightDriveEncoderPosition());
         m_limelightVision.limelightInit();
         m_limelightOff = true;
-        doSysOut = true;
+        m_doSysOut = true;
     }
 
     /**
@@ -108,10 +108,10 @@ public class Auton{
 
         //Counter for sysouts
         if((m_sysOutCounter % 50) == 0){
-            doSysOut = true;
+            m_doSysOut = true;
         }
         else{
-            doSysOut = false;
+            m_doSysOut = false;
         }
 
         //m_drivetrain.zeroEncoders();
@@ -200,20 +200,20 @@ public class Auton{
                          m_step = AutonStep.kStep8;
                     }
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
-                        if(doSysOut == true){
+                        if(m_doSysOut == true){
                             System.out.println("Not On Target");    
                         }
                         m_drivetrain.arcadeDrive(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
-                        if(doSysOut == true){
+                        if(m_doSysOut == true){
                             System.out.println("Not On Target");
                         }
                         m_drivetrain.arcadeDrive(0, -RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                 }
                 else{
-                    if(doSysOut == true){
+                    if(m_doSysOut == true){
                         System.out.println("No Target Detected");
                     }
                 }
@@ -312,20 +312,20 @@ public class Auton{
                          m_step = AutonStep.kStep8;
                     }
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
-                        if(doSysOut == true){
+                        if(m_doSysOut == true){
                             System.out.println("Not On Target");    
                         }
                         m_drivetrain.arcadeDrive(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
-                        if(doSysOut == true){
+                        if(m_doSysOut == true){
                             System.out.println("Not On Target");    
                         }
                         m_drivetrain.arcadeDrive(0, -RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                 }
                 else{
-                    if(doSysOut == true){
+                    if(m_doSysOut == true){
                             System.out.println("No target detected");    
                         }
                 }
@@ -493,7 +493,7 @@ public class Auton{
             }
             else{
                 m_drivetrain.arcadeDrive(0, speed);
-                if(doSysOut == true){
+                if(m_doSysOut == true){
                     System.out.println("Not At Target Angle " + currentAngle);
                 }
                 return false;
@@ -513,7 +513,7 @@ public class Auton{
             }
             else{
                 m_drivetrain.arcadeDrive(0, speed);
-                if(doSysOut == true){
+                if(m_doSysOut == true){
                     System.out.println("Not At Target Angle " + currentAngle);
                 }
                 return false;
