@@ -85,7 +85,6 @@ public class Auton{
         // System.out.println("left encoder " + m_drivetrain.getLeftDriveEncoderPosition());
         // System.out.println(" Right encoder " + m_drivetrain.getRightDriveEncoderPosition());
         m_limelightVision.limelightInit();
-        m_limelightOff = true;
         m_doSysOut = true;
     }
 
@@ -94,11 +93,23 @@ public class Auton{
      */
     public void periodic(){
         m_limelightVision.periodic();
+        int CurrentLEDStatus = m_limelightVision.currentLEDStatus();
+        //If the Limelight is off, sets m_limelightOff to be true
+        if(CurrentLEDStatus == 1){
+            m_limelightOff = true;
+        }
+        //If the Limelight is on, sets m_limelightOff to be false
+        else if(CurrentLEDStatus == 3){
+            m_limelightOff = false;
+        }
+        else{
+            System.out.println("unknown LED status");
+        }
+
         if(autonStartFlag){
             m_drivetrain.zeroEncoders();
             m_step = AutonStep.kStep1;
             System.out.println("STARTING AUTON");
-            m_limelightOff = true;
             autonStartFlag = false;
         }
         currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
@@ -186,7 +197,6 @@ public class Auton{
                     System.out.println("Turning on LEDS");
                     //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
                     m_limelightVision.enableLEDs();
-                    m_limelightOff = false;
                 }
                 m_xToTarget = m_limelightVision.xAngleToTarget();
                 System.out.println(m_xToTarget);
@@ -196,7 +206,6 @@ public class Auton{
                         m_drivetrain.arcadeDrive(0,0);
                          m_drivetrain.zeroEncoders();
                          m_limelightVision.disableLEDs();
-                         m_limelightOff = true;
                          m_step = AutonStep.kStep8;
                     }
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
@@ -298,7 +307,6 @@ public class Auton{
                     System.out.println("Turning on LEDS");
                     //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
                     m_limelightVision.enableLEDs();
-                    m_limelightOff = false;
                 }
                 m_xToTarget = m_limelightVision.xAngleToTarget();
                 System.out.println(m_xToTarget);
@@ -308,7 +316,6 @@ public class Auton{
                         m_drivetrain.arcadeDrive(0,0);
                          m_drivetrain.zeroEncoders();
                          m_limelightVision.disableLEDs();
-                         m_limelightOff = true;
                          m_step = AutonStep.kStep8;
                     }
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
