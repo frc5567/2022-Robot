@@ -175,7 +175,10 @@ public class Drivetrain {
         m_slaveRightMotor.configFactoryDefault();
         m_masterLeftMotor.configFactoryDefault();
         m_slaveLeftMotor.configFactoryDefault();
+        
         zeroEncoders();
+        zeroGyro();
+        
         shiftGear(Gear.kLowGear);
         m_masterRightMotor.setInverted(true);
         m_slaveRightMotor.setInverted(InvertType.FollowMaster);
