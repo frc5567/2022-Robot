@@ -47,7 +47,8 @@ public class RobotMap {
 
         public static final double STICK_DEADBAND = 0.09;
 
-        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.3;
+        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.2;
+        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 0.3;
     }
 
     /**
@@ -169,8 +170,16 @@ public class RobotMap {
 
         public static final double FULL_TURN = 180;
 
-        public static final double STEP_ONE_TARGET = 60;
-        public static final double STEP_TWO_TARGET = 180;
-        public static final double STEP_THREE_TARGET = 10;
+        public static final double LEFT_WALL_STEP_ONE_TARGET_DISTANCE = 84.75;
+        //TODO: find exact angle, this is a guess
+        public static final double LEFT_WALL_STEP_TWO_TARGET_ANGLE = 30;
+        public static final double LEFT_WALL_STEP_FOUR_TARGET_DISTANCE = 75;
+        public static final double LEFT_WALL_STEP_SIX_TARGET_ANGLE = 160;
+
+        public static final double RIGHT_WALL_STEP_ONE_TARGET_DISTANCE = 84.75;
+        //TODO: find exact angle, this is a guess
+        public static final double RIGHT_WALL_STEP_TWO_TARGET_ANGLE = 30;
+        public static final double RIGHT_WALL_STEP_FOUR_TARGET_DISTANCE = 75;
+        public static final double RIGHT_WALL_STEP_SIX_TARGET_ANGLE = 160;
     }
 }
