@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableEntry;
 
 
 public class LimelightVision {
@@ -85,6 +86,16 @@ public class LimelightVision {
         //System.out.println(value);
     }
 
+    /**
+     * Current status of the LEDs
+     * @return 1 if LEDs are off, 3 if LEDs are on
+     */
+    public int currentLEDStatus(){
+        NetworkTableEntry ledMode = m_limelightTable.getEntry("ledMode");
+        double currentValue = ledMode.getDouble(0);
+        int intValue = (int)Math.round(currentValue);
+        return intValue;
+    }
 
     /**
      * Tells if the target is visible or not
