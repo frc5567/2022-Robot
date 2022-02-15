@@ -93,13 +93,17 @@ public class Auton{
      */
     public void periodic(){
         m_limelightVision.periodic();
+        int CurrentLEDStatus = m_limelightVision.currentLEDStatus();
         //If the Limelight is off, sets m_limelightOff to be true
-        if(m_limelightVision.currentLEDStatus() == 1){
+        if(CurrentLEDStatus == 1){
             m_limelightOff = true;
         }
         //If the Limelight is on, sets m_limelightOff to be false
-        if(m_limelightVision.currentLEDStatus() == 3){
+        else if(CurrentLEDStatus == 3){
             m_limelightOff = false;
+        }
+        else{
+            System.out.println("unknown LED status");
         }
 
         if(autonStartFlag){
