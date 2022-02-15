@@ -23,7 +23,7 @@ public class PilotController {
 
     // Creates a SlewRateLimiter that limits the rate of change of the signal to 0.5 units per second (Constant is untested)
     SlewRateLimiter triggerFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
-    SlewRateLimiter stickFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_RATE_OF_CHANGE);
+    SlewRateLimiter stickFilter = new SlewRateLimiter(RobotMap.PilotControllerConstants.SLEW_SIGNAL_TURN_RATE_OF_CHANGE);
 
     // Sysout counter
     int m_sysOutCounter = 0;
