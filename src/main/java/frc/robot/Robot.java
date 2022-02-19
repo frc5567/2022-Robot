@@ -97,11 +97,15 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    m_pilotController.init();
+  }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_pilotController.periodic();
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
@@ -114,12 +118,12 @@ public class Robot extends TimedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    m_pilotController.init();
+    m_copilotController.initCopilot();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_pilotController.periodic();
+    m_copilotController.periodicCopilot();
   }
 }
