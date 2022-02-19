@@ -32,7 +32,9 @@ public class GamePad extends GenericHID {
 		LaunchCMD(5),
 		Move_Climber_Up(6),
 		Move_Climber_Down(7),
-        Move_Robot_Up(8);
+        Move_Robot_Up(8),
+		Trajectory_Up(9),
+		Trajectory_Down(10);
 
 		//Variable used to get port values 
 		public final int portNum;
@@ -97,5 +99,13 @@ public class GamePad extends GenericHID {
 	*/
 	public boolean getMoveRobotUp() {
 		return super.getRawButton(GamePadControls.Move_Robot_Up.portNum);
-	}	
+	}
+	
+	public boolean getTrajectoryUp() {
+		return super.getRawButton(GamePadControls.Trajectory_Up.portNum);
+	}
+
+	public boolean getTrajectoryDown() {
+		return super.getRawButton(GamePadControls.Trajectory_Down.portNum);
+	}
 }
