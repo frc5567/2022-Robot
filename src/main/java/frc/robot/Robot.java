@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
     m_launcher = new Launcher(m_limelightVision);
     
     m_pilotController = new PilotController(m_drivetrain, m_limelightVision);
-    m_copilotController = new CopilotController(m_limelightVision, m_intake, m_launcher, m_climber);
+    m_copilotController = new CopilotController(m_intake, m_launcher, m_climber);
     m_auton = new Auton(m_drivetrain, m_launcher, m_intake, m_limelightVision);
   }
 

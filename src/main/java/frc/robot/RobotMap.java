@@ -9,7 +9,7 @@ public class RobotMap {
     public static final double TOLERATED_TARGET_ERROR = 0.3;
 
     /**
-     * constant for PCM location on the CAN bus
+     * constant for PCM port on the CAN bus
      */
     public static class CANConstants{
         public static final int PCM_CAN_ID = 20;
@@ -19,8 +19,7 @@ public class RobotMap {
     * constants for drivetrain 
     */
     public static class DrivetrainConstants{
-
-        //constants for drivetrain motor ID's (on the CAN bus)
+        //constants for drivetrain motor IDs (on the CAN bus)
         public static final int MASTER_RIGHT_FALCON_ID = 4; 
         public static final int MASTER_LEFT_FALCON_ID = 3;
         public static final int SLAVE_RIGHT_FALCON_ID = 14;
@@ -45,10 +44,13 @@ public class RobotMap {
      * constants for Pilot Controller
      */
     public static class PilotControllerConstants{
+        //Port on the comp computer for the pilot controller
         public static final int XBOX_CONTROLLER_PORT = 0;
 
+        //Constant to record stick deadband that works for our pilot controller (Currently the xbox one controller, but the 360 controllers may need a higher value because of larger drift)
         public static final double STICK_DEADBAND = 0.09;
 
+        //Constants for filters on acceleration and turning in order to prevent brownouts
         public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.2;
         public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 0.3;
     }
@@ -57,8 +59,10 @@ public class RobotMap {
      * constants for Copilot Controller
      */
     public static class CopilotControllerConstants{
+        //Port on the comp computer for the copilot controller/gamepad
         public static final int GAMEPAD_PORT = 1;
 
+        //Constant to record stick deadband that works for our copilot controller. This should be tested once we have finalized a copilot controller
         public static final double STICK_DEADBAND = 0.09;
     }
 
@@ -72,39 +76,39 @@ public class RobotMap {
         public static final int FEEDER_MOTOR_ID = 7;
         public static final int TURRET_MOTOR_ID = 8;
         
-        //These are untested placesholder values until we know what speed we actually need
-        public static final double IDLE_SPEED = 0.0;
-        public static final double FIRING_SPEED = 1;
+        //These are untested placesholder values until we know what speeds we actually need
         public static final double FEEDING_SPEED = 0.5;
         public static final double EXPEL_SPEED = 0.25;
-
         public static final double POSITIVE_TURRET_ROTATION_SPEED = 0.25;
         public static final double NEGATIVE_TURRET_ROTATION_SPEED = -0.25;
 
+        //Constant for our turret encoder limit so we don't overturn and damage wiring
         public static final double TURRET_ENCODER_LIMIT = 75000;
 
+        //Constant for distance from directly on center we allow the target to be 
         public static final double TOLERATED_TURRET_ERROR = 0.08;
 
         //TODO: Change to actual port number once we know what it is
         public static final int LAUNCH_SENSOR_PORT = 10;
 
-        public static final int DOUBLESOLENOID_ANGLE_UP = 2;
-        public static final int DOUBLESOLENOID_ANGLE_DOWN = 3;
+        //Constant for the port numbers of the trajectory control pistons
+        public static final int DOUBLESOLENOID_ANGLE_UP_PORT = 2;
+        public static final int DOUBLESOLENOID_ANGLE_DOWN_PORT = 3;
     }
 
     /**
      * Constants for Intake
      */
     public static class IntakeConstants{
-        //constants for drivetrain motor IDs (on the CAN bus)
-        public static final int FRONT_ROLLER_MOTOR_ID = 11;
+        //constants for intake motor IDs (on the CAN bus)
+        public static final int ROLLER_MOTOR_ID = 11;
         public static final int MAGAZINE_MOTOR_ID = 12;
         //These are untested placesholder values until we know what speed we actually need
-        public static final double FRONT_ROLLER_SPEED = 0.5;
+        public static final double ROLLER_SPEED = 0.5;
         public static final double MAGAZINE_SPEED = 0.5;
 
         //These are untested placesholder values until we know what speed we actually need but it is important that these are negative
-        public static final double REVERSE_FRONT_ROLLER_SPEED = -0.5;
+        public static final double REVERSE_ROLLER_SPEED = -0.5;
         public static final double REVERSE_MAGAZINE_SPEED = -0.5;
 
         //constants for solenoids (on the PCM)
@@ -155,16 +159,12 @@ public class RobotMap {
      * constants for Auton
      */
     public static class AutonConstants{
-        //contant for encoder ticks to inches (pulled from 2021, may be subject to change)
         public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (21.125 / 15);
         public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (21.125 / 7.92);
 
         public static final double DRIVE_SPEED = 0.2;
         public static final double TURN_SPEED = 0.2;
         public static final double TARGETING_SPEED = 0.1;
-        public static final double PLACEHOLDER_VALUE_DISTANCE = 1;
-        public static final double PLACEHOLDER_VALUE_ANGLE_CLOCKWISE = 1;
-        public static final double PLACEHOLDER_VALUE_ANGLE_COUNTERCLOCKWISE = -1;
 
         //constant for rotation error acceptance
         public static final double ROTATE_BOUND = 0.03;
@@ -183,7 +183,7 @@ public class RobotMap {
         public static final double RIGHT_WALL_STEP_FOUR_TARGET_DISTANCE = 75;
         public static final double RIGHT_WALL_STEP_SIX_TARGET_ANGLE = 160;
 
-        //TODO: find exact angle/distances, this is a guess
+        //TODO: find exact angle/distance, this is a guess
         public static final double RIGHT_LINE_STEP_TWO_TARGET_DISTANCE = 48;
         public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 160;
     }

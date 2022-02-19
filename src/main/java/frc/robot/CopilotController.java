@@ -5,38 +5,44 @@ import frc.robot.Launcher.TrajectoryPosition;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class CopilotController {
-    //declarations
+    //declare objects for the different systems controlled by the coppilot controller
     private GamePad m_gamePad;
     private Launcher m_launcher;
     private Intake m_intake;
     private Climber m_climber;
-    private LimelightVision m_limelightVision;
+    //declares shuffleboard to be used for flywheel velocity testing
     private RobotShuffleboard m_shuffleboard;
+    private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
     //for testing until we have a real gamepad
     private XboxController m_controller;
     
-    private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
-
     /**
-     * constructor for copilot controller- instantiates all of the systems that we interact with in this class.
+     * constructor for copilot controller- passes in all of the systems that we interact with in this class.
+     * @param intake we pass in intake so the copilot can control the intake system
+     * @param launcher we pass in launcher so the copilot can control the launcher system
+     * @param climber we pass in climber so the copilot can control the climber system
      */
-    public CopilotController(LimelightVision limelightVision, Intake intake, Launcher launcher, Climber climber){
-        m_limelightVision = limelightVision;
+    public CopilotController(Intake intake, Launcher launcher, Climber climber){
+        //instatiates objects for copilot class
         m_intake = intake;
         m_launcher = launcher;
         m_climber = climber;
         
         m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
 
+        //configures shuffleboard for flywheel testing
         m_shuffleboard.drivetrainShuffleboardConfig();
     }
 
     /**
-     * This method should be called in robot init
-     * Sets intake state
+     * Initialization method for CopilotController class, should be called in robotInit
      */
     public void initCopilot(){
         m_intake.init();
+        m_launcher.init();
+        m_climber.init();
+        m_gamePad.init();
+        //sets our flywheel velocity for testing to the value put into the shuffleboard
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
     }
 
@@ -47,6 +53,7 @@ public class CopilotController {
         controlClimber();
         controlIntake();
         controlLauncher();
+        //for testing purposes
         manualLauncherCmd();
     }
 
@@ -74,10 +81,10 @@ public class CopilotController {
     }
 
     /**
-     * This method controls the launcher (and turret) with two buttons, one for revving and one for advancing balls into the launcher
+     * This method controls the launcher (and turret) with three buttons, one for automatically targeting and launching, and two for setting the position of the trajectory controller
      */
     private void controlLauncher(){
-        //uses one button to aim and rev
+        //uses one button to aim and launch
         if (m_gamePad.getRevPressed()){
             m_launcher.launch();
         }
@@ -90,6 +97,9 @@ public class CopilotController {
         }
     }
 
+    /**
+     * Manually controls the launcher and the turret for testing
+     */
     private void manualLauncherCmd(){
         if(m_controller.getLeftBumperPressed()){
             m_launcher.setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
@@ -104,7 +114,7 @@ public class CopilotController {
     }
 
     /**
-     * This method controlls the climber using three buttons to pass in values of power to two motors; the climber motor and the winch motor.
+     * This method controls the climber using three buttons to pass in values of power to two motors; the climber motor and the winch motor.
      */
     private void controlClimber(){
         //controls Climber motor with two buttons, up or down
