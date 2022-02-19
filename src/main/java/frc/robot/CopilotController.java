@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Intake.IntakeState;
+import frc.robot.Launcher.TrajectoryPosition;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class CopilotController {
@@ -79,6 +80,13 @@ public class CopilotController {
         //uses one button to aim and rev
         if (m_gamePad.getRevPressed()){
             m_launcher.launch();
+        }
+
+        if (m_gamePad.getTrajectoryUp()){
+            m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
+        }
+        else if (m_gamePad.getTrajectoryDown()){
+            m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
     }
 
