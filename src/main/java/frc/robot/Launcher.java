@@ -53,13 +53,6 @@ public class Launcher{
     private TrajectoryPosition m_state;
 
     /**
-     * Initialization method for Launcher
-     */
-    public void initLauncher(){
-        zeroEncoders();
-    }
-
-    /**
      * Constructor for Launcher objects
      */
     public Launcher(LimelightVision limelightVision){
@@ -81,6 +74,14 @@ public class Launcher{
         m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_DOWN, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_UP);
     
         m_state = TrajectoryPosition.kUnkown;
+    }
+
+    /**
+     * Initialization method for Launcher
+     */
+    public void initLauncher(){
+        zeroEncoders();
+        setTrajectoryPosition(TrajectoryPosition.kUp);
     }
     
     /**
@@ -128,15 +129,6 @@ public class Launcher{
                 setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
             }
 
-            if(m_limelightVision.yAngleToTarget() > 0){
-                setTrajectoryPosition(TrajectoryPosition.kUp);
-                trajectoryReady = true;
-            }
-            else if (m_limelightVision.yAngleToTarget() < 0){
-                setTrajectoryPosition(TrajectoryPosition.kDown);
-                trajectoryReady = true;
-            }
-
             // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
             // 100 is arbitrary and needs to be tested (more will probably need to be done so this is more fine tuned)
             double targetFlywheelSpeed = m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100;
@@ -150,7 +142,7 @@ public class Launcher{
             }
 
             //Prints out a message telling the driver when our robot is ready to launch
-            if(turretAngleReady == true && trajectoryReady == true && flywheelMotorReady == true){
+            if(turretAngleReady == true && flywheelMotorReady == true){
                 System.out.println("Commencing Launch Sequence");
                 advanceBalls();
             }
