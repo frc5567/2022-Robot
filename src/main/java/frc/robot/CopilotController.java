@@ -111,10 +111,10 @@ public class CopilotController {
         }
         //controls Climber winch with one button, up
         if(m_gamePad.getMoveRobotUp()){
-            m_climber.WinchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
+            m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
         }
         else{
-            m_climber.WinchCMD(0);
+            m_climber.winchCMD(0);
         }
     }
 

@@ -98,7 +98,7 @@ public class Drivetrain {
 
         // Instantiate PID Controller
         m_PIDTurnController = new PIDController(RobotMap.DrivetrainConstants.TURN_GAINS.kP, RobotMap.DrivetrainConstants.TURN_GAINS.kI, RobotMap.DrivetrainConstants.TURN_GAINS.kD);
-
+        //Configures the turn PID so we can recieve continuous input
         turnPIDConfig();
     }
 
@@ -167,20 +167,25 @@ public class Drivetrain {
      * Initialization method for the drivetrain
      */
     public void init(){
+        // Brakes all the motors in init so we are not moving when we turn on the robot
         m_masterRightMotor.setNeutralMode(NeutralMode.Brake);
         m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
         m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
         m_slaveRightMotor.setNeutralMode(NeutralMode.Brake);
+        // Reverts all configurations to factory default values
         m_masterRightMotor.configFactoryDefault();
         m_slaveRightMotor.configFactoryDefault();
         m_masterLeftMotor.configFactoryDefault();
         m_slaveLeftMotor.configFactoryDefault();
-        
+        // Zeros encoders initially
         zeroEncoders();
+        // Zeros gyro initially
         zeroGyro();
-        
+        // Intially starts robot in low gear
         shiftGear(Gear.kLowGear);
+        // inverts the right motor 
         m_masterRightMotor.setInverted(true);
+        // sets the right slave motor as inverted 
         m_slaveRightMotor.setInverted(InvertType.FollowMaster);
     }
 
@@ -222,7 +227,7 @@ public class Drivetrain {
     /**
      * This method returns the output of the PID controller scaled back to match our expected drivetrain input range
      * @param currentAngle
-     * @return
+     * @return the output of the PID controller scaled back
      */
     public double scaledTurnPIDOutput (double currentAngle){
         return m_PIDTurnController.calculate(currentAngle) / RobotMap.DrivetrainConstants.DRIVE_PID_OUTPUT_SCALAR;

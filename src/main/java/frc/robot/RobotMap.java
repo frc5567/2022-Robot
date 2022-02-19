@@ -37,7 +37,7 @@ public class RobotMap {
         public static final double PID_INPUT_RANGE = 180.00;
         public static final double ROTATE_PID_INTEGRATOR_RANGE = 0.10;
         public static final double TOLERANCE_ROTATE_CONTROLLER = 2.00;
-        public static final double DRIVE_PID_OUTPUT_SCALAR = 0;
+        public static final double DRIVE_PID_OUTPUT_SCALAR = 0.1;
 
     }
 

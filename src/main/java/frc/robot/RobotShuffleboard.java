@@ -25,6 +25,7 @@ public class RobotShuffleboard {
 
     /**
      * Initialization method for RobotShuffleBoard
+     * Calls drivetrainShuffleboardConfig, setDrivetrainInputScalar, and setFlywheelVelocity
      */
     public void initRobotShuffleboard(){
         drivetrainShuffleboardConfig();
@@ -64,19 +65,33 @@ public class RobotShuffleboard {
                                     .getEntry();
     }
 
+    /**
+     * Sets the input scalars for velocity and turning as the values found on the Shuffleboard
+     */
     private void setDrivetrainInputScalar(){
-        // Sets highVelocityScalar equal to the entry from the tab and if it returns with nothing sets it to default
+        // Sets highVelocityScalar equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
         m_highVelocityScalar = m_highVelocityScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
+        // Sets lowVelocityScalar equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
         m_lowVelocityScalar = m_lowVelocityScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
+        // Sets highTurnScalar equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
         m_highTurnScalar = m_highTurnScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
+        // Sets lowTurnScalar equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
         m_lowTurnScalar = m_lowTurnScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
     }
 
+    /**
+     * Sets the velocity of the flywheel equal to the value on the shuffleboard
+     */
     private void setFlywheelVelocity(){
         m_flywheelVelocity = m_flywheelVelocityEntry.getDouble(RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY);
     }
     
+    /**
+     * Gets the current value for the flywheel velocity from the shuffleboard
+     * @return the flywheel velocity double from the shuffleboard
+     */
     public double getFlywheelVelocity(){
+        // Gets the updated value from the shuffleboard
         setFlywheelVelocity();
         return m_flywheelVelocity;
     }
