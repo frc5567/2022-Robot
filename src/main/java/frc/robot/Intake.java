@@ -44,8 +44,11 @@ public class Intake {
     //Declares solenoids for extension and retraction
     private DoubleSolenoid m_solenoid;
 
-    //Delares intake sensor
-    private DigitalInput m_magazineSensor;
+    //Delares the first magazine sensor that is before the "carwash" wheels
+    private DigitalInput m_sensor1;
+
+    //Delares the second magazine sensor that is after the "carwash" wheels
+    private DigitalInput m_sensor2;
 
     //Declares a state enum
     private IntakeState m_state;
@@ -63,7 +66,8 @@ public class Intake {
 
         m_state = IntakeState.kUnkown;
 
-        m_magazineSensor = new DigitalInput(RobotMap.IntakeConstants.MAGAZINE_SENSOR_PORT);
+        m_sensor1 = new DigitalInput(RobotMap.IntakeConstants.MAGAZINE_SENSOR_0_PORT);
+        m_sensor2 = new DigitalInput(RobotMap.IntakeConstants.MAGAZINE_SENSOR_1_PORT);
     }
 
     /**
@@ -72,6 +76,21 @@ public class Intake {
      */
     public void init(){
         setIntakeExtension(IntakeState.kRetracted);
+    }
+
+    /**
+     * This method is called many times a second in robotPeriodic. It is currently only used for automatic indexing
+     */
+    public void periodic(){
+        //If a game piece is in the first slot, and there is no game piece in the second slot, move the game piece to the second slot
+        if(getMagazineSensor1()){
+            if(getMagazineSensor2()){
+                return;
+            }
+            else{
+                setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+            }
+        }
     }
 
     /**
@@ -131,10 +150,17 @@ public class Intake {
     }
 
     /**
-     * @return whether or not the intake sensor is being activated
+     * @return whether or not the first magazine sensor is being activated
      */
-    public boolean checkMagazineSensor() {
-        return m_magazineSensor.get();
+    public boolean getMagazineSensor1() {
+        return m_sensor1.get();
+    }
+
+    /**
+     * @return whether or not the second magazine sensor is being activated
+     */
+    public boolean getMagazineSensor2() {
+        return m_sensor2.get();
     }
 
     /**

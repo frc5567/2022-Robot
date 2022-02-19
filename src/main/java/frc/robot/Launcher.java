@@ -5,8 +5,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 //Import Encoders
 import com.ctre.phoenix.motorcontrol.SensorCollection;
-//Import for sensor 
-import edu.wpi.first.wpilibj.DigitalInput;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -47,9 +45,6 @@ public class Launcher{
     private SensorCollection m_feederEncoder;
     private SensorCollection m_turretEncoder;
 
-    //declares the sensor that will be attatched to the launcher to track when we launch game pieces
-    private DigitalInput m_launchSensor;
-
     //declares our double solenoid to be used on our trajectory control system
     private DoubleSolenoid m_solenoid;
 
@@ -73,8 +68,6 @@ public class Launcher{
         m_flywheelEncoder = new SensorCollection (m_masterFlywheelMotor);
         m_feederEncoder = new SensorCollection (m_feederMotor);
         m_turretEncoder = new SensorCollection (m_turretMotor);
-
-        m_launchSensor = new DigitalInput(RobotMap.LauncherConstants.LAUNCH_SENSOR_PORT);
 
         m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_DOWN_PORT, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_UP_PORT);
     
@@ -205,13 +198,6 @@ public class Launcher{
      */
     public double getRealSpeed(){
         return m_masterFlywheelMotor.getSelectedSensorVelocity();
-    }
-
-    /**
-     * @return whether or not the launch snesor is being activated
-     */
-    public boolean checkLaunchSensor(){
-        return m_launchSensor.get();
     }
 
     /**

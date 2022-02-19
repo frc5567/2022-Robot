@@ -37,7 +37,7 @@ public class CopilotController {
     /**
      * Initialization method for CopilotController class, should be called in robotInit
      */
-    public void initCopilot(){
+    public void init(){
         m_intake.init();
         m_launcher.init();
         m_climber.init();
@@ -49,7 +49,7 @@ public class CopilotController {
     /**
      * This method should be called periodically in Teleop in order to control all systems
      */
-    public void periodicCopilot(){
+    public void periodic(){
         controlClimber();
         controlIntake();
         controlLauncher();

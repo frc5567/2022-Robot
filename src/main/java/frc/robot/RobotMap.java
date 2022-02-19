@@ -115,8 +115,9 @@ public class RobotMap {
         public static final int DOUBLESOLENOID_RETRACTED_PORT = 0;
         public static final int DOUBLESOLENOID_EXTENDED_PORT = 1;
 
-        //TODO: Change to actual port number once we know what it is
-        public static final int MAGAZINE_SENSOR_PORT = 9;
+        //TODO: Change to actual port numbers once we know what they are
+        public static final int MAGAZINE_SENSOR_0_PORT = 9;
+        public static final int MAGAZINE_SENSOR_1_PORT = 10;
     }
     
     /**

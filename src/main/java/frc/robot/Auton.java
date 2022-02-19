@@ -99,6 +99,8 @@ public class Auton{
     public void periodic(){
         //calls the limelight periodic method in order to update the network tables every cycle
         m_limelightVision.periodic();
+        //calls the intake periodic method for automatic indexing
+        m_intake.periodic();
         int CurrentLEDStatus = m_limelightVision.currentLEDStatus();
         //If the Limelight is off, sets m_limelightOff to be true
         if(CurrentLEDStatus == 1){
