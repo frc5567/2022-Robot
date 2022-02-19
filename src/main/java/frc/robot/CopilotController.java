@@ -50,9 +50,9 @@ public class CopilotController {
      * This method should be called periodically in Teleop in order to control all systems
      */
     public void periodic(){
-        controlClimber();
         controlIntake();
         controlLauncher();
+        controlClimber();
         //for testing purposes
         manualLauncherCmd();
     }
@@ -85,7 +85,7 @@ public class CopilotController {
      */
     private void controlLauncher(){
         //uses one button to aim and launch
-        if (m_gamePad.getRevPressed()){
+        if (m_gamePad.getLaunchCMD()){
             m_launcher.launch();
         }
 
