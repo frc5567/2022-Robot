@@ -71,27 +71,25 @@ public class RobotMap {
         public static final int SLAVE_FLYWHEEL_FALCON_ID = 6;
         public static final int FEEDER_MOTOR_ID = 7;
         public static final int TURRET_MOTOR_ID = 8;
-        public static final int TRAJECTORY_MOTOR_ID = 9;
         
         //These are untested placesholder values until we know what speed we actually need
         public static final double IDLE_SPEED = 0.0;
         public static final double FIRING_SPEED = 1;
         public static final double FEEDING_SPEED = 0.5;
-        public static final double TRAJECTORY_MOTOR_SPEED = 0.25;
         public static final double EXPEL_SPEED = 0.25;
 
         public static final double POSITIVE_TURRET_ROTATION_SPEED = 0.25;
         public static final double NEGATIVE_TURRET_ROTATION_SPEED = -0.25;
 
-        public static final double TRAJECTORY_ENCODER_LIMIT = 30000;
-
         public static final double TURRET_ENCODER_LIMIT = 75000;
 
         public static final double TOLERATED_TURRET_ERROR = 0.08;
-        public static final double TOLERATED_TRAJECTORY_ERROR = 1000;
 
         //TODO: Change to actual port number once we know what it is
         public static final int LAUNCH_SENSOR_PORT = 10;
+
+        public static final int DOUBLESOLENOID_ANGLE_UP = 2;
+        public static final int DOUBLESOLENOID_ANGLE_DOWN = 3;
     }
 
     /**

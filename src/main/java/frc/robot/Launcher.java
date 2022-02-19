@@ -7,8 +7,30 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 //Import for sensor 
 import edu.wpi.first.wpilibj.DigitalInput;
+// Import pneumatic double solenoid
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public class Launcher{
+    public enum TrajectoryPosition{
+        kUp ("Up"),
+
+        kDown ("Down"),
+
+        kUnkown ("Unknown");
+
+        private String stateName;
+
+        TrajectoryPosition (String stateName){
+            this.stateName = stateName;
+        }
+
+        public String toString(){
+            return this.stateName;
+
+        }
+    }
     //Declares limelight object
     private LimelightVision m_limelightVision;
     
@@ -18,15 +40,17 @@ public class Launcher{
     private WPI_TalonFX m_slaveFlywheelMotor;
     private WPI_TalonFX m_feederMotor;
     private WPI_TalonFX m_turretMotor;
-    private WPI_TalonFX m_trajectoryMotor;
 
     //Declares variables for the encoders
     private SensorCollection m_flywheelEncoder;
     private SensorCollection m_feederEncoder;
     private SensorCollection m_turretEncoder;
-    private SensorCollection m_trajectoryEncoder;
 
     private DigitalInput m_launchSensor;
+
+    private DoubleSolenoid m_solenoid;
+
+    private TrajectoryPosition m_state;
 
     /**
      * Initialization method for Launcher
@@ -46,14 +70,17 @@ public class Launcher{
         //TODO: THESE WILL NOT BE FALCONS - CHANGE
         m_feederMotor = new WPI_TalonFX(RobotMap.LauncherConstants.FEEDER_MOTOR_ID);
         m_turretMotor = new WPI_TalonFX(RobotMap.LauncherConstants.TURRET_MOTOR_ID);
-        m_trajectoryMotor = new WPI_TalonFX(RobotMap.LauncherConstants.TRAJECTORY_MOTOR_ID);
 
         m_flywheelEncoder = new SensorCollection (m_masterFlywheelMotor);
         m_feederEncoder = new SensorCollection (m_feederMotor);
         m_turretEncoder = new SensorCollection (m_turretMotor);
-        m_trajectoryEncoder = new SensorCollection (m_trajectoryMotor);
 
         m_launchSensor = new DigitalInput(RobotMap.LauncherConstants.LAUNCH_SENSOR_PORT);
+
+        // Instantiate Right and Left Solenoids
+        m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_DOWN, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_UP);
+    
+        m_state = TrajectoryPosition.kUnkown;
     }
     
     /**
@@ -101,36 +128,13 @@ public class Launcher{
                 setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
             }
 
-            //variable to find the target position of the trajectory control motor
-            double targetTrajectoryPosition = (-(m_limelightVision.yAngleToTarget()/2) + 0.5) * RobotMap.LauncherConstants.TRAJECTORY_ENCODER_LIMIT;
-
-            //checks if the encoder is within the range we want, for now 0 and 30000 but needs testing
-            if(getTrajectoryPosition() > 0 && getTrajectoryPosition() < RobotMap.LauncherConstants.TRAJECTORY_ENCODER_LIMIT){
-                //checks to see if we are within the tolerated error range
-                if(Math.abs(getTrajectoryPosition() - targetTrajectoryPosition) <= RobotMap.LauncherConstants.TOLERATED_TRAJECTORY_ERROR){
-                    trajectoryReady = true;
-                }
-                //move the trajectory control motor toward the target position
-                else if(getTrajectoryPosition() < targetTrajectoryPosition){
-                    System.out.println("Not Ready to Launch");
-                    trajectoryReady = false;
-                    setTrajectorySpeed(RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
-                }
-                else if(getTrajectoryPosition() > targetTrajectoryPosition){
-                    System.out.println("Not Ready to Launch");
-                    trajectoryReady = false;
-                    setTrajectorySpeed(-RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
-                }
+            if(m_limelightVision.yAngleToTarget() > 0){
+                setTrajectoryPosition(TrajectoryPosition.kUp);
+                trajectoryReady = true;
             }
-            else if(getTrajectoryPosition() > RobotMap.LauncherConstants.TRAJECTORY_ENCODER_LIMIT){
-                System.out.println("Not Ready to Launch");
-                trajectoryReady = false;
-                setTrajectorySpeed(-RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
-            }
-            else if(getTrajectoryPosition() < 0){
-                System.out.println("Not Ready to Launch");
-                trajectoryReady = false;
-                setTrajectorySpeed(RobotMap.LauncherConstants.TRAJECTORY_MOTOR_SPEED);
+            else if (m_limelightVision.yAngleToTarget() < 0){
+                setTrajectoryPosition(TrajectoryPosition.kDown);
+                trajectoryReady = true;
             }
 
             // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
@@ -178,14 +182,6 @@ public class Launcher{
         m_flywheelEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
         m_feederEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
         m_turretEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
-        m_trajectoryEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
-    }
-
-    /**
-     * @return the current encoder ticks on the trajectory control motor
-     */
-    public double getTrajectoryPosition(){
-        return m_trajectoryEncoder.getQuadraturePosition();
     }
 
     /**
@@ -223,11 +219,29 @@ public class Launcher{
     }
 
     /**
-     * Sets the speed of the motor that moves the trajectory control
-     * @param speed desired speed
+     * sets the trajectory control system between up/down states
+     * @param trajectoryPosition desired state (trajectoryPosition.kUp, trajectoryPosition.kDown)
      */
-    private void setTrajectorySpeed(double speed){
-        m_trajectoryMotor.set(ControlMode.PercentOutput, speed);
+    public void setTrajectoryPosition(TrajectoryPosition trajectoryPosition){
+        if (trajectoryPosition == m_state){
+            return;
+        }
+        m_state = trajectoryPosition;
+
+        if(m_state == TrajectoryPosition.kUp){
+            setPiston(Value.kForward);
+        }
+        else if (m_state == TrajectoryPosition.kDown){
+            setPiston(Value.kReverse);
+        }
+    }
+
+    /**
+     * Sets pistons to a specific value
+     * @param value Forward, Reverse
+     */
+    private void setPiston(DoubleSolenoid.Value value) {
+        m_solenoid.set(value);
     }
 
     /**
