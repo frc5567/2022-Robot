@@ -36,6 +36,7 @@ public class CopilotController {
      */
     public void initCopilot(){
         m_intake.init();
+        m_launcher.initLauncher();
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
     }
 
