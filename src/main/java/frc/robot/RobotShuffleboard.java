@@ -30,6 +30,7 @@ public class RobotShuffleboard {
     public void initRobotShuffleboard(){
         drivetrainShuffleboardConfig();
         setDrivetrainInputScalar();
+        setFlywheelVelocity();
     }
 
  
