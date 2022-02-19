@@ -184,5 +184,9 @@ public class RobotMap {
         public static final double RIGHT_WALL_STEP_TWO_TARGET_ANGLE = 30;
         public static final double RIGHT_WALL_STEP_FOUR_TARGET_DISTANCE = 75;
         public static final double RIGHT_WALL_STEP_SIX_TARGET_ANGLE = 160;
+
+        //TODO: find exact angle/distances, this is a guess
+        public static final double RIGHT_LINE_STEP_TWO_TARGET_DISTANCE = 48;
+        public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 160;
     }
 }
