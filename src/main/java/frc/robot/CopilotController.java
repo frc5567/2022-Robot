@@ -147,6 +147,10 @@ public class CopilotController {
         else{
             m_launcher.setFlywheelSpeed(0);
         }
+
+        if(m_controller.getBButton()){
+            m_launcher.targetAndLaunch();
+        }
     }
 
     /**
