@@ -56,6 +56,7 @@ public class CopilotController {
         controlClimber();
         //for testing purposes
         manualLauncherCmd();
+        m_shuffleboard.periodic();
     }
 
     /**
