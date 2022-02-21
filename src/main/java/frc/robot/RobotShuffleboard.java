@@ -26,7 +26,7 @@ public class RobotShuffleboard {
     /**
      * Initialization method for RobotShuffleBoard
      */
-    public void initRobotShuffleboard(){
+    public void init(){
         drivetrainShuffleboardConfig();
         setDrivetrainInputScalar();
         setFlywheelVelocity();

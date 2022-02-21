@@ -4,7 +4,7 @@ import frc.robot.Drivetrain.Gear;
 import frc.robot.Intake.IntakeState;
 
 
-public class Auton{    
+public class Auton{
     //enum for storing what path we are going to take in auton
     public enum AutonPath{
         //auton path for starting on the hub wall on the left side
@@ -41,22 +41,23 @@ public class Auton{
     //declares variables for the auton class
     private AutonStep m_step;
     private AutonPath m_path;
+
     private Drivetrain m_drivetrain;
     private Launcher m_launcher;
     private Intake m_intake;
     private LimelightVision m_limelightVision;
+
     boolean m_autonStartFlag = true;
+    boolean m_limelightOff = true;
+    boolean m_canSeeTarget = false;
+    boolean m_doSysOut = true;
+
     double m_targetEncoderTicks;
     double m_currentRightEncoderTicks;
     double m_currentLeftEncoderTicks;
-    double m_targetGyro;
-    double m_currentGyro;
-    boolean m_canSeeTarget = false;
-    double m_visionAngleToTarget;
-    boolean m_limelightOff;
     double m_xToTarget;
+
     int m_sysOutCounter;
-    boolean m_doSysOut;
 
     /**
      * constructor for auton
@@ -86,11 +87,7 @@ public class Auton{
         m_limelightVision.init();
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kRightWall;
-        m_drivetrain.shiftGear(Gear.kLowGear);
-        // System.out.println("left encoder " + m_drivetrain.getLeftDriveEncoderPosition());
-        // System.out.println(" Right encoder " + m_drivetrain.getRightDriveEncoderPosition());
-        m_limelightVision.init();
-        m_doSysOut = true;
+        m_drivetrain.zeroEncoders();
     }
 
     /**
@@ -101,6 +98,10 @@ public class Auton{
         m_limelightVision.periodic();
         //calls the intake periodic method for automatic indexing
         m_intake.periodic();
+
+        m_currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
+        m_currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
+
         int CurrentLEDStatus = m_limelightVision.currentLEDStatus();
         //If the Limelight is off, sets m_limelightOff to be true
         if(CurrentLEDStatus == 1){
@@ -115,22 +116,21 @@ public class Auton{
         }
 
         if(m_autonStartFlag){
-            m_drivetrain.zeroEncoders();
-            m_step = AutonStep.kStep1;
             System.out.println("STARTING AUTON");
             m_autonStartFlag = false;
         }
-        m_currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
-        m_currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-        //System.out.println("Right Encoder Ticks: " + currentRightEncoderTicks);
-        //System.out.println("Left Encoder Ticks: " + currentLeftEncoderTicks);
-
+ 
         //Counter for sysouts
         if((m_sysOutCounter % 50) == 0){
             m_doSysOut = true;
         }
         else{
             m_doSysOut = false;
+        }
+
+        if(m_doSysOut == true){
+            System.out.println("Right Encoder Ticks: " + m_currentRightEncoderTicks);
+            System.out.println("Left Encoder Ticks: " + m_currentLeftEncoderTicks);   
         }
 
         //Starts auton pathing in one of our three paths: Left Wall, Right Wall, or Right Line
