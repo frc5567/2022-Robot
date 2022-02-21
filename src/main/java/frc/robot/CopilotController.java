@@ -76,7 +76,7 @@ public class CopilotController {
         }
         else{
             // If the button is not pressed or the intake is not extended, intake and magazine motors don't run
-            m_intake.setFrontRollerSpeed(0);
+            m_intake.setRollerSpeed(0);
             m_intake.setMagazineSpeed(0);
         }
     }
@@ -103,6 +103,29 @@ public class CopilotController {
     }
 
     /**
+     * This method controls the climber using three buttons to pass in values of power to two motors; the climber motor and the winch motor.
+     */
+    private void controlClimber(){
+        //controls Climber motor with two buttons, up or down
+        if(m_gamePad.getMoveClimberUp()){
+            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
+        }
+        else if(m_gamePad.getMoveClimberDown()){
+            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_REVERSE_SPEED);
+        }
+        else{
+            m_climber.climbCMD(0);
+        }
+        //controls Climber winch with one button, up
+        if(m_gamePad.getMoveRobotUp()){
+            m_climber.WinchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
+        }
+        else{
+            m_climber.WinchCMD(0);
+        }
+    }
+
+    /**
      * Manually controls the launcher and the turret for testing
      */
     private void manualLauncherCmd(){
@@ -125,26 +148,19 @@ public class CopilotController {
     }
 
     /**
-     * This method controls the climber using three buttons to pass in values of power to two motors; the climber motor and the winch motor.
+     * Manually controls the intake for testing 
      */
-    private void controlClimber(){
-        //controls Climber motor with two buttons, up or down
-        if(m_gamePad.getMoveClimberUp()){
-            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
+    private void manualIntakeCmd(){
+        //two if statements to determine intake position
+        if(m_controller.getXButton()){
+            m_intake.setIntakeExtension(IntakeState.kExtended);
         }
-        else if(m_gamePad.getMoveClimberDown()){
-            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_REVERSE_SPEED);
+        else if(m_controller.getYButton()){
+            m_intake.setIntakeExtension(IntakeState.kRetracted);
         }
-        else{
-            m_climber.climbCMD(0);
-        }
-        //controls Climber winch with one button, up
-        if(m_gamePad.getMoveRobotUp()){
-            m_climber.WinchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
-        }
-        else{
-            m_climber.WinchCMD(0);
-        }
+        
+        double triggerInput = (m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
+        m_intake.setRollerSpeed(triggerInput);
     }
 
     /**

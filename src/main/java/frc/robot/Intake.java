@@ -99,10 +99,10 @@ public class Intake {
     public void takeIn(){
         // Check to see if the intake is extended before activating the front roller motors
         if(m_state == IntakeState.kExtended){
-            setFrontRollerSpeed(RobotMap.IntakeConstants.ROLLER_SPEED);
+            setRollerSpeed(RobotMap.IntakeConstants.ROLLER_SPEED);
         } 
         else {
-            setFrontRollerSpeed(0);
+            setRollerSpeed(0);
         }
             
     }
@@ -111,7 +111,7 @@ public class Intake {
      * Sets the speed of the exterior intake motor
      * @param speed desired speed
      */
-    public void setFrontRollerSpeed(double speed){
+    public void setRollerSpeed(double speed){
         m_rollerMotor.set(ControlMode.PercentOutput, speed);
     }
 
@@ -127,7 +127,7 @@ public class Intake {
      * Reverses all intake and magazine motors to unjam the robot
      */
     public void unJam(){
-        setFrontRollerSpeed(RobotMap.IntakeConstants.REVERSE_ROLLER_SPEED);
+        setRollerSpeed(RobotMap.IntakeConstants.REVERSE_ROLLER_SPEED);
         setMagazineSpeed(RobotMap.IntakeConstants.REVERSE_MAGAZINE_SPEED);
     }
 
