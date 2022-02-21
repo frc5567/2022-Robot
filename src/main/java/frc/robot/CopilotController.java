@@ -22,11 +22,12 @@ public class CopilotController {
      * @param launcher we pass in launcher so the copilot can control the launcher system
      * @param climber we pass in climber so the copilot can control the climber system
      */
-    public CopilotController(Intake intake, Launcher launcher, Climber climber){
+    public CopilotController(Intake intake, Launcher launcher, Climber climber, RobotShuffleboard shuffleboard){
         //instatiates objects for copilot class
         m_intake = intake;
         m_launcher = launcher;
         m_climber = climber;
+        m_shuffleboard = shuffleboard;
         
         m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
 
@@ -69,7 +70,7 @@ public class CopilotController {
             m_intake.setIntakeExtension(IntakeState.kRetracted);
         }
         //if statement to control the power of the intake
-        if (m_gamePad.getIntakeCMDPressed()){
+        if (m_gamePad.getIntakeCMD()){
             // If the button getInakeCMD is pressed and the intake is extended, we activate the intake
             m_intake.takeIn();
         }
@@ -86,13 +87,17 @@ public class CopilotController {
     private void controlLauncher(){
         //uses one button to aim and launch
         if (m_gamePad.getLaunchCMD()){
-            m_launcher.launch();
+            m_launcher.targetAndLaunch();
+        }
+        else{
+            m_launcher.setFlywheelSpeed(0);
+            m_launcher.setTurretSpeed(0);
         }
 
-        if (m_gamePad.getTrajectoryUp()){
+        if (m_gamePad.getTrajectoryUpPressed()){
             m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
         }
-        else if (m_gamePad.getTrajectoryDown()){
+        else if (m_gamePad.getTrajectoryDownPressed()){
             m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
     }
@@ -101,15 +106,21 @@ public class CopilotController {
      * Manually controls the launcher and the turret for testing
      */
     private void manualLauncherCmd(){
-        if(m_controller.getLeftBumperPressed()){
+        if(m_controller.getLeftBumper()){
             m_launcher.setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
         }
-        else if(m_controller.getRightBumperPressed()){
+        else if(m_controller.getRightBumper()){
             m_launcher.setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
         }
+        else{
+            m_launcher.setTurretSpeed(0);
+        }
 
-        if(m_controller.getAButtonPressed()){
+        if(m_controller.getAButton()){
             m_launcher.setFlywheelSpeed(m_currentFlywheelVelocity);
+        }
+        else{
+            m_launcher.setFlywheelSpeed(0);
         }
     }
 
