@@ -5,14 +5,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 //Import Encoders
 import com.ctre.phoenix.motorcontrol.SensorCollection;
-//Import for sensor 
-import edu.wpi.first.wpilibj.DigitalInput;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public class Launcher{
+    //enum to store the state of the trajectory control solenoids
     public enum TrajectoryPosition{
         kUp ("Up"),
 
@@ -34,7 +33,7 @@ public class Launcher{
     //Declares limelight object
     private LimelightVision m_limelightVision;
     
-    //Declares variables for the motors that move the launcher flywheel, the feeder wheel, the turret angle, and the trajectory control
+    //Declares variables for the motors that move the launcher flywheel, the feeder wheel, and the turret angle
     //Not all of these motors will be TalonFXs, those are placeholders until we know what kinds of motors we'll be using
     private WPI_TalonFX m_masterFlywheelMotor;
     private WPI_TalonFX m_slaveFlywheelMotor;
@@ -46,16 +45,18 @@ public class Launcher{
     private SensorCollection m_feederEncoder;
     private SensorCollection m_turretEncoder;
 
-    private DigitalInput m_launchSensor;
-
+    //declares our double solenoid to be used on our trajectory control system
     private DoubleSolenoid m_solenoid;
 
+    //declares state enum to track our current trajectory control state
     private TrajectoryPosition m_state;
 
     /**
      * Constructor for Launcher objects
+     * @param limelightVision we pass in limelight to use in launch targeting
      */
     public Launcher(LimelightVision limelightVision){
+        //Instantiates objects for the Launcher class
         m_limelightVision = limelightVision;
 
         m_masterFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
@@ -68,28 +69,25 @@ public class Launcher{
         m_feederEncoder = new SensorCollection (m_feederMotor);
         m_turretEncoder = new SensorCollection (m_turretMotor);
 
-        m_launchSensor = new DigitalInput(RobotMap.LauncherConstants.LAUNCH_SENSOR_PORT);
-
-        // Instantiate Right and Left Solenoids
-        m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_DOWN, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_UP);
+        m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_DOWN_PORT, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_UP_PORT);
     
         m_state = TrajectoryPosition.kUnkown;
     }
 
     /**
-     * Initialization method for Launcher
+     * Initialization method for Launcher. Currently only zeros encoders and sets our default trajectory position to up
      */
-    public void initLauncher(){
+    public void init(){
         zeroEncoders();
         setTrajectoryPosition(TrajectoryPosition.kUp);
     }
     
     /**
-     * Prepares launch sequence by turning turret towards the target, moving the trajectory controller to the required angle, and revving the launcher flywheel to the required speed
+     * Prepares launch sequence by turning turret towards the target and revving the launcher flywheel to the required speed
      */
     public void launch(){
+        //Booleans to track when the two aspects of our launching sequence are ready
         boolean turretAngleReady = false;
-        boolean trajectoryReady = false;
         boolean flywheelMotorReady = false;
         //this if statement makes it so if we don't see a target, don't run the method and instead print "No Target Detected"
         if(m_limelightVision.seeTarget()){
@@ -103,14 +101,14 @@ public class Launcher{
                 }
                 //if we are above the tolerated error range, turn the turret toward the tolerated error range
                 else if(m_limelightVision.xAngleToTarget() > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
-                    //Prints out a message telling the driver that our robot is not yet ready to launch
+                    //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
                     System.out.println("Not Ready to Launch");
                     turretAngleReady = false;
                     setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
                 }
                 //if we are below the tolerated error range, turn the turret toward the tolerated error range
                 else if(m_limelightVision.xAngleToTarget() < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
-                    //Prints out a message telling the driver that our robot is not yet ready to launch
+                    //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
                     System.out.println("Not Ready to Launch");
                     turretAngleReady = false;
                     setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
@@ -134,6 +132,7 @@ public class Launcher{
             double targetFlywheelSpeed = m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100;
             setFlywheelSpeed(targetFlywheelSpeed);
             //Checks if our flywheel is at the target speed
+            //TODO: Add a small amount of error so that flywheelMotorReady is set to true when we are close enough
             if(getRealSpeed() == targetFlywheelSpeed){
                 flywheelMotorReady = true;
             }
@@ -141,7 +140,7 @@ public class Launcher{
                 flywheelMotorReady = false;
             }
 
-            //Prints out a message telling the driver when our robot is ready to launch
+            //Prints out a message telling the driver when our robot is ready to launch and moves game pieces into the flywheel
             if(turretAngleReady == true && flywheelMotorReady == true){
                 System.out.println("Commencing Launch Sequence");
                 advanceBalls();
@@ -153,14 +152,7 @@ public class Launcher{
     }
 
     /**
-     * feeds the ball into the flywheel and advances the magazine
-     */
-    private void advanceBalls(){
-        setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-    }
-
-    /**
-     * Shoots any balls out at a low speed to eject balls we don't want
+     * Shoots any game pieces out at a low speed to eject game pieces we don't want
      */
     public void expel(){
         setFlywheelSpeed(RobotMap.LauncherConstants.EXPEL_SPEED);
@@ -168,7 +160,7 @@ public class Launcher{
     }
 
     /**
-     * Zeros encoders
+     * Resets encoder values to 0
      */
     public void zeroEncoders(){
         m_flywheelEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
@@ -184,11 +176,28 @@ public class Launcher{
     }
 
     /**
-     * Sets the speed of the feeder motor
-     * @param speed desired speed
+     * sets the trajectory control system between up/down states
+     * @param trajectoryPosition desired state (trajectoryPosition.kUp, trajectoryPosition.kDown)
      */
-    private void setFeederSpeed(double speed){
-        m_feederMotor.set(ControlMode.PercentOutput, speed);
+    public void setTrajectoryPosition(TrajectoryPosition trajectoryPosition){
+        if (trajectoryPosition == m_state){
+            return;
+        }
+        m_state = trajectoryPosition;
+
+        if(m_state == TrajectoryPosition.kUp){
+            setPiston(Value.kForward);
+        }
+        else if (m_state == TrajectoryPosition.kDown){
+            setPiston(Value.kReverse);
+        }
+    }
+
+    /**
+     * @return current speed of flywheel motor
+     */
+    public double getRealSpeed(){
+        return m_masterFlywheelMotor.getSelectedSensorVelocity();
     }
 
     /**
@@ -211,52 +220,25 @@ public class Launcher{
     }
 
     /**
-     * sets the trajectory control system between up/down states
-     * @param trajectoryPosition desired state (trajectoryPosition.kUp, trajectoryPosition.kDown)
+     * Sets the speed of the feeder motor
+     * @param speed desired speed
      */
-    public void setTrajectoryPosition(TrajectoryPosition trajectoryPosition){
-        if (trajectoryPosition == m_state){
-            return;
-        }
-        m_state = trajectoryPosition;
+    private void setFeederSpeed(double speed){
+        m_feederMotor.set(ControlMode.PercentOutput, speed);
+    }
 
-        if(m_state == TrajectoryPosition.kUp){
-            setPiston(Value.kForward);
-        }
-        else if (m_state == TrajectoryPosition.kDown){
-            setPiston(Value.kReverse);
-        }
+    /**
+     * feeds the ball into the flywheel
+     */
+    private void advanceBalls(){
+        setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
     }
 
     /**
      * Sets pistons to a specific value
-     * @param value Forward, Reverse
+     * @param value Value.kForward, Value.kReverse
      */
     private void setPiston(DoubleSolenoid.Value value) {
         m_solenoid.set(value);
-    }
-
-    /**
-     * @return current speed of flywheel motor
-     */
-    public double getRealSpeed(){
-        return m_masterFlywheelMotor.getSelectedSensorVelocity();
-    }
-
-    /**
-     * @return whether or not the launch snesor is being activated
-     */
-    public boolean checkLaunchSensor(){
-        return m_launchSensor.get();
-    }
-
-    //ALL METHODS BEYOND THIS POINT WERE CREATED FOR MANUAL TURRET/LAUNCHER TESTING
-
-    /**
-     * Allows the turret to be controlled manually
-     * @param speed Desired speed of the turret (Positive for one direction, negative for the other)
-     */
-    public void manualTurretControl(double speed){
-
     }
 }
