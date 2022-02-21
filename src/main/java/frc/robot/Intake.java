@@ -1,7 +1,7 @@
 package frc.robot;
 
 //Import motors
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -37,9 +37,8 @@ public class Intake {
          
     }
     //Declares motors for the roller bar and interior magazine
-    //TODO: rename talonFX to the proper motor that will be used
-    private TalonFX m_rollerMotor;
-    private TalonFX m_magazineMotor;
+    private WPI_TalonSRX m_rollerMotor;
+    private WPI_TalonSRX m_magazineMotor;
 
     //Declares solenoids for extension and retraction
     private DoubleSolenoid m_solenoid;
@@ -58,9 +57,8 @@ public class Intake {
      */
     public Intake(){
         //Instatiate objects for intake class
-        //TODO: rename talonFX to the proper motor that will be used
-        m_rollerMotor = new TalonFX(RobotMap.IntakeConstants.ROLLER_MOTOR_ID);
-        m_magazineMotor = new TalonFX(RobotMap.IntakeConstants.MAGAZINE_MOTOR_ID);
+        m_rollerMotor = new WPI_TalonSRX(RobotMap.IntakeConstants.ROLLER_MOTOR_ID);
+        m_magazineMotor = new WPI_TalonSRX(RobotMap.IntakeConstants.MAGAZINE_MOTOR_ID);
 
         m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.DOUBLESOLENOID_EXTENDED_PORT);
 

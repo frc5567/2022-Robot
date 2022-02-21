@@ -2,6 +2,7 @@ package frc.robot;
 
 // Import motor controllers
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 //Import Encoders
 import com.ctre.phoenix.motorcontrol.SensorCollection;
@@ -37,8 +38,8 @@ public class Launcher{
     //Not all of these motors will be TalonFXs, those are placeholders until we know what kinds of motors we'll be using
     private WPI_TalonFX m_masterFlywheelMotor;
     private WPI_TalonFX m_slaveFlywheelMotor;
-    private WPI_TalonFX m_feederMotor;
-    private WPI_TalonFX m_turretMotor;
+    private WPI_TalonSRX m_feederMotor;
+    private WPI_TalonSRX m_turretMotor;
 
     //Declares variables for the encoders
     private SensorCollection m_flywheelEncoder;
@@ -61,9 +62,8 @@ public class Launcher{
 
         m_masterFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
         m_slaveFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.SLAVE_FLYWHEEL_FALCON_ID);
-        //TODO: THESE WILL NOT BE FALCONS - CHANGE
-        m_feederMotor = new WPI_TalonFX(RobotMap.LauncherConstants.FEEDER_MOTOR_ID);
-        m_turretMotor = new WPI_TalonFX(RobotMap.LauncherConstants.TURRET_MOTOR_ID);
+        m_feederMotor = new WPI_TalonSRX(RobotMap.LauncherConstants.FEEDER_MOTOR_ID);
+        m_turretMotor = new WPI_TalonSRX(RobotMap.LauncherConstants.TURRET_MOTOR_ID);
 
         m_flywheelEncoder = new SensorCollection (m_masterFlywheelMotor);
         m_feederEncoder = new SensorCollection (m_feederMotor);
@@ -133,8 +133,7 @@ public class Launcher{
             double targetFlywheelSpeed = m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100;
             setFlywheelSpeed(targetFlywheelSpeed);
             //Checks if our flywheel is at the target speed
-            //TODO: Add a small amount of error so that flywheelMotorReady is set to true when we are close enough
-            if(getRealSpeed() == targetFlywheelSpeed){
+            if(Math.abs(getRealSpeed() - targetFlywheelSpeed) < RobotMap.LauncherConstants.TOLERATED_FLYWHEEL_SPEED_ERROR){
                 flywheelMotorReady = true;
             }
             else{
