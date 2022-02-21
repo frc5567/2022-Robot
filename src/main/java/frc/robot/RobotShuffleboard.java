@@ -32,6 +32,17 @@ public class RobotShuffleboard {
         setFlywheelVelocity();
     }
 
+    /**
+     * This method should be called periodically in Teleop in order to control all systems
+     */
+    public void periodic(){
+        getFlywheelVelocity();
+        getHighVelocityScalar();
+        getLowVelocityScalar();
+        getHighTurnScalar();
+        getLowTurnScalar();
+    }
+
  
     /**
      * Constructor for robot shuffleboard class
