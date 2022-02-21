@@ -7,6 +7,10 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 
 
 public class LimelightVision {
+    /**
+     * Creates an enum to store the different pipelines:
+     * kStandard, kZoomX2, kZoomX3, and kDriver
+     */
     public enum Pipeline{
         kStandard(0),
         kZoomX2(1),
@@ -24,6 +28,7 @@ public class LimelightVision {
         }
     }
 
+    // Declares the pipeline
     public Pipeline m_Pipeline;
 
     // Declaration of the network table so values for m_xAngleOffset, m_yAngleOffset, and distance can be created
@@ -38,7 +43,9 @@ public class LimelightVision {
     // Target Area (0% to 100% of image)
     double m_areaOfScreen;
     
-    //Constructor for limelight
+    /**
+     * Constructor for limelight
+     */
     public LimelightVision (){
         m_limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
@@ -54,7 +61,10 @@ public class LimelightVision {
 
     }
 
-    public void init(){
+    /**
+     * Limelight init to initially disable the LEDs and set the pipeline
+     */
+    public void limelightInit(){
         disableLEDs();
         setPipeline(Pipeline.kStandard);
     }
@@ -104,6 +114,7 @@ public class LimelightVision {
     public boolean seeTarget(){
         boolean returnVal = false;
         double retFromTable = (double)m_limelightTable.getEntry("tv").getNumber(0);
+        // Checks to see if the value from the Limelight is at the desired value of 1
         if (retFromTable == 1){
             returnVal = true;
         }

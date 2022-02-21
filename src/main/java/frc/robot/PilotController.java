@@ -10,14 +10,15 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class PilotController {
+    // declares limelight object for aiming launcher and targeting
     private LimelightVision m_limelightVision;
 
-    //Declares controller, drivetrain, and shuffleboard objects
+    //Declares controller, drivetrain, and shuffleboard objects used for moving the robot
     private XboxController m_controller;
     private Drivetrain m_drivetrain;
     private RobotShuffleboard m_shuffleboard;
 
-    //Declares scalars
+    //Declares velocity and turn scalars used to control input value for arcade drive and store shuffleboard values
     private double m_currentVelocityScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
     private double m_currentTurnScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
 
@@ -27,17 +28,17 @@ public class PilotController {
 
     // Sysout counter
     int m_sysOutCounter = 0;
+
     /**
      * Constuctor for the pilot controller
      */
-    public PilotController(Drivetrain drivetrain, LimelightVision limelightVision){
+    public PilotController(Drivetrain drivetrain, LimelightVision limelightVision, RobotShuffleboard shuffleboard){
         m_drivetrain = drivetrain;
         m_limelightVision = limelightVision;
+        m_shuffleboard = shuffleboard;
 
         m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
         
-        m_shuffleboard = new RobotShuffleboard();
-
         //puts input scalar widgets on the shuffleboard
         m_shuffleboard.drivetrainShuffleboardConfig();
     }
@@ -80,7 +81,9 @@ public class PilotController {
         // applies deadband method 
         leftStickXInput = adjustForDeadband(leftStickXInput);
 
+        // limits the slew rate for trigger input
         triggerFilter.calculate(triggerInput);
+        // limits the slew rate for left stick x input
         stickFilter.calculate(leftStickXInput);
 
         // passes in our variables from this method (calculations) into our arcade drive in drivetrain
@@ -112,7 +115,7 @@ public class PilotController {
      */
     private void turnToTarget(){
         // checks if left bumper button is pressed and executes code if it is
-        if(m_controller.getLeftBumperPressed()){
+        if(m_controller.getLeftBumper()){
             // change into low gear for defense and more accurate aim
             m_drivetrain.shiftGear(Gear.kLowGear);
             // checks if any part of the target is visible
@@ -133,50 +136,34 @@ public class PilotController {
             else if(m_limelightVision.seeTarget() == false){
                 m_drivetrain.arcadeDrive(0, RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED);
             }
-            
         }
     }
 
-    /**
-     * Manual limelight activation for testing
-     */
-    public void manualLimelightCmd(){
-        if(m_controller.getAButtonPressed()){
-            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
-            System.out.println("A Button Pressed, Limelight on");
-            NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
-            double value = (double)ledMode.getNumber(0);
-            System.out.println(value);
-
-        }
-        else if(m_controller.getBButtonPressed()){
-            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
-            System.out.println("B Button Pressed, Limelight off");
-            NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
-            double value = (double)ledMode.getNumber(0);
-            System.out.println(value);
-        }
-    }
-
-    /**
+     /**
      * Initialization method for the pilot controller
+     * Calls init for drivetrain
      */
     public void init(){
         m_drivetrain.init();
-
     }
     /**
      * Periodic method for the pilot controller
+     * Calls turnToTarget, arcadeDriveCmd, and controlGear to set up the buttons needed for targeting, switching gears, and controlling the drive train on the xbox pilot controller
      */
     public void periodic() {
+        // When left bumper is pressed we turn to target
         turnToTarget();
+        // Calls the drivetrain to be utilized. Right trigger is forward, left trigger is backward, and left stick is turn
         arcadeDriveCmd();
+        // Controls the gear with x button being high gear and y button being low gear 
         controlGear();
-        manualLimelightCmd();
-
+     
+        // Periodically updates encoder ticks to our actual current encoder position
         double currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
         double currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
-
+        /**
+         * prints out our current right and left encoder ticks, prints only every 50 cycles 
+         */
         if ((++m_sysOutCounter % 50) == 0){
             System.out.println("Right Encoder Ticks: " + currentRightEncoderTicks);
             System.out.println("Left Encoder Ticks: " + currentLeftEncoderTicks);

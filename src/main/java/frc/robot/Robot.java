@@ -24,11 +24,12 @@ public class Robot extends TimedRobot {
   private CopilotController m_copilotController;
   private Auton m_auton;
 
+  private Intake m_intake;
   private LimelightVision m_limelightVision;
   private Drivetrain m_drivetrain;
   private Launcher m_launcher;
-  private Intake m_intake;
   private Climber m_climber;
+  private RobotShuffleboard m_shuffleboard;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -44,9 +45,11 @@ public class Robot extends TimedRobot {
     m_limelightVision = new LimelightVision();
     m_drivetrain = new Drivetrain();
     m_launcher = new Launcher(m_limelightVision);
+    m_climber = new Climber();
+    m_shuffleboard = new RobotShuffleboard();
     
-    m_pilotController = new PilotController(m_drivetrain, m_limelightVision);
-    m_copilotController = new CopilotController(m_intake, m_launcher, m_climber);
+    m_pilotController = new PilotController(m_drivetrain, m_limelightVision, m_shuffleboard);
+    m_copilotController = new CopilotController(m_intake, m_launcher, m_climber, m_shuffleboard);
     m_auton = new Auton(m_drivetrain, m_launcher, m_intake, m_limelightVision);
   }
 

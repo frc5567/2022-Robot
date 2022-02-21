@@ -83,13 +83,13 @@ public class Auton{
         m_drivetrain.init();
         m_launcher.init();
         m_intake.init();
-        m_limelightVision.init();
+        m_limelightVision.limelightInit();
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kRightWall;
         m_drivetrain.shiftGear(Gear.kLowGear);
         // System.out.println("left encoder " + m_drivetrain.getLeftDriveEncoderPosition());
         // System.out.println(" Right encoder " + m_drivetrain.getRightDriveEncoderPosition());
-        m_limelightVision.init();
+        m_limelightVision.limelightInit();
         m_doSysOut = true;
     }
 
