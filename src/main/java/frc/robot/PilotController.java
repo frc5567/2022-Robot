@@ -5,7 +5,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 //Drivetrain import
 import frc.robot.Drivetrain.Gear;
 
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -36,7 +35,7 @@ public class PilotController {
         m_shuffleboard = shuffleboard;
 
         m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
-        
+
         //puts input scalar widgets on the shuffleboard
         m_shuffleboard.drivetrainShuffleboardConfig();
     }
