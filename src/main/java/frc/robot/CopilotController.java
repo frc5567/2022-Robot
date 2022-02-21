@@ -56,6 +56,7 @@ public class CopilotController {
         controlClimber();
         //for testing purposes
         manualLauncherCmd();
+        manualIntakeCmd();
         m_shuffleboard.periodic();
     }
 
@@ -149,7 +150,7 @@ public class CopilotController {
     }
 
     /**
-     * Manually controls the intake for testing 
+     * Manually controls the intake for testing
      */
     private void manualIntakeCmd(){
         //two if statements to determine intake position
