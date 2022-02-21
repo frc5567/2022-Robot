@@ -54,7 +54,7 @@ public class LimelightVision {
 
     }
 
-    public void limelightInit(){
+    public void init(){
         disableLEDs();
         setPipeline(Pipeline.kStandard);
     }

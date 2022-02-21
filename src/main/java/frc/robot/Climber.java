@@ -12,7 +12,7 @@ private TalonFX m_winchMotor;
     /**
      * Initialization method for Climber
      */
-    public void initClimber(){
+    public void init(){
     }
 
     /**
