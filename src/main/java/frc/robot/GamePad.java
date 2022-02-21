@@ -62,8 +62,8 @@ public class GamePad extends GenericHID {
 	/**
 	 * Method to check if the IntakeCMD button was pressed
 	 */
-	public boolean getIntakeCMDPressed() {
-		return super.getRawButtonPressed(GamePadControls.IntakeCMD.portNum);
+	public boolean getIntakeCMD() {
+		return super.getRawButton(GamePadControls.IntakeCMD.portNum);
 	}
 
 	/**
@@ -76,15 +76,15 @@ public class GamePad extends GenericHID {
 	/**
 	 * Method to check if the Trajectory Up button was pressed
 	 */
-	public boolean getTrajectoryUp() {
-		return super.getRawButton(GamePadControls.Trajectory_Up.portNum);
+	public boolean getTrajectoryUpPressed() {
+		return super.getRawButtonPressed(GamePadControls.Trajectory_Up.portNum);
 	}
 
 	/**
 	 * Method to check if the Trajectory Down button was pressed
 	 */
-	public boolean getTrajectoryDown() {
-		return super.getRawButton(GamePadControls.Trajectory_Down.portNum);
+	public boolean getTrajectoryDownPressed() {
+		return super.getRawButtonPressed(GamePadControls.Trajectory_Down.portNum);
 	}
 
 	/**
