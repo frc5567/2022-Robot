@@ -1,12 +1,11 @@
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Drivetrain.Gear;
 import frc.robot.Intake.IntakeState;
 
 
 public class Auton{    
-    //enum for what path we are going to take in auton
+    //enum for storing what path we are going to take in auton
     public enum AutonPath{
         //auton path for starting on the hub wall on the left side
         kLeftWall,
@@ -61,7 +60,10 @@ public class Auton{
 
     /**
      * constructor for auton
-     * @param drivetrain drivetrain mechanism on the robot
+     * @param drivetrain we pass in drivetrain to be able to drive around in auton
+     * @param launcher we pass in the launcher to be able to launch during auton
+     * @param intake we pass in the intake to be able to pick up game pieces during auton
+     * @param limelightVision we pass in limelight to be able to target during auton
      */
     public Auton(Drivetrain drivetrain, Launcher launcher, Intake intake, LimelightVision limelightVision){
         m_drivetrain = drivetrain;
@@ -69,6 +71,7 @@ public class Auton{
         m_intake = intake;
         m_limelightVision = limelightVision;
 
+        //Sets the current step to step 1 and the path to whatever path we are currently running
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kRightWall;
     }
@@ -78,7 +81,9 @@ public class Auton{
      */
     public void init(){
         m_drivetrain.init();
-        m_launcher.initLauncher();
+        m_launcher.init();
+        m_intake.init();
+        m_limelightVision.limelightInit();
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kRightWall;
         m_drivetrain.shiftGear(Gear.kLowGear);
@@ -89,10 +94,13 @@ public class Auton{
     }
 
     /**
-     * this method will be called many times a second during the auton period. currently all pseudo-code, need to create driveToTarget and turnToAngle methods 
+     * this method will be called many times a second during the auton period
      */
     public void periodic(){
+        //calls the limelight periodic method in order to update the network tables every cycle
         m_limelightVision.periodic();
+        //calls the intake periodic method for automatic indexing
+        m_intake.periodic();
         int CurrentLEDStatus = m_limelightVision.currentLEDStatus();
         //If the Limelight is off, sets m_limelightOff to be true
         if(CurrentLEDStatus == 1){
@@ -125,12 +133,12 @@ public class Auton{
             m_doSysOut = false;
         }
 
-        //m_drivetrain.zeroEncoders();
+        //Starts auton pathing in one of our three paths: Left Wall, Right Wall, or Right Line
         if (m_path == AutonPath.kLeftWall){
             if(m_step == AutonStep.kStep1){
-                m_targetEncoderTicks = RobotMap.AutonConstants.LEFT_WALL_STEP_ONE_TARGET_DISTANCE * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
-                
+                //Activates our drive to target method, which returns true once we have reached our target
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_ONE_TARGET_DISTANCE)){
+                    //once drive to target returns true, zero encoders and drivetrain to stop the bot and prepare the sensors for the next step
                     m_drivetrain.arcadeDrive(0,0);
                     m_step = AutonStep.kStep2;
                     m_drivetrain.zeroEncoders();
@@ -140,11 +148,9 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStep2){
-                m_currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
-                m_currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-                //targetGyro = -RobotMap.AutonConstants.LEFT_WALL_STEP_TWO_TARGET_ANGLE * (1 - RobotMap.AutonConstants.ROTATE_BOUND);
-                //currentGyro = m_drivetrain.getGyro();
+                //Activates our turn to angle method, which returns true once we have reached our target
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_TWO_TARGET_ANGLE)){
+                    //when turn to angle returns true, zero encoders, gyro and drivetrain to stop the robot and prepare the sensors for the next step
                     m_drivetrain.arcadeDrive(0,0);
                     m_step = AutonStep.kStep3;
                     m_drivetrain.zeroEncoders();
@@ -155,11 +161,13 @@ public class Auton{
                 }
             }
             if(m_step == AutonStep.kStep3){
-                //m_intake.setIntakeExtension(IntakeState.kExtended);
+                //extends intake to prepare for the next step, where we activate our intake
+                m_intake.setIntakeExtension(IntakeState.kExtended);
+                System.out.println("Intake Extended");
                 m_step = AutonStep.kStep4;
             }
             if(m_step == AutonStep.kStep4){
-                m_targetEncoderTicks = RobotMap.AutonConstants.LEFT_WALL_STEP_FOUR_TARGET_DISTANCE * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
+                //Activates intake and drives forward to a target in order to pick up a game piece
                 m_intake.takeIn();
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_FOUR_TARGET_DISTANCE)){
                     m_drivetrain.arcadeDrive(0,0);
@@ -171,17 +179,13 @@ public class Auton{
                 }
             }
             if(m_step == AutonStep.kStep5){
-                //m_intake.setIntakeExtension(IntakeState.kRetracted);
+                //Retract intake so that we can continue our path without risking breaking the intake system
+                m_intake.setIntakeExtension(IntakeState.kRetracted);
+                System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep6;
             }
-
-                //TODO: correct step numbers
             else if(m_step == AutonStep.kStep6){
-                //System.out.println(m_drivetrain.getGyro());
-                m_currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
-                m_currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-                //targetGyro = RobotMap.AutonConstants.LEFT_WALL_STEP_SIX_TARGET_ANGLE * (1 - RobotMap.AutonConstants.ROTATE_BOUND);
-                //currentGyro = m_drivetrain.getGyro();
+                //Turns the robot a full 180 degrees in order to face the hub
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_SIX_TARGET_ANGLE)){
                     m_drivetrain.arcadeDrive(0,0);
                     m_step = AutonStep.kStep7;
@@ -193,27 +197,33 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStep7){
+                //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
                 if(m_limelightOff){
                     System.out.println("Turning on LEDS");
-                    //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
                     m_limelightVision.enableLEDs();
                 }
+                //This is all currently placeholder code for vision/targeting testing, it will eventually be replaced with m_launcher.launch()
+                //Stores the current distance from the target to the center of the screen on the x axis in a variable
                 m_xToTarget = m_limelightVision.xAngleToTarget();
                 System.out.println(m_xToTarget);
+                //If we can see the target, move on to the next logic
                 if(m_limelightVision.seeTarget()){
+                    //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
                     if(m_xToTarget < RobotMap.TOLERATED_TARGET_ERROR && m_xToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
                         System.out.println("On Target");
                         m_drivetrain.arcadeDrive(0,0);
-                         m_drivetrain.zeroEncoders();
-                         m_limelightVision.disableLEDs();
-                         m_step = AutonStep.kStep8;
+                        m_drivetrain.zeroEncoders();
+                        m_limelightVision.disableLEDs();
+                        m_step = AutonStep.kStop;
                     }
+                    //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");    
                         }
                         m_drivetrain.arcadeDrive(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
+                    //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");
@@ -227,20 +237,15 @@ public class Auton{
                     }
                 }
             }
-            else if(m_step == AutonStep.kStep8){
-                //this is the step where we will launch 
-                System.out.println("Launch!");
-                m_step = AutonStep.kStop;
-            }
             else if(m_step == AutonStep.kStop){
                 m_drivetrain.arcadeDrive(0, 0);
             }
         }
         else if (m_path == AutonPath.kRightWall){
             if(m_step == AutonStep.kStep1){
-                m_targetEncoderTicks = RobotMap.AutonConstants.RIGHT_WALL_STEP_ONE_TARGET_DISTANCE * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
-                
+                //Activates our drive to target method, which returns true once we have reached our target
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_ONE_TARGET_DISTANCE)){
+                    //once drive to target returns true, zero encoders and drivetrain to stop the bot and prepare the sensors for the next step
                     m_drivetrain.arcadeDrive(0,0);
                     m_step = AutonStep.kStep2;
                     m_drivetrain.zeroEncoders();
@@ -250,11 +255,9 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStep2){
-                m_currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
-                m_currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-                //targetGyro = -RobotMap.AutonConstants.RIGHT_WALL_STEP_TWO_TARGET_ANGLE * (1 - RobotMap.AutonConstants.ROTATE_BOUND);
-                //currentGyro = m_drivetrain.getGyro();
+                //Activates our turn to angle method, which returns true once we have reached our target
                 if(turnToAngle(RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_TWO_TARGET_ANGLE)){
+                    //when turn to angle returns true, zero encoders, gyro and drivetrain to stop the robot and prepare the sensors for the next step
                     m_drivetrain.arcadeDrive(0,0);
                     m_step = AutonStep.kStep3;
                     m_drivetrain.zeroEncoders();
@@ -265,11 +268,13 @@ public class Auton{
                 }
             }
             if(m_step == AutonStep.kStep3){
-                //m_intake.setIntakeExtension(IntakeState.kExtended);
+                //extends intake to prepare for the next step, where we activate our intake
+                m_intake.setIntakeExtension(IntakeState.kExtended);
+                System.out.println("Intake Extended");
                 m_step = AutonStep.kStep4;
             }
             if(m_step == AutonStep.kStep4){
-                m_targetEncoderTicks = RobotMap.AutonConstants.RIGHT_WALL_STEP_FOUR_TARGET_DISTANCE * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
+                //Activates intake and drives forward to a target in order to pick up a game piece
                 m_intake.takeIn();
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_FOUR_TARGET_DISTANCE)){
                     m_drivetrain.arcadeDrive(0,0);
@@ -281,17 +286,13 @@ public class Auton{
                 }
             }
             if(m_step == AutonStep.kStep5){
-                //m_intake.setIntakeExtension(IntakeState.kRetracted);
+                //Retract intake so that we can continue our path without risking breaking the intake system
+                m_intake.setIntakeExtension(IntakeState.kRetracted);
+                System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep6;
             }
-
-                //TODO: correct step numbers
             else if(m_step == AutonStep.kStep6){
-                //System.out.println( m_drivetrain.getGyro());
-                m_currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
-                m_currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-                //targetGyro = RobotMap.AutonConstants.RIGHT_WALL_STEP_SIX_TARGET_ANGLE * (1 - RobotMap.AutonConstants.ROTATE_BOUND);
-                //currentGyro = m_drivetrain.getGyro();
+                //Turns the robot a full 180 degrees in order to face the hub
                 if(turnToAngle(RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_SIX_TARGET_ANGLE)){
                     m_drivetrain.arcadeDrive(0,0);
                     m_step = AutonStep.kStep7;
@@ -303,27 +304,33 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStep7){
+                //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
                 if(m_limelightOff){
                     System.out.println("Turning on LEDS");
-                    //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
                     m_limelightVision.enableLEDs();
                 }
+                //This is all currently placeholder code for vision/targeting testing, it will eventually be replaced with m_launcher.launch()
+                //Stores the current distance from the target to the center of the screen on the x axis in a variable
                 m_xToTarget = m_limelightVision.xAngleToTarget();
                 System.out.println(m_xToTarget);
+                //If we can see the target, move on to the next logic
                 if(m_limelightVision.seeTarget()){
+                    //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
                     if(m_xToTarget < RobotMap.TOLERATED_TARGET_ERROR && m_xToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
                         System.out.println("On Target");
                         m_drivetrain.arcadeDrive(0,0);
                          m_drivetrain.zeroEncoders();
                          m_limelightVision.disableLEDs();
-                         m_step = AutonStep.kStep8;
+                         m_step = AutonStep.kStop;
                     }
+                    //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");    
                         }
                         m_drivetrain.arcadeDrive(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
+                    //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");    
@@ -337,24 +344,19 @@ public class Auton{
                         }
                 }
             }
-            else if(m_step == AutonStep.kStep8){
-                //this is the step where we will launch 
-                System.out.println("Launch!");
-                m_step = AutonStep.kStop;
-            }
             else if(m_step == AutonStep.kStop){
                 m_drivetrain.arcadeDrive(0, 0);
             }
         }
         else if (m_path == AutonPath.kRightLine){ 
-            //drive forward a much smaller amount than other paths
             if(m_step == AutonStep.kStep1){
-                //m_intake.setIntakeExtension(IntakeState.kExtended);
+                //extends intake to prepare for the next step, where we activate our intake
+                m_intake.setIntakeExtension(IntakeState.kExtended);
                 System.out.println("Intake Extended");
                 m_step = AutonStep.kStep2;
             }
             else if(m_step == AutonStep.kStep2){
-                m_targetEncoderTicks = RobotMap.AutonConstants.RIGHT_LINE_STEP_TWO_TARGET_DISTANCE * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
+                //Activates intake and drives forward to a target in order to pick up a game piece
                 m_intake.takeIn();
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_TWO_TARGET_DISTANCE)){
                     m_drivetrain.arcadeDrive(0,0);
@@ -366,16 +368,13 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStep3){
-                //m_intake.setIntakeExtension(IntakeState.kRetracted);
+                //Retract intake so that we can continue our path without risking breaking the intake system
+                m_intake.setIntakeExtension(IntakeState.kRetracted);
                 System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep4;
             }
             else if(m_step == AutonStep.kStep4){
-                //System.out.println(m_drivetrain.getGyro());
-                m_currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
-                m_currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-                //targetGyro = RobotMap.AutonConstants.LEFT_WALL_STEP_SIX_TARGET_ANGLE * (1 - RobotMap.AutonConstants.ROTATE_BOUND);
-                //currentGyro = m_drivetrain.getGyro();
+                //Turns the robot a full 180 degrees in order to face the hub
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_FOUR_TARGET_ANGLE)){
                     m_drivetrain.arcadeDrive(0,0);
                     m_step = AutonStep.kStep5;
@@ -387,27 +386,33 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStep5){
+                //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
                 if(m_limelightOff){
                     System.out.println("Turning on LEDS");
-                    //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
                     m_limelightVision.enableLEDs();
                 }
+                //This is all currently placeholder code for vision/targeting testing, it will eventually be replaced with m_launcher.launch()
+                //Stores the current distance from the target to the center of the screen on the x axis in a variable
                 m_xToTarget = m_limelightVision.xAngleToTarget();
                 System.out.println(m_xToTarget);
+                //If we can see the target, move on to the next logic
                 if(m_limelightVision.seeTarget()){
+                    //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
                     if(m_xToTarget < RobotMap.TOLERATED_TARGET_ERROR && m_xToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
                         System.out.println("On Target");
                         m_drivetrain.arcadeDrive(0,0);
-                         m_drivetrain.zeroEncoders();
-                         m_limelightVision.disableLEDs();
-                         m_step = AutonStep.kStep6;
+                        m_drivetrain.zeroEncoders();
+                        m_limelightVision.disableLEDs();
+                        m_step = AutonStep.kStop;
                     }
+                    //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");    
                         }
                         m_drivetrain.arcadeDrive(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
+                    //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");
@@ -421,11 +426,6 @@ public class Auton{
                     }
                 }
             }
-            else if(m_step == AutonStep.kStep6){
-                //this is the step where we will launch 
-                System.out.println("Launch!");
-                m_step = AutonStep.kStop;
-            }
             else if(m_step == AutonStep.kStop){
                 System.out.println("Auton Completed");
                 m_drivetrain.arcadeDrive(0, 0);
@@ -435,31 +435,30 @@ public class Auton{
     }
 
     /**
-     * code taken from 2021 auton (protobranch)
+     * Method for driving forward a specified amount of inches at a specified
      * @param speed speed robot will travel at 
-     * @param target target distance in inches
+     * @param target target distance in inches. Should always be positive. In order to turn the other way, pass in a negative speed
      * @return whether or not we have reached our target
      */
     public boolean driveToTarget(double speed, double target){
+        //Assigns encoder values to variables to be used in the logic of this method
         double rightEncoder = m_drivetrain.getRightDriveEncoderPosition();
         double leftEncoder = m_drivetrain.getLeftDriveEncoderPosition();
+        //Translates target in inches to target in encoder ticks
         target = target * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
-        //System.out.println("EncoderTarget: " + target);
-        //System.out.println("Right Encoder Ticks: " + rightEncoder);
-        //System.out.println("Left Encoder Ticks: " + leftEncoder);
 
+        //
         if(speed < 0){
             target = target * -1;
             if((target > 0) && (speed > 0)){
+                //if We have not yet reached our target, move forward at the speed passed into the method. Otherwise, reset encoders and return true
                 if((leftEncoder < target) || (rightEncoder < target)){
-                    //m_drivetrain.arcadeDrive(0,0);
                     m_drivetrain.arcadeDrive(speed, 0);
                     return false;
                 }
                 else{
                     m_drivetrain.arcadeDrive(0,0);
                     m_drivetrain.zeroEncoders();
-                    //TODO: look for docuemtation about using gyros
                     return true;
                 }
             }

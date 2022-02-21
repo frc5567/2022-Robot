@@ -12,7 +12,7 @@ public class Climber {
     /**
      * Initialization method for Climber
      */
-    public void initClimber(){
+    public void init(){
     }
 
     /**
