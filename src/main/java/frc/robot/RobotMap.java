@@ -87,6 +87,9 @@ public class RobotMap {
 
         //Constant for distance from directly on center we allow the target to be 
         public static final double TOLERATED_TURRET_ERROR = 0.08;
+        //Constant for how much error we allow the flywheel speed before we launch
+        //TODO: This value is a guess and needs to be tuned
+        public static final double TOLERATED_FLYWHEEL_SPEED_ERROR = 0.05;
 
         //TODO: Change to actual port number once we know what it is
         public static final int LAUNCH_SENSOR_PORT = 10;
