@@ -25,7 +25,8 @@ public class RobotShuffleboard {
 
     /**
      * Initialization method for RobotShuffleBoard
-     * Calls drivetrainShuffleboardConfig, setDrivetrainInputScalar, and setFlywheelVelocity
+     * Calls drivetrainShuffleboardConfig, setDrivetrainInputScalar, and setFlywheelVelocity to create the shuffleboard and its inputs.
+     * Also sets the current values for inputs to the values from the shuffleboard.
      */
     public void initRobotShuffleboard(){
         drivetrainShuffleboardConfig();

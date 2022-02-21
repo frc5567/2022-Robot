@@ -10,15 +10,15 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class PilotController {
-    // declares limelight object 
+    // declares limelight object for aiming launcher and targeting
     private LimelightVision m_limelightVision;
 
-    //Declares controller, drivetrain, and shuffleboard objects
+    //Declares controller, drivetrain, and shuffleboard objects used for moving the robot
     private XboxController m_controller;
     private Drivetrain m_drivetrain;
     private RobotShuffleboard m_shuffleboard;
 
-    //Declares scalars
+    //Declares velocity and turn scalars used to control input value for arcade drive and store shuffleboard values
     private double m_currentVelocityScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
     private double m_currentTurnScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
 
@@ -149,7 +149,7 @@ public class PilotController {
     }
     /**
      * Periodic method for the pilot controller
-     * Calls turnToTarget, arcadeDriveCmd, and controlGear
+     * Calls turnToTarget, arcadeDriveCmd, and controlGear to set up the buttons needed for targeting, switching gears, and controlling the drive train on the xbox pilot controller
      */
     public void periodic() {
         // When left bumper is pressed we turn to target
