@@ -7,11 +7,12 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 
 
 public class LimelightVision {
+    /**
+     * Creates an enum to store the pipeline kStandard and the methond to get its ID
+     */
     public enum Pipeline{
-        kStandard(0),
-        kZoomX2(1),
-        kZoomX3(2),
-        kDriver(3);
+        // Declares kStandard as a mode for the pipeline for the way the image data is processed
+        kStandard(0);
 
         int m_pipelineID;
 
@@ -24,22 +25,27 @@ public class LimelightVision {
         }
     }
 
+    // Declares the pipeline object for the Limelight that processes the images into data that we need to find for targeting
     public Pipeline m_Pipeline;
 
     // Declaration of the network table so values for m_xAngleOffset, m_yAngleOffset, and distance can be created
     NetworkTable m_limelightTable;
 
-    // Horizontal offset from Crosshair to target (LL1: -27 to 27 degrees; LL2 -29.8 to 29.8 degrees)
+    // Declares object for horizontal offset from Crosshair to target (-29.8 to 29.8 degrees)
     double m_xAngleOffset;
 
-    // Vertical offset from crosshair to target (LL1: -20.5 to 20.5 degrees; LL2: -24.85 to 24.85 degrees)
+    // Declares object for vertical offset from crosshair to target (-24.85 to 24.85 degrees)
     double m_yAngleOffset;
 
-    // Target Area (0% to 100% of image)
+    // Declares object for Target Area (0% to 100% of image)
     double m_areaOfScreen;
     
-    //Constructor for limelight
+    /**
+     * Constructor for limelight to allow robot to target for launching
+     * Creates SmartDashboard with offset values in the x and y directions and area of the screen taken up by the target that is found by the Limelight
+     */
     public LimelightVision (){
+        // Creates the Network Table that stores the values for the Limelight and allows those values to be easily changed for testing
         m_limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
         // assigns and gets the variable for each entry
@@ -54,6 +60,9 @@ public class LimelightVision {
 
     }
 
+    /**
+     * Limelight init to initially disable the LEDs and set the pipeline
+     */
     public void init(){
         disableLEDs();
         setPipeline(Pipeline.kStandard);
@@ -103,7 +112,9 @@ public class LimelightVision {
      */
     public boolean seeTarget(){
         boolean returnVal = false;
+        // If tv (target visable) is a 1, target is visable. If tv is 0, target is not visible (if no value is found it returns 0)
         double retFromTable = (double)m_limelightTable.getEntry("tv").getNumber(0);
+        // Checks to see if the value from the Limelight is at the desired value of 1 or true, meaning the target is visable
         if (retFromTable == 1){
             returnVal = true;
         }
