@@ -72,7 +72,9 @@ public class Drivetrain {
     }
     
     /**
-     * constructor for drivetrain objects
+     * constructor for instantiating and creating instances for drivetrain objects:
+     * 4 falcon (talon fx) motors, 1 double solenoid, gear, and gyro
+     * Configures the turn PID and instantiates PIDTurnController
      */
     public Drivetrain () {
 
@@ -164,10 +166,15 @@ public class Drivetrain {
     }
 
     /**
-     * Initialization method for the drivetrain
+     * Initialization method for the drivetrain.
+     * Brakes all drivetrain motors,
+     * Configures factory default values for all drivetrain motors,
+     * Zeros encoders and gyro,
+     * Shifts initially to low gear,
+     * Inverts all right motors,
      */
     public void init(){
-        // Brakes all the motors in init so we are not moving when we turn on the robot
+        // Brakes all the motors in init so we are not moving when there is no power going to the robot
         m_masterRightMotor.setNeutralMode(NeutralMode.Brake);
         m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
         m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
@@ -183,9 +190,10 @@ public class Drivetrain {
         zeroGyro();
         // Intially starts robot in low gear
         shiftGear(Gear.kLowGear);
-        // inverts the right motor 
+        // inverts the right motor so we don't spin in a circle because the motor is flipped
         m_masterRightMotor.setInverted(true);
-        // sets the right slave motor as inverted 
+        // sets the right slave motor to however the master motor it is following is inverted
+        // If master inverted is set true, so will the slave. If it is false, the slave will be false
         m_slaveRightMotor.setInverted(InvertType.FollowMaster);
     }
 
@@ -222,7 +230,6 @@ public class Drivetrain {
         m_PIDTurnController.setIntegratorRange(-RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE, RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE);
         m_PIDTurnController.setTolerance(RobotMap.DrivetrainConstants.TOLERANCE_ROTATE_CONTROLLER);
     }
-
 
     /**
      * This method returns the output of the PID controller scaled back to match our expected drivetrain input range
