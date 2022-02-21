@@ -19,7 +19,7 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  //added for testing
+  
   private PilotController m_pilotController;
   private CopilotController m_copilotController;
   private Auton m_auton;
