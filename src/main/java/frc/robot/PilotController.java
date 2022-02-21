@@ -32,14 +32,13 @@ public class PilotController {
     /**
      * Constuctor for the pilot controller
      */
-    public PilotController(Drivetrain drivetrain, LimelightVision limelightVision){
+    public PilotController(Drivetrain drivetrain, LimelightVision limelightVision, RobotShuffleboard shuffleboard){
         m_drivetrain = drivetrain;
         m_limelightVision = limelightVision;
+        m_shuffleboard = shuffleboard;
 
         m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
         
-        m_shuffleboard = new RobotShuffleboard();
-
         //puts input scalar widgets on the shuffleboard
         m_shuffleboard.drivetrainShuffleboardConfig();
     }
@@ -116,7 +115,7 @@ public class PilotController {
      */
     private void turnToTarget(){
         // checks if left bumper button is pressed and executes code if it is
-        if(m_controller.getLeftBumperPressed()){
+        if(m_controller.getLeftBumper()){
             // change into low gear for defense and more accurate aim
             m_drivetrain.shiftGear(Gear.kLowGear);
             // checks if any part of the target is visible

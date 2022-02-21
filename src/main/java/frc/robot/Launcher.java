@@ -85,7 +85,7 @@ public class Launcher{
     /**
      * Prepares launch sequence by turning turret towards the target and revving the launcher flywheel to the required speed
      */
-    public void launch(){
+    public void targetAndLaunch(){
         //Booleans to track when the two aspects of our launching sequence are ready
         boolean turretAngleReady = false;
         boolean flywheelMotorReady = false;
@@ -97,6 +97,7 @@ public class Launcher{
             if(getTurretPosition() > -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT && getTurretPosition() < RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
                 //this if statements checks to see if we are within the tolerated error range, and if we are set turret bool to true
                 if(m_limelightVision.xAngleToTarget() < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR && m_limelightVision.xAngleToTarget() > -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                    setTurretSpeed(0);
                     turretAngleReady = true;
                 }
                 //if we are above the tolerated error range, turn the turret toward the tolerated error range
@@ -143,7 +144,10 @@ public class Launcher{
             //Prints out a message telling the driver when our robot is ready to launch and moves game pieces into the flywheel
             if(turretAngleReady == true && flywheelMotorReady == true){
                 System.out.println("Commencing Launch Sequence");
-                advanceBalls();
+                setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+            }
+            else{
+                setFeederSpeed(0);
             }
         }
         else {
@@ -202,7 +206,7 @@ public class Launcher{
 
     /**
      * Sets the speed of the launcher flywheel motor
-     * This method is public for manual turret testing
+     * This method is public for manual turret testing zeroing motors in CopilotController
      * @param speed desired speed 
      */
     public void setFlywheelSpeed(double speed){
@@ -212,7 +216,7 @@ public class Launcher{
 
     /**
      * Sets the speed of the motor that moves the turret
-     * This is method is public for manual turret testing
+     * This is method is public for manual turret testing and zeroing motors in CopilotController
      * @param speed desired speed (Positive for one direction, negative for the other)
      */
     public void setTurretSpeed(double speed){
@@ -225,13 +229,6 @@ public class Launcher{
      */
     private void setFeederSpeed(double speed){
         m_feederMotor.set(ControlMode.PercentOutput, speed);
-    }
-
-    /**
-     * feeds the ball into the flywheel
-     */
-    private void advanceBalls(){
-        setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
     }
 
     /**
