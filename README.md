@@ -20,15 +20,31 @@
 | Turn Control   | Left Stick X  |
 | High Gear      | X Button      |
 | Low Gear       | Y Button      |
+| Turn To Target | L. Bumper     |
 
 ##### Copilot
 | System         | Control (ID)  |
 | -------------- | ------------- |
-| Extend Intake  |       1       |
-| Retract Intake |       2       |
-| Intake         |       3       |
-| Prepare Launch |       4       |
-| Launch         |       5       |
-| Climber Up     |       6       |
+| Extend Intake  |       0       |
+| Retract Intake |       1       |
+| Intake         |       2       |
+| Launch         |       3       |
+| Trajectory Up  |       4       |
+| Trajectory Down|       5       |
+| Climber Down   |       6       |
 | Climber Down   |       7       |
 | Robot up       |       8       |
+
+##### Copilot (Testing Xbox Controller)
+| System         | Control       |
+| -------------- | ------------- |
+| Turret Left    | Left Bumper   |
+| Turret Right   | Right Bumper  |
+| Launch         | A Button      |
+| Target+Launch  | B Button      |
+| Extend Intake  | X Button      |
+| Retract Intake | Y Button      |
+| Intake (In)    | R. Trigger    |
+| Intake (Out)   | L. Trigger    |
+
+
