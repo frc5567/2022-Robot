@@ -27,15 +27,15 @@ public class Climber {
       * sets speed of climber to passed in variable
       * @param climb  velocity input (valid values: -1 to 1)
       */
-    public void climbCMD(double climb){
-        m_climbMotor.set(ControlMode.PercentOutput, climb);
+    public void climbCMD(double speed){
+        m_climbMotor.set(ControlMode.PercentOutput, speed);
     }
 
     /**
      * sets the speed of winch to passed in variable
      * @param winch velocity input (valid values 0 to 1)
      */
-    public void winchCMD(double winch){
-        m_winchMotor.set(ControlMode.PercentOutput, winch);
+    public void winchCMD(double speed){
+        m_winchMotor.set(ControlMode.PercentOutput, speed);
     }
 }
