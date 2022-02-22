@@ -34,3 +34,17 @@
 | Climber Down   |       6       |
 | Climber Down   |       7       |
 | Robot up       |       8       |
+
+##### Copilot (Testing Xbox Controller)
+| System         | Control       |
+| -------------- | ------------- |
+| Turret Left    | Left Bumper   |
+| Turret Right   | Right Bumper  |
+| Launch         | A Button      |
+| Target+Launch  | B Button      |
+| Extend Intake  | X Button      |
+| Retract Intake | Y Button      |
+| Intake (In)    | R. Trigger    |
+| Intake (Out)   | L. Trigger    |
+
+
