@@ -133,7 +133,7 @@ public class Launcher{
             double targetFlywheelSpeed = m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100;
             setFlywheelSpeed(targetFlywheelSpeed);
             //Checks if our flywheel is at the target speed
-            if(Math.abs(getRealSpeed() - targetFlywheelSpeed) < RobotMap.LauncherConstants.TOLERATED_FLYWHEEL_SPEED_ERROR){
+            if(getRealSpeed() > targetFlywheelSpeed){
                 flywheelMotorReady = true;
             }
             else{
@@ -163,22 +163,6 @@ public class Launcher{
     }
 
     /**
-     * Resets encoder values to 0
-     */
-    public void zeroEncoders(){
-        m_flywheelEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
-        m_feederEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
-        m_turretEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
-    }
-
-    /**
-     * @return the current encoder ticks on the turret motor
-     */
-    public double getTurretPosition(){
-        return m_turretEncoder.getQuadraturePosition();
-    }
-
-    /**
      * sets the trajectory control system between up/down states
      * @param trajectoryPosition desired state (trajectoryPosition.kUp, trajectoryPosition.kDown)
      */
@@ -199,7 +183,7 @@ public class Launcher{
     /**
      * @return current speed of flywheel motor
      */
-    public double getRealSpeed(){
+    private double getRealSpeed(){
         return m_masterFlywheelMotor.getSelectedSensorVelocity();
     }
 
@@ -236,5 +220,21 @@ public class Launcher{
      */
     private void setPiston(DoubleSolenoid.Value value) {
         m_solenoid.set(value);
+    }
+
+    /**
+     * Resets encoder values to 0
+     */
+    private void zeroEncoders(){
+        m_flywheelEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
+        m_feederEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
+        m_turretEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
+    }
+
+    /**
+     * @return the current encoder ticks on the turret motor
+     */
+    private double getTurretPosition(){
+        return m_turretEncoder.getQuadraturePosition();
     }
 }
