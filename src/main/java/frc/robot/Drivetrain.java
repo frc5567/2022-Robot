@@ -10,18 +10,19 @@ import edu.wpi.first.wpilibj.SPI;
 
 // Import motor
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 //Import Motor controller
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
-import edu.wpi.first.wpilibj.Encoder;
 
 import com.kauailabs.navx.frc.AHRS;
 
+//Unused imports for commented-out code
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import edu.wpi.first.wpilibj.Encoder;
+import com.ctre.phoenix.ErrorCode;
 
 public class Drivetrain {
 
@@ -126,8 +127,8 @@ public class Drivetrain {
     }
 
     /**
-     * setPiston is a method for changing the state between Forward and reverse
-     * @param value what state state to set the pistons to (Forward, Reverse)
+     * setPiston is a method for changing the state between Value.kForward and Value.kReverse
+     * @param value what state state to set the pistons to (kForward, kReverse)
      */
     private void setPistons(DoubleSolenoid.Value value) {
         m_solenoid.set(value);
@@ -176,7 +177,7 @@ public class Drivetrain {
         m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
         m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
         m_slaveRightMotor.setNeutralMode(NeutralMode.Brake);
-        // Reverts all configurations to factory default values
+        // Reverts all configurations to factory default values to restore the motor controllers to a known state, allowing you to only config the settings that you intend to change
         m_masterRightMotor.configFactoryDefault();
         m_slaveRightMotor.configFactoryDefault();
         m_masterLeftMotor.configFactoryDefault();
@@ -222,8 +223,11 @@ public class Drivetrain {
      * integrator range to stop us from turning too far and it also sets the tolerance to determine in we need to stop or replan the input.
      */
     private void turnPIDConfig(){
+        //Calculates the shortest route to the setpoint by considering the min and max to be the same point
         m_PIDTurnController.enableContinuousInput(-RobotMap.DrivetrainConstants.PID_INPUT_RANGE, RobotMap.DrivetrainConstants.PID_INPUT_RANGE);
+        //Sets the min and max values of error by adding the integrator value to the controller output
         m_PIDTurnController.setIntegratorRange(-RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE, RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE);
+        //Sets the error which is considered tolerable for use with the setpoint
         m_PIDTurnController.setTolerance(RobotMap.DrivetrainConstants.TOLERANCE_ROTATE_CONTROLLER);
     }
 
