@@ -26,7 +26,7 @@ public class LimelightVision {
     }
 
     // Declares the pipeline object for the Limelight that processes the images into data that we need to find for targeting
-    public Pipeline m_Pipeline;
+    public Pipeline m_pipeline;
 
     // Declaration of the network table so values for m_xAngleOffset, m_yAngleOffset, and distance can be created
     NetworkTable m_limelightTable;
@@ -49,8 +49,11 @@ public class LimelightVision {
         m_limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
         // assigns and gets the variable for each entry
+        // tx is the horizontal distance between target angle and the center of the screen
         m_xAngleOffset = m_limelightTable.getEntry("tx").getDouble(0.0);
+        // ty is the vertical distance between target angle and the center of the screen
         m_yAngleOffset = m_limelightTable.getEntry("ty").getDouble(0.0);
+        // ta is the percent area of the screen that is taken up by the target
         m_areaOfScreen = m_limelightTable.getEntry("ta").getDouble(0.0); 
 
         // Creates/assigns the offset and area variables onto the dashboard table
@@ -80,9 +83,6 @@ public class LimelightVision {
      */
     public void disableLEDs() {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
-        //NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
-        //double value = (double)ledMode.getNumber(0);
-        //System.out.println(value);
     }
 
     /**
@@ -90,9 +90,6 @@ public class LimelightVision {
      */
     public void enableLEDs() {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
-        //NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode"); 
-        //double value = (double)ledMode.getNumber(0);
-        //System.out.println(value);
     }
 
     /**
@@ -112,9 +109,9 @@ public class LimelightVision {
      */
     public boolean seeTarget(){
         boolean returnVal = false;
-        // If tv (target visable) is a 1, target is visable. If tv is 0, target is not visible (if no value is found it returns 0)
+        // If tv (target visible) is a 1, target is visible. If tv is 0, target is not visible (if no value is found it returns 0)
         double retFromTable = (double)m_limelightTable.getEntry("tv").getNumber(0);
-        // Checks to see if the value from the Limelight is at the desired value of 1 or true, meaning the target is visable
+        // Checks to see if the value from the Limelight is at the desired value of 1 or true, meaning the target is visible
         if (retFromTable == 1){
             returnVal = true;
         }
@@ -126,7 +123,7 @@ public class LimelightVision {
      * @return It returns the angular value in the x direction from the target from -29.8 to 29.8
      */
     public double xAngleToTarget(){
-        return(NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0));
+        return(m_xAngleOffset);
     }
 
     /**
@@ -135,14 +132,6 @@ public class LimelightVision {
      */
     public double yAngleToTarget(){
         return(m_yAngleOffset);
-    }
-  
-    /**
-     * Tells the percent of the screen that the target takes up 
-     * @return The percentage of the screen that the target takes up (0 to 1)
-     */
-    private double targetPercentVisible(){
-        return(m_areaOfScreen);
     }
 
     /**
@@ -164,6 +153,7 @@ public class LimelightVision {
         return m_distance;
     }
   
+    //TODO: integrate PID into this method later
     /**
      * Figures out where in the x direction (right or left) to go in terms of speed 
      * @return The speed for turning to the target
@@ -175,7 +165,6 @@ public class LimelightVision {
         if (xAngleToTarget() > 0.5){
             // If our offset is greater than acceptable maximum we set speed to negative to turn left until in acceptable range
             m_xTurnSpeed = -RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
-    
         }
         else if (xAngleToTarget() < -0.5){
             // If our offset is less than acceptable minimmum we set speed to positive to turn right until in acceptable range
