@@ -119,6 +119,7 @@ public class PilotController {
             // checks if any part of the target is visible
             if (m_limelightVision.seeTarget() == true){
                 // if target is outside of acceptable offset values, robot moves to aim at the target
+                //TODO: fix so turret aims
                 if (m_limelightVision.xAngleToTarget() < RobotMap.TOLERATED_TARGET_ERROR && m_limelightVision.xAngleToTarget() > -RobotMap.TOLERATED_TARGET_ERROR && m_limelightVision.yAngleToTarget() < RobotMap.TOLERATED_TARGET_ERROR && m_limelightVision.yAngleToTarget() > -RobotMap.TOLERATED_TARGET_ERROR){
                     m_drivetrain.arcadeDrive(0, 0);
                     // prints to let drivers know we are On Target
