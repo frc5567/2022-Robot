@@ -1,4 +1,5 @@
 package frc.robot;
+// Note: When tuning, tune in the order of PDI
 
 /**
  * Class for holding PID constants as well as gains in robot map
@@ -15,10 +16,10 @@ public class Gains {
     /**
      * Contructor for Gains objects
      * These objects store PID constants for easier reading in the RobotMap
-     * @param _kP the proportionality constant
-     * @param _kI the integral constant
-     * @param _kD the derivative constant
-     * @param _kF the feed-forward constant
+     * @param _kP the proportionality constant. How much to change the value/power by
+     * @param _kI the integral constant. Error between the current and desired value. Bumps the value/power to actually hit the target
+     * @param _kD the derivative constant. The rate of change. It helps to dampen oscillation
+     * @param _kF the feed-forward constant. The minimum amount of power needed to overcome inertia (to actually get us to move). Use characterization to find this
      * @param _kIzone the intergral zone -> if absolute closed loop error exceeds this value, error is reset
      * @param _kPeakOutput the peak output of the PID control
      */

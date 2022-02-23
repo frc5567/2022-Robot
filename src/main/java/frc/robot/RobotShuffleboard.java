@@ -24,6 +24,15 @@ public class RobotShuffleboard {
     private NetworkTableEntry m_flywheelVelocityEntry;
 
     /**
+     * Constructor for robot shuffleboard class
+     * Ceeates a the Driver Tab on the shuffleboard
+     */
+    public RobotShuffleboard(){
+        // Creates the new tab on the Shuffleboard for the driver
+        m_driverTab = Shuffleboard.getTab("Driver Tab");
+    }
+
+    /**
      * Initialization method for RobotShuffleBoard
      * Calls drivetrainShuffleboardConfig, setDrivetrainInputScalar, and setFlywheelVelocity to create the shuffleboard and its inputs.
      * Also sets the current values for inputs to the values from the shuffleboard.
@@ -36,20 +45,13 @@ public class RobotShuffleboard {
 
     /**
      * This method should be called periodically in Teleop
+     * This updates the values we are getting from the shuffleboard to be current
      */
     public void periodic(){
         setDrivetrainInputScalar();
         setFlywheelVelocity();
     }
 
- 
-    /**
-     * Constructor for robot shuffleboard class
-     */
-    public RobotShuffleboard(){
-        // Creates the new tab on the Shuffleboard for the driver
-        m_driverTab = Shuffleboard.getTab("Driver Tab");
-    }
     /**
      * Configures shuffleboard so we can get the entries from the shuffleboard driver tab
      */
@@ -90,7 +92,8 @@ public class RobotShuffleboard {
     }
 
     /**
-     * Sets the velocity of the flywheel equal to the value on the shuffleboard
+     * Sets the velocity of the flywheel equal to the value on the shuffleboard. 
+     * If no value is found on the shuffleboard, returns with nothing, the value will be set to 0.5 from RobotMap
      */
     private void setFlywheelVelocity(){
         m_flywheelVelocity = m_flywheelVelocityEntry.getDouble(RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY);
@@ -106,34 +109,37 @@ public class RobotShuffleboard {
         return m_flywheelVelocity;
     }
 
-/**
- * Gets the value for HighVelocityScalar and returns it
- * @return The value of HighVelocity Scalar
- */
+    /**
+     * Gets the value for HighVelocityScalar and returns it
+     * @return The value of HighVelocity Scalar
+     */
     public double getHighVelocityScalar(){
         setDrivetrainInputScalar();
         return m_highVelocityScalar;
     }
-/**
- * Gets the value for LowVelocityScalar and returns it
- * @return The value for LowVelocityScalar
- */
+
+    /**
+     * Gets the value for LowVelocityScalar and returns it
+     * @return The value for LowVelocityScalar
+     */
     public double getLowVelocityScalar(){
         setDrivetrainInputScalar();
         return m_lowVelocityScalar;
     }
-/**
- * Gets the value for HighTurnScalar and returns it
- * @return The value for HighTurnScalar
- */
+
+    /**
+     * Gets the value for HighTurnScalar and returns it
+     * @return The value for HighTurnScalar
+     */
     public double getHighTurnScalar(){
         setDrivetrainInputScalar();
         return m_highTurnScalar;
     }
-/**
- * Gets the value for LowTurnScalar and returns it
- * @return The value for LowTurnScalar
- */
+
+    /**
+     * Gets the value for LowTurnScalar and returns it
+     * @return The value for LowTurnScalar
+     */
     public double getLowTurnScalar(){
         setDrivetrainInputScalar();
         return m_lowTurnScalar;
