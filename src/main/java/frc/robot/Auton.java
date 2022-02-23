@@ -7,13 +7,13 @@ import frc.robot.Intake.IntakeState;
 public class Auton{
     //enum for storing what path we are going to take in auton
     public enum AutonPath{
-        //auton path for starting on the hub wall on the left side
+        //auton path for starting on the hub wall on the left side from the drivers' station perspective
         kLeftWall,
 
-        //auton path for starting on the hub wall on the left side
+        //auton path for starting on the hub wall on the right side from the drivers' station perspective
         kRightWall,
 
-        //auton path for starting on the edge of the tarmac line on the right side
+        //auton path for starting on the edge of the tarmac line on the right side from the drivers' station perspective
         kRightLine;
     }
 
@@ -39,22 +39,31 @@ public class Auton{
     }
     
     //declares variables for the auton class
+    //Enums to store what step we are on and what path we chose
     private AutonStep m_step;
     private AutonPath m_path;
 
+    //Member variables to store the systems we pass in
     private Drivetrain m_drivetrain;
     private Launcher m_launcher;
     private Intake m_intake;
     private LimelightVision m_limelightVision;
 
+    //Variable that is only true the first time through the auton periodic loop to print out that we have started auton
     boolean m_autonStartFlag = true;
+    //Variable to store the current state of our Limelight LEDS
     boolean m_limelightOff = true;
+    //Variable to store whether or not we can currently see a target
     boolean m_canSeeTarget = false;
+    //Boolean for Sysout counter
     boolean m_doSysOut = true;
 
+    //Variables for Sysouts
     double m_targetEncoderTicks;
     double m_currentRightEncoderTicks;
     double m_currentLeftEncoderTicks;
+
+    //Stores the value from the xAngleToTarget method
     double m_xToTarget;
 
     int m_sysOutCounter;
@@ -115,6 +124,7 @@ public class Auton{
             System.out.println("unknown LED status");
         }
 
+        //Prints out "Starting Auton" only once
         if(m_autonStartFlag){
             System.out.println("STARTING AUTON");
             m_autonStartFlag = false;
@@ -179,6 +189,10 @@ public class Auton{
                 }
             }
             if(m_step == AutonStep.kStep5){
+                //Sysout to tell drivers if we acually picked up a game piece
+                System.out.println("Game Piece Picked up:" + m_intake.getMagazineSensor1());
+                //Zeros roller speed before we retract the intake
+                m_intake.setRollerSpeed(0);
                 //Retract intake so that we can continue our path without risking breaking the intake system
                 m_intake.setIntakeExtension(IntakeState.kRetracted);
                 System.out.println("Intake Retracted");
@@ -447,31 +461,16 @@ public class Auton{
         //Translates target in inches to target in encoder ticks
         target = target * RobotMap.AutonConstants.INCHES_TO_ENCODER_TICKS_LOWGEAR;
 
-        //
         if(speed < 0){
             target = target * -1;
-            if((target > 0) && (speed > 0)){
-                //if We have not yet reached our target, move forward at the speed passed into the method. Otherwise, reset encoders and return true
-                if((leftEncoder < target) || (rightEncoder < target)){
-                    m_drivetrain.arcadeDrive(speed, 0);
-                    return false;
-                }
-                else{
-                    m_drivetrain.arcadeDrive(0,0);
-                    m_drivetrain.zeroEncoders();
-                    return true;
-                }
-            }
-            else if((target < 0) && (speed < 0)){
+            if(target < 0){
                 if(leftEncoder > target || rightEncoder > target){
-                    //m_drivetrain.arcadeDrive(0,0);
                     m_drivetrain.arcadeDrive(speed,0);
                     return false;
                 }
                 else{
                     m_drivetrain.arcadeDrive(0,0);
                     m_drivetrain.zeroEncoders();
-                    //gyro again
                     return true;
                 }
             }
@@ -481,31 +480,15 @@ public class Auton{
                 return false;
             }
         }
-        //if speed is greater than 0
-        else{
+        else if(speed > 0){
             if((target > 0) && (speed > 0)){
                 if((leftEncoder < target) || (rightEncoder < target)){
-                    //m_drivetrain.arcadeDrive(0,0);
                     m_drivetrain.arcadeDrive(speed, 0);
                     return false;
                 }
                 else{
                     m_drivetrain.arcadeDrive(0,0);
                     m_drivetrain.zeroEncoders();
-                    //gyro again
-                    return true;
-                }
-            }
-            else if((target < 0) && (speed < 0)){
-                if((leftEncoder > target) || (rightEncoder > target)){
-                    //m_drivetrain.arcadeDrive(0,0);
-                    m_drivetrain.arcadeDrive(speed,0);
-                    return false;
-                }
-                else{
-                    m_drivetrain.arcadeDrive(0,0);
-                    m_drivetrain.zeroEncoders();
-                    //gyro again
                     return true;
                 }
             }
@@ -514,6 +497,11 @@ public class Auton{
                 m_step = AutonStep.kStop;
                 return false;
             }
+        }
+        else{
+            System.out.println("Robot will never reach target; exiting pathing.");
+            m_step = AutonStep.kStop;
+            return false;
         }
     }
 
@@ -528,14 +516,11 @@ public class Auton{
         //if target is on the left, this if statement will run
         if(speed < 0){
             target = target * -1;
-            //System.out.println("Target Angle: " + target);
-            //System.out.println("Current Angle " + currentAngle);
+            //Rotate Bound is a percentage (we are within a certain percentage of are target angle where we will be close enough)
             if(currentAngle < (target * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
                 m_drivetrain.arcadeDrive(0,0);
                 m_drivetrain.zeroGyro();
                 m_drivetrain.zeroEncoders();
-                //System.out.println("Zero Gyro " + m_drivetrain.getGyro()); 
-                //System.out.println("At Target Angle " + currentAngle);
                 return true;
             }
             else{
@@ -548,14 +533,11 @@ public class Auton{
         }
         //if target is on the right, this if statement will run
         else{
-            //System.out.println("Target Angle: " + target);
-            //System.out.println("Current Angle: " + currentAngle);
+            //Rotate Bound is a percentage (we are within a certain percentage of are target angle where we will be close enough)
             if(currentAngle > (target * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
                 m_drivetrain.arcadeDrive(0, 0);
                 m_drivetrain.zeroEncoders();
                 m_drivetrain.zeroGyro();
-                //System.out.println("zero Gyro" + m_drivetrain.getGyro());
-                //System.out.println("At Target Angle " + currentAngle);
                 return true;
             }
             else{
