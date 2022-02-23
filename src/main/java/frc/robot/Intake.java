@@ -150,20 +150,20 @@ public class Intake {
     /**
      * @return whether or not the first magazine sensor is being activated
      */
-    public boolean getMagazineSensor1() {
+    private boolean getMagazineSensor1() {
         return m_sensor1.get();
     }
 
     /**
      * @return whether or not the second magazine sensor is being activated
      */
-    public boolean getMagazineSensor2() {
+    private boolean getMagazineSensor2() {
         return m_sensor2.get();
     }
 
     /**
      * Sets pistons to a specific value
-     * @param value Forward, Reverse
+     * @param value Value.kForward, Value.kReverse
      */
     private void setPiston(DoubleSolenoid.Value value) {
         m_solenoid.set(value);
