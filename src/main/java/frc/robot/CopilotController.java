@@ -51,6 +51,7 @@ public class CopilotController {
      * This method should be called periodically in Teleop in order to control all systems
      */
     public void periodic(){
+        //when testing with xbox controller, comment out intake, launcher, and climber
         controlIntake();
         controlLauncher();
         controlClimber();
@@ -77,9 +78,8 @@ public class CopilotController {
             m_intake.takeIn();
         }
         else{
-            // If the button is not pressed or the intake is not extended, intake and magazine motors don't run
+            // If the button is not pressed or the intake is not extended, set intake to not run
             m_intake.setRollerSpeed(0);
-            m_intake.setMagazineSpeed(0);
         }
     }
 
