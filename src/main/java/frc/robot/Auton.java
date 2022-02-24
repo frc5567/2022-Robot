@@ -1,8 +1,7 @@
 package frc.robot;
 
-import frc.robot.Drivetrain.Gear;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Intake.IntakeState;
-
 
 public class Auton{
     //enum for storing what path we are going to take in auton
@@ -49,6 +48,10 @@ public class Auton{
     private Intake m_intake;
     private LimelightVision m_limelightVision;
 
+    //declares shuffleboard to be used for path selection
+    private RobotShuffleboard m_shuffleboard;
+    private double m_currentAutonPath = RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH;
+
     //Variable that is only true the first time through the auton periodic loop to print out that we have started auton
     boolean m_autonStartFlag = true;
     //Variable to store the current state of our Limelight LEDS
@@ -75,7 +78,8 @@ public class Auton{
      * @param intake we pass in the intake to be able to pick up game pieces during auton
      * @param limelightVision we pass in limelight to be able to target during auton
      */
-    public Auton(Drivetrain drivetrain, Launcher launcher, Intake intake, LimelightVision limelightVision){
+    public Auton(Drivetrain drivetrain, Launcher launcher, Intake intake, LimelightVision limelightVision, RobotShuffleboard shuffleboard){
+        m_shuffleboard = shuffleboard;
         m_drivetrain = drivetrain;
         m_launcher = launcher;
         m_intake = intake;
@@ -84,6 +88,8 @@ public class Auton{
         //Sets the current step to step 1 and the path to whatever path we are currently running
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kRightWall;
+
+        m_shuffleboard.drivetrainShuffleboardConfig();
     }
 
     /**
@@ -103,6 +109,10 @@ public class Auton{
      * this method will be called many times a second during the auton period
      */
     public void periodic(){
+        //Sets our current path to the one entered on the shuffleboard
+        selectPath();
+        //Runs Shuffleboard periodic to update our shuffleboard controlled values in real time
+        m_shuffleboard.periodic();
         //calls the limelight periodic method in order to update the network tables every cycle
         m_limelightVision.periodic();
         //calls the intake periodic method for automatic indexing
@@ -547,6 +557,27 @@ public class Auton{
                 }
                 return false;
             }
+        }
+    }
+
+    //Method to set the auton path from the shuffleboard. 0 = Right Line, 1 = Right Wall, 2 = Left Wall
+    private void selectPath(){
+        if(m_currentAutonPath == 0){
+            System.out.println("Setting Auton to Right Line Path");
+            m_path = AutonPath.kRightLine;
+        }
+        else if(m_currentAutonPath == 1){
+            System.out.println("Setting Auton to Right Wall Path");
+            m_path = AutonPath.kRightWall;
+        }
+        else if(m_currentAutonPath == 2){
+            System.out.println("Setting Auton to Left Wall Path");
+            m_path = AutonPath.kLeftWall;
+        }
+        else{
+            m_currentAutonPath = 0;
+            System.out.println("Setting Auton to Right Line Path");
+            m_path = AutonPath.kRightLine;
         }
     }
 }
