@@ -113,7 +113,7 @@ public class CopilotController {
             m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
         }
         else if(m_gamePad.getMoveClimberDown()){
-            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_REVERSE_SPEED);
+            m_climber.climbCMD(-RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
         }
         else{
             m_climber.climbCMD(0);
@@ -132,10 +132,10 @@ public class CopilotController {
      */
     private void manualLauncherCmd(){
         if(m_controller.getLeftBumper()){
-            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
+            m_launcher.setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
         }
         else if(m_controller.getRightBumper()){
-            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
+            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
         }
         else{
             m_launcher.setTurretSpeed(0);
