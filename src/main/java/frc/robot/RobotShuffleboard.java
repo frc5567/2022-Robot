@@ -16,12 +16,15 @@ public class RobotShuffleboard {
     double m_lowTurnScalar;
     // Declares member variable for manual launcher testing
     double m_flywheelVelocity;
+    // Declares member variable for choosing an auton path
+    double m_autonPath;
     // Declares member variables for the entries on the table
     private NetworkTableEntry m_highVelocityScalarEntry;
     private NetworkTableEntry m_lowVelocityScalarEntry;
     private NetworkTableEntry m_highTurnScalarEntry;
     private NetworkTableEntry m_lowTurnScalarEntry;
     private NetworkTableEntry m_flywheelVelocityEntry;
+    private NetworkTableEntry m_autonPathEntry;
 
     /**
      * Constructor for robot shuffleboard class
@@ -41,6 +44,7 @@ public class RobotShuffleboard {
         drivetrainShuffleboardConfig();
         setDrivetrainInputScalar();
         setFlywheelVelocity();
+        setAutonPath();
     }
 
     /**
@@ -50,6 +54,7 @@ public class RobotShuffleboard {
     public void periodic(){
         setDrivetrainInputScalar();
         setFlywheelVelocity();
+        setAutonPath();
     }
 
     /**
@@ -73,6 +78,9 @@ public class RobotShuffleboard {
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
         m_flywheelVelocityEntry = m_driverTab.addPersistent("Flywheel Velocity", RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY)
+                                    .withWidget(BuiltInWidgets.kTextView)
+                                    .getEntry();
+        m_autonPathEntry = m_driverTab.addPersistent("Auton Path", RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
     }
@@ -99,6 +107,9 @@ public class RobotShuffleboard {
         m_flywheelVelocity = m_flywheelVelocityEntry.getDouble(RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY);
     }
     
+    private void setAutonPath(){
+        m_autonPath = m_autonPathEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH);
+    }
     /**
      * Gets the current value for the flywheel velocity from the shuffleboard
      * @return the flywheel velocity double from the shuffleboard
