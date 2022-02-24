@@ -109,10 +109,10 @@ public class Auton{
      * this method will be called many times a second during the auton period
      */
     public void periodic(){
-        //Sets our current path to the one entered on the shuffleboard
-        selectPath();
         //Runs Shuffleboard periodic to update our shuffleboard controlled values in real time
         m_shuffleboard.periodic();
+        //Sets our current path to the one entered on the shuffleboard
+        selectPath();
         //calls the limelight periodic method in order to update the network tables every cycle
         m_limelightVision.periodic();
         //calls the intake periodic method for automatic indexing
