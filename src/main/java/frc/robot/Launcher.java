@@ -105,27 +105,27 @@ public class Launcher{
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
                     System.out.println("Not Ready to Launch");
                     turretAngleReady = false;
-                    setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
+                    setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
                 }
                 //if we are below the tolerated error range, turn the turret toward the tolerated error range
                 else if(m_limelightVision.xAngleToTarget() < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
                     System.out.println("Not Ready to Launch");
                     turretAngleReady = false;
-                    setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
+                    setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
                 }
             }
             //If we are to the left of our motor limit, print out a message and turn right
             else if(getTurretPosition() < -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
                 System.out.println("Not Ready to Launch");
                 turretAngleReady = false;
-                setTurretSpeed(RobotMap.LauncherConstants.POSITIVE_TURRET_ROTATION_SPEED);
+                setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }
             //If we are to the right of our motor limit, print out a message and turn left
             else if(getTurretPosition() > RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
                 System.out.println("Not Ready to Launch");
                 turretAngleReady = false;
-                setTurretSpeed(RobotMap.LauncherConstants.NEGATIVE_TURRET_ROTATION_SPEED);
+                setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }
 
             // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.

@@ -150,7 +150,7 @@ public class Intake {
     /**
      * @return whether or not the first magazine sensor is being activated
      */
-    private boolean getMagazineSensor1() {
+    public boolean getMagazineSensor1() {
         return m_sensor1.get();
     }
 

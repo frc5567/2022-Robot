@@ -5,11 +5,11 @@ public class RobotMap {
     //timeout in milliseconds for the CTRE config methods
     public static final int TIMEOUT_MS = 30;
 
-    //constant for alotted error for turning to a target
+    //constant for alotted error for turning to a target used only for turning in auton and pilot controller
     public static final double TOLERATED_TARGET_ERROR = 0.3;
 
     /**
-     * constant for PCM port on the CAN bus
+     * constant for PCM (Pneumatic Control Module) port on the CAN bus
      */
     public static class CANConstants{
         public static final int PCM_CAN_ID = 20;
@@ -25,7 +25,8 @@ public class RobotMap {
         public static final int SLAVE_RIGHT_FALCON_ID = 14;
         public static final int SLAVE_LEFT_FALCON_ID = 13;
 
-        //constants for gearbox solenoid (on the PCM)
+        //constants for gearbox solenoid (on the PCM) two ports are needed per double solenoid because the a and b sides are electrically independant
+        //Ports are on the PCM 
         public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 4; 
         public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 5;
         
@@ -48,7 +49,7 @@ public class RobotMap {
         //Port on the comp computer for the pilot controller
         public static final int XBOX_CONTROLLER_PORT = 0;
 
-        //Constant to record stick deadband that works for our pilot controller (Currently the xbox one controller, but the 360 controllers may need a higher value because of larger drift)
+        //Constant to record stick deadband that works for our pilot controller (Currently the xbox one controller, but the 360 controllers may need a higher value because of larger drift) 
         public static final double STICK_DEADBAND = 0.09;
 
         //Constants for filters on acceleration and turning in order to prevent brownouts
@@ -63,7 +64,8 @@ public class RobotMap {
         //Port on the comp computer for the copilot controller/gamepad
         public static final int GAMEPAD_PORT = 1;
 
-        //Constant to record stick deadband that works for our copilot controller. This should be tested once we have finalized a copilot controller
+        //Constant to record stick deadband that works for our copilot controller. This should be tested once we have finalized a copilot controller 
+        //TODO Keep this only if an Xbox controller will be used. If a joystick is used on the gamepad, the specific value for that joystick will need to be found
         public static final double STICK_DEADBAND = 0.09;
     }
 
@@ -71,7 +73,7 @@ public class RobotMap {
      * Constants for Launcher 
      */
     public static class LauncherConstants{
-        //constants for drivetrain motor IDs (on the CAN bus)
+        //constants for drivetrain motor IDs (on the CAN (Continuous Area Network) bus)
         public static final int MASTER_FLYWHEEL_FALCON_ID = 5;
         public static final int SLAVE_FLYWHEEL_FALCON_ID = 6;
         public static final int FEEDER_MOTOR_ID = 7;
@@ -80,22 +82,23 @@ public class RobotMap {
         //These are untested placesholder values until we know what speeds we actually need
         public static final double FEEDING_SPEED = 0.5;
         public static final double EXPEL_SPEED = 0.25;
-        public static final double POSITIVE_TURRET_ROTATION_SPEED = 0.25;
-        public static final double NEGATIVE_TURRET_ROTATION_SPEED = -0.25;
+        public static final double TURRET_ROTATION_SPEED = 0.25;
 
         //Constant for our turret encoder limit so we don't overturn and damage wiring
         public static final double TURRET_ENCODER_LIMIT = 75000;
 
         //Constant for distance from directly on center we allow the target to be 
+        //TODO Tune when limelight is set up
         public static final double TOLERATED_TURRET_ERROR = 0.08;
         //Constant for how much error we allow the flywheel speed before we launch
-        //TODO: This value is a guess and needs to be tuned
+        //TODO: This value is a guess and needs to be tuned. Might need to use PID instead of this or adjust the logic
         public static final double TOLERATED_FLYWHEEL_SPEED_ERROR = 0.05;
 
         //TODO: Change to actual port number once we know what it is
         public static final int LAUNCH_SENSOR_PORT = 10;
 
-        //Constant for the port numbers of the trajectory control pistons
+        //Constant for the port numbers of the trajectory control pistons two ports are needed per double solenoid because the a and b sides are electrically independant
+        //Ports are on the PCM 
         public static final int DOUBLESOLENOID_ANGLE_UP_PORT = 2;
         public static final int DOUBLESOLENOID_ANGLE_DOWN_PORT = 3;
     }
@@ -108,6 +111,7 @@ public class RobotMap {
         public static final int ROLLER_MOTOR_ID = 11;
         public static final int MAGAZINE_MOTOR_ID = 12;
         //These are untested placesholder values until we know what speed we actually need
+        //TODO These values will need to be tuned
         public static final double ROLLER_SPEED = 0.5;
         public static final double MAGAZINE_SPEED = 0.5;
 
@@ -115,11 +119,13 @@ public class RobotMap {
         public static final double REVERSE_ROLLER_SPEED = -0.5;
         public static final double REVERSE_MAGAZINE_SPEED = -0.5;
 
-        //constants for solenoids (on the PCM)
+        //constants for solenoids (on the PCM) two ports are needed per double solenoid because the a and b sides are electrically independant 
+        //Ports are on the PCM 
         public static final int DOUBLESOLENOID_RETRACTED_PORT = 0;
         public static final int DOUBLESOLENOID_EXTENDED_PORT = 1;
 
         //TODO: Change to actual port numbers once we know what they are
+        //The sensors on the magazine are plugged into ports on the RoboRio
         public static final int MAGAZINE_SENSOR_0_PORT = 9;
         public static final int MAGAZINE_SENSOR_1_PORT = 10;
     }
@@ -128,8 +134,8 @@ public class RobotMap {
      * Constants for LimelightVision class
      */
     public static class LimelightConstants{
-        //TODO change camera height after camera is mounted
-        public static final double CAMERA_HEIGHT = 12.0; //in inches
+        //TODO change camera angle after camera is mounted
+        public static final double CAMERA_HEIGHT = 23.25; //in inches
         public static final double HUB_HEIGHT = 104.0; //in inches
         public static final double CAMERA_DEGREES_FROM_GROUND = 45;
         // constant for the minimum speed for aiming at target
@@ -138,7 +144,7 @@ public class RobotMap {
     }
 
     /**
-     * Constants used in RobotShuffelbaard class (also used in Pilot controller when initial scalars are set)
+     * Constants used in RobotShuffleboard class (also used in Pilot controller when initial scalars are set)
      */
     public static class ShuffleboardConstants {
         public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.5;
@@ -156,7 +162,6 @@ public class RobotMap {
 
         //constants for motor speeds 
         public static final double CLIMBER_MOTOR_SPEED = 0.8;
-        public static final double CLIMBER_MOTOR_REVERSE_SPEED = -0.8;
         public static final double WINCH_MOTOR_SPEED = 0.8;
     }
 
@@ -164,6 +169,7 @@ public class RobotMap {
      * constants for Auton
      */
     public static class AutonConstants{
+        //2048 is the number of ticks per rotation of motor, 21.125 is the circumference of the wheels, 15 and 7.92 are the gear ratios.
         public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (21.125 / 15);
         public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (21.125 / 7.92);
 
@@ -175,21 +181,31 @@ public class RobotMap {
         public static final double ROTATE_BOUND = 0.03;
 
         public static final double FULL_TURN = 180;
-
+        //This value is passed into driveToTarget method in Auton to move the robot 84.75 inches
         public static final double LEFT_WALL_STEP_ONE_TARGET_DISTANCE = 84.75;
         //TODO: find exact angle, this is a guess
+        //This value is passed into turnToTarget method in Auton to turn the robot 30 degrees
         public static final double LEFT_WALL_STEP_TWO_TARGET_ANGLE = 30;
+        //This value is passed into driveToTarget method in Auton to move the robot 75 inches 
         public static final double LEFT_WALL_STEP_FOUR_TARGET_DISTANCE = 75;
+        //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees 
         public static final double LEFT_WALL_STEP_SIX_TARGET_ANGLE = 160;
 
+        //This value is passed into driveToTarget method in Auton to move the robot 84.75 inches
         public static final double RIGHT_WALL_STEP_ONE_TARGET_DISTANCE = 84.75;
         //TODO: find exact angle, this is a guess
+        //This value is passed into turnToTarget method in Auton to turn the robot 30 degrees 
         public static final double RIGHT_WALL_STEP_TWO_TARGET_ANGLE = 30;
+
+        //This value is passed into driveToTarget method in Auton to move the robot 75 inches
         public static final double RIGHT_WALL_STEP_FOUR_TARGET_DISTANCE = 75;
+        //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees
         public static final double RIGHT_WALL_STEP_SIX_TARGET_ANGLE = 160;
 
         //TODO: find exact angle/distance, this is a guess
+        //This value is passed into driveToTarget method in Auton to move the robot 48 inches
         public static final double RIGHT_LINE_STEP_TWO_TARGET_DISTANCE = 48;
+        //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees
         public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 160;
     }
 }
