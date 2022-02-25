@@ -3,9 +3,12 @@ package frc.robot;
 // Import motor controllers
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 //Import Encoders
 import com.ctre.phoenix.motorcontrol.SensorCollection;
+
+import edu.wpi.first.math.controller.PIDController;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -51,6 +54,9 @@ public class Launcher{
 
     //declares state enum to track our current trajectory control state
     private TrajectoryPosition m_state;
+
+    //PID contoller for the Talon SRX motor that controlls the turret
+    PIDController m_turretPIDController;
 
     /**
      * Constructor for Launcher objects

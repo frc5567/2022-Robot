@@ -9,7 +9,7 @@ public class RobotMap {
     public static final double TOLERATED_TARGET_ERROR = 0.3;
 
     /**
-     * constant for PCM (Pneumatic Control Module) port on the CAN bus
+     * constant for PCM (Pneumatic Control Module) port on the CAN (Controller Area Network) bus
      */
     public static class CANConstants{
         public static final int PCM_CAN_ID = 20;
@@ -19,7 +19,7 @@ public class RobotMap {
     * constants for drivetrain 
     */
     public static class DrivetrainConstants{
-        //constants for drivetrain motor IDs (on the CAN bus)
+        //constants for drivetrain motor IDs (on the CAN (Controller Area Network) bus)
         public static final int MASTER_RIGHT_FALCON_ID = 4; 
         public static final int MASTER_LEFT_FALCON_ID = 3;
         public static final int SLAVE_RIGHT_FALCON_ID = 14;
@@ -73,7 +73,7 @@ public class RobotMap {
      * Constants for Launcher 
      */
     public static class LauncherConstants{
-        //constants for drivetrain motor IDs (on the CAN (Continuous Area Network) bus)
+        //constants for drivetrain motor IDs (on the CAN (Controller Area Network) bus)
         public static final int MASTER_FLYWHEEL_FALCON_ID = 5;
         public static final int SLAVE_FLYWHEEL_FALCON_ID = 6;
         public static final int FEEDER_MOTOR_ID = 7;
@@ -107,7 +107,7 @@ public class RobotMap {
      * Constants for Intake
      */
     public static class IntakeConstants{
-        //constants for intake motor IDs (on the CAN bus)
+        //constants for intake motor IDs (on the CAN (Controller Area Network)  bus)
         public static final int ROLLER_MOTOR_ID = 11;
         public static final int MAGAZINE_MOTOR_ID = 12;
         //These are untested placesholder values until we know what speed we actually need
@@ -156,7 +156,7 @@ public class RobotMap {
      * Constants for Climber
      */
     public static class ClimberConstants{
-        //constants for motor IDs (on the CAN bus)
+        //constants for motor IDs (on the CAN (Controller Area Network) bus)
         public static final int CLIMBER_MOTOR_ID = 16;
         public static final int CLIMBER_WINCH_ID = 17;
 
