@@ -14,18 +14,19 @@ public class RobotMap {
      * constant for PCM (Pneumatic Control Module) port on the CAN (Controller Area Network) bus
      */
     public static class CANConstants{
-        public static final int PCM_CAN_ID = 20;
+        public static final int PCM_CAN_ID = 10;
     }
 
     /**
     * constants for drivetrain 
     */
     public static class DrivetrainConstants{
-        //constants for drivetrain motor IDs (on the CAN (Controller Area Network) bus)
-        public static final int MASTER_RIGHT_FALCON_ID = 4; 
-        public static final int MASTER_LEFT_FALCON_ID = 3;
-        public static final int SLAVE_RIGHT_FALCON_ID = 14;
-        public static final int SLAVE_LEFT_FALCON_ID = 13;
+
+        //constants for drivetrain motor IDs (on the CAN - Controller Area Network - bus)
+        public static final int MASTER_RIGHT_FALCON_ID = 9; 
+        public static final int MASTER_LEFT_FALCON_ID = 6;
+        public static final int SLAVE_RIGHT_FALCON_ID = 8;
+        public static final int SLAVE_LEFT_FALCON_ID = 7;
 
         //constants for gearbox solenoid (on the PCM) two ports are needed per double solenoid because the a and b sides are electrically independant
         //Ports are on the PCM 
@@ -75,11 +76,11 @@ public class RobotMap {
      * Constants for Launcher 
      */
     public static class LauncherConstants{
-        //constants for drivetrain motor IDs (on the CAN (Controller Area Network) bus)
-        public static final int MASTER_FLYWHEEL_FALCON_ID = 5;
-        public static final int SLAVE_FLYWHEEL_FALCON_ID = 6;
-        public static final int FEEDER_MOTOR_ID = 7;
-        public static final int TURRET_MOTOR_ID = 8;
+        //constants for drivetrain motor IDs (on the CAN (Continuous Area Network) bus)
+        public static final int MASTER_FLYWHEEL_FALCON_ID = 1;
+        public static final int SLAVE_FLYWHEEL_FALCON_ID = 2;
+        public static final int FEEDER_MOTOR_ID = 5;
+        public static final int TURRET_MOTOR_ID = 3;
         
         //These are untested placesholder values until we know what speeds we actually need
         public static final double FEEDING_SPEED = 0.5;
@@ -109,9 +110,10 @@ public class RobotMap {
      * Constants for Intake
      */
     public static class IntakeConstants{
-        //constants for intake motor IDs (on the CAN (Controller Area Network)  bus)
-        public static final int ROLLER_MOTOR_ID = 11;
-        public static final int MAGAZINE_MOTOR_ID = 12;
+        //constants for intake motor IDs (on the CAN bus)
+        public static final int ROLLER_MOTOR_ID = 12;
+        public static final int MAGAZINE_MOTOR_ID = 11;
+      
         //These are untested placesholder values until we know what speed we actually need
         //TODO These values will need to be tuned
         public static final double ROLLER_SPEED = 0.5;
@@ -159,9 +161,9 @@ public class RobotMap {
      * Constants for Climber
      */
     public static class ClimberConstants{
-        //constants for motor IDs (on the CAN (Controller Area Network) bus)
-        public static final int CLIMBER_MOTOR_ID = 16;
-        public static final int CLIMBER_WINCH_ID = 17;
+        //constants for motor IDs (on the CAN bus)
+        public static final int CLIMBER_MOTOR_ID = 13;
+        public static final int CLIMBER_WINCH_ID = 4;
 
         //constants for motor speeds 
         public static final double CLIMBER_MOTOR_SPEED = 0.8;
