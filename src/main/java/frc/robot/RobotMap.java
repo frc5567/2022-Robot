@@ -11,7 +11,7 @@ public class RobotMap {
     public static final double TOLERATED_TARGET_ERROR = 0.3;
 
     /**
-     * constant for PCM (Pneumatic Control Module) port on the CAN bus
+     * constant for PCM (Pneumatic Control Module) port on the CAN (Controller Area Network) bus
      */
     public static class CANConstants{
         public static final int PCM_CAN_ID = 10;
@@ -21,7 +21,8 @@ public class RobotMap {
     * constants for drivetrain 
     */
     public static class DrivetrainConstants{
-        //constants for drivetrain motor IDs (on the CAN bus)
+
+        //constants for drivetrain motor IDs (on the CAN - Controller Area Network - bus)
         public static final int MASTER_RIGHT_FALCON_ID = 9; 
         public static final int MASTER_LEFT_FALCON_ID = 6;
         public static final int SLAVE_RIGHT_FALCON_ID = 8;
@@ -112,6 +113,7 @@ public class RobotMap {
         //constants for intake motor IDs (on the CAN bus)
         public static final int ROLLER_MOTOR_ID = 12;
         public static final int MAGAZINE_MOTOR_ID = 11;
+      
         //These are untested placesholder values until we know what speed we actually need
         //TODO These values will need to be tuned
         public static final double ROLLER_SPEED = 0.5;
