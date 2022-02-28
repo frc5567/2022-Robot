@@ -1,12 +1,12 @@
 package frc.robot;
 
 // Import motor
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class Climber {
-    private WPI_TalonSRX m_climbMotor;
-    private WPI_TalonSRX m_winchMotor; 
+    private WPI_VictorSPX m_climbMotor;
+    private WPI_VictorSPX m_winchMotor; 
 
 
     /**
@@ -19,8 +19,8 @@ public class Climber {
      * constructor for climber objects
      */
     public Climber() {
-        m_climbMotor = new WPI_TalonSRX(RobotMap.ClimberConstants.CLIMBER_MOTOR_ID);
-        m_winchMotor = new WPI_TalonSRX(RobotMap.ClimberConstants.CLIMBER_WINCH_ID);
+        m_climbMotor = new WPI_VictorSPX(RobotMap.ClimberConstants.CLIMBER_MOTOR_ID);
+        m_winchMotor = new WPI_VictorSPX(RobotMap.ClimberConstants.CLIMBER_WINCH_ID);
     }
 
      /**
