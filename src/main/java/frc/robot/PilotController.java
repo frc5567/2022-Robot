@@ -38,7 +38,6 @@ public class PilotController {
 
         m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
         //puts input scalar widgets on the shuffleboard
-        m_shuffleboard.drivetrainShuffleboardConfig();
     }
 
     /**
