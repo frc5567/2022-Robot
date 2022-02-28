@@ -30,8 +30,8 @@ public class RobotMap {
 
         //constants for gearbox solenoid (on the PCM) two ports are needed per double solenoid because the a and b sides are electrically independant
         //Ports are on the PCM 
-        public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 4; 
-        public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 5;
+        public static final int DOUBLESOLENOID_LOW_GEAR_PORT = 6; 
+        public static final int DOUBLESOLENOID_HIGH_GEAR_PORT = 7;
         
         //constants for Turn Gains for the PID controller
         public static final Gains TURN_GAINS = new Gains(0.3, 0.0, 0.0, 0.0, 100, 1.0);
