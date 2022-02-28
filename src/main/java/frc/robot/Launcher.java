@@ -3,6 +3,7 @@ package frc.robot;
 // Import motor controllers
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 //Import Encoders
 import com.ctre.phoenix.motorcontrol.SensorCollection;
@@ -38,12 +39,11 @@ public class Launcher{
     //Not all of these motors will be TalonFXs, those are placeholders until we know what kinds of motors we'll be using
     private WPI_TalonFX m_masterFlywheelMotor;
     private WPI_TalonFX m_slaveFlywheelMotor;
-    private WPI_TalonSRX m_feederMotor;
+    private WPI_VictorSPX m_feederMotor;
     private WPI_TalonSRX m_turretMotor;
 
     //Declares variables for the encoders
     private SensorCollection m_flywheelEncoder;
-    private SensorCollection m_feederEncoder;
     private SensorCollection m_turretEncoder;
 
     //declares our double solenoid to be used on our trajectory control system
@@ -62,11 +62,10 @@ public class Launcher{
 
         m_masterFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
         m_slaveFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.SLAVE_FLYWHEEL_FALCON_ID);
-        m_feederMotor = new WPI_TalonSRX(RobotMap.LauncherConstants.FEEDER_MOTOR_ID);
+        m_feederMotor = new WPI_VictorSPX(RobotMap.LauncherConstants.FEEDER_MOTOR_ID);
         m_turretMotor = new WPI_TalonSRX(RobotMap.LauncherConstants.TURRET_MOTOR_ID);
 
         m_flywheelEncoder = new SensorCollection (m_masterFlywheelMotor);
-        m_feederEncoder = new SensorCollection (m_feederMotor);
         m_turretEncoder = new SensorCollection (m_turretMotor);
 
         m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_DOWN_PORT, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_UP_PORT);
@@ -80,6 +79,7 @@ public class Launcher{
     public void init(){
         zeroEncoders();
         setTrajectoryPosition(TrajectoryPosition.kUp);
+        m_slaveFlywheelMotor.setInverted(true);
     }
     
     /**
@@ -210,7 +210,7 @@ public class Launcher{
      * Sets the speed of the feeder motor
      * @param speed desired speed
      */
-    private void setFeederSpeed(double speed){
+    public void setFeederSpeed(double speed){
         m_feederMotor.set(ControlMode.PercentOutput, speed);
     }
 
@@ -227,7 +227,6 @@ public class Launcher{
      */
     private void zeroEncoders(){
         m_flywheelEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
-        m_feederEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
         m_turretEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
     }
 
