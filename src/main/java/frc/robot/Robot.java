@@ -47,6 +47,7 @@ public class Robot extends TimedRobot {
     m_launcher = new Launcher(m_limelightVision);
     m_climber = new Climber();
     m_shuffleboard = new RobotShuffleboard();
+    m_shuffleboard.drivetrainShuffleboardConfig();
     
     m_pilotController = new PilotController(m_drivetrain, m_limelightVision, m_shuffleboard);
     m_copilotController = new CopilotController(m_intake, m_launcher, m_climber, m_shuffleboard);

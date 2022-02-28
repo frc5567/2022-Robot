@@ -88,8 +88,6 @@ public class Auton{
         //Sets the current step to step 1 and the path to whatever path we are currently running
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kRightWall;
-
-        m_shuffleboard.drivetrainShuffleboardConfig();
     }
 
     /**
