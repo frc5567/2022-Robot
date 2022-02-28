@@ -29,10 +29,8 @@ public class CopilotController {
         m_climber = climber;
         m_shuffleboard = shuffleboard;
         
-        m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
-
-        //configures shuffleboard for flywheel testing
-        m_shuffleboard.drivetrainShuffleboardConfig();
+        m_controller = new XboxController(1);
+        //m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
     }
 
     /**
@@ -42,7 +40,7 @@ public class CopilotController {
         m_intake.init();
         m_launcher.init();
         m_climber.init();
-        m_gamePad.init();
+        //m_gamePad.init();
         //sets our flywheel velocity for testing to the value put into the shuffleboard
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
     }
@@ -52,9 +50,10 @@ public class CopilotController {
      */
     public void periodic(){
         //when testing with xbox controller, comment out intake, launcher, and climber
-        controlIntake();
-        controlLauncher();
-        controlClimber();
+        //TODO: uncomment these when testing is complete
+        //controlIntake();
+        //controlLauncher();
+        //controlClimber();
         //for testing purposes
         manualLauncherCmd();
         manualIntakeCmd();
@@ -149,7 +148,14 @@ public class CopilotController {
         }
 
         if(m_controller.getBButton()){
-            m_launcher.targetAndLaunch();
+            //Added for testing
+            m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+            //Commented out for testing purposes
+            //m_launcher.targetAndLaunch();
+        }
+        else {
+            //Added for testing
+            m_launcher.setFeederSpeed(0);
         }
     }
 
@@ -159,14 +165,28 @@ public class CopilotController {
     private void manualIntakeCmd(){
         //two if statements to determine intake position
         if(m_controller.getXButton()){
-            m_intake.setIntakeExtension(IntakeState.kExtended);
+            m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+            //Commented out for testing purposes
+            //m_intake.setIntakeExtension(IntakeState.kExtended);
         }
-        else if(m_controller.getYButton()){
-            m_intake.setIntakeExtension(IntakeState.kRetracted);
+        else {
+            //Added for Testing
+            m_intake.setMagazineSpeed(0);
         }
         
-        double triggerInput = (m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
-        m_intake.setRollerSpeed(triggerInput);
+        if(m_controller.getYButton()){
+            m_intake.setRollerSpeed(RobotMap.IntakeConstants.ROLLER_SPEED);
+            //Commented out for testing purposes
+            //m_intake.setIntakeExtension(IntakeState.kRetracted);
+        }
+        else {
+            //Added for testing
+            m_intake.setRollerSpeed(0);
+        }
+        
+        //Commented out for testing purposes. Also review double triggerInput (may not need to subtract the two but instead get one triggerAxis)
+        //double triggerInput = (m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
+        //m_intake.setRollerSpeed(triggerInput);
     }
 
     /**
