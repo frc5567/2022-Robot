@@ -57,6 +57,7 @@ public class CopilotController {
         //for testing purposes
         manualLauncherCmd();
         manualIntakeCmd();
+        manualClimberCmd();
         m_shuffleboard.periodic();
     }
 
@@ -187,6 +188,16 @@ public class CopilotController {
         //Commented out for testing purposes. Also review double triggerInput (may not need to subtract the two but instead get one triggerAxis)
         //double triggerInput = (m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
         //m_intake.setRollerSpeed(triggerInput);
+    }
+
+    private void manualClimberCmd(){
+        if(m_controller.getLeftY() > RobotMap.CopilotControllerConstants.STICK_DEADBAND){
+            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
+        }
+
+        if(m_controller.getRightY() > RobotMap.CopilotControllerConstants.STICK_DEADBAND){
+            m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
+        }
     }
 
     /**
