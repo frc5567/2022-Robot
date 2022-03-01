@@ -56,8 +56,8 @@ public class RobotMap {
         public static final double STICK_DEADBAND = 0.09;
 
         //Constants for filters on acceleration and turning in order to prevent brownouts
-        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.2;
-        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 0.3;
+        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.3;
+        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 0.4;
     }
 
     /**

@@ -69,7 +69,7 @@ public class PilotController {
      */
     private void arcadeDriveCmd(){
         // triggerInput is for the velocity input forward and backwards
-        double triggerInput = (m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis() * m_currentVelocityScalar);
+        double triggerInput = ((m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis()) * m_currentVelocityScalar);
         //double triggerInput = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
         // leftStickXInput is for our current turn input
         //double leftStickXInput = stickFilter.calculate(m_controller.getLeftX());
@@ -79,9 +79,9 @@ public class PilotController {
         leftStickXInput = adjustForDeadband(leftStickXInput);
 
         // limits the slew rate for trigger input
-        triggerFilter.calculate(triggerInput);
+        triggerInput = triggerFilter.calculate(triggerInput);
         // limits the slew rate for left stick x input
-        stickFilter.calculate(leftStickXInput);
+        leftStickXInput = stickFilter.calculate(leftStickXInput);
 
         // passes in our variables from this method (calculations) into our arcade drive in drivetrain
         m_drivetrain.arcadeDrive(triggerInput, leftStickXInput);
