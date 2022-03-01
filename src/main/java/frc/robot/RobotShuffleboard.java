@@ -18,6 +18,7 @@ public class RobotShuffleboard {
     double m_flywheelVelocity;
     // Declares member variable for choosing an auton path
     double m_autonPath;
+    double m_launchPreset;
     // Declares member variables for the entries on the table
     private NetworkTableEntry m_highVelocityScalarEntry;
     private NetworkTableEntry m_lowVelocityScalarEntry;
@@ -25,6 +26,7 @@ public class RobotShuffleboard {
     private NetworkTableEntry m_lowTurnScalarEntry;
     private NetworkTableEntry m_flywheelVelocityEntry;
     private NetworkTableEntry m_autonPathEntry;
+    private NetworkTableEntry m_launchPresetEntry;
 
     /**
      * Constructor for robot shuffleboard class
@@ -45,6 +47,7 @@ public class RobotShuffleboard {
         setDrivetrainInputScalar();
         setFlywheelVelocity();
         setAutonPath();
+        setLaunchPreset();
     }
 
     /**
@@ -55,6 +58,7 @@ public class RobotShuffleboard {
         setDrivetrainInputScalar();
         setFlywheelVelocity();
         setAutonPath();
+        setLaunchPreset();
     }
 
     /**
@@ -83,6 +87,9 @@ public class RobotShuffleboard {
         m_autonPathEntry = m_driverTab.addPersistent("Auton Path", RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
+        m_launchPresetEntry = m_driverTab.addPersistent("Launch Preset", RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET)
+                                    .withWidget(BuiltInWidgets.kTextView)
+                                    .getEntry();
     }
 
     /**
@@ -106,10 +113,7 @@ public class RobotShuffleboard {
     private void setFlywheelVelocity(){
         m_flywheelVelocity = m_flywheelVelocityEntry.getDouble(RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY);
     }
-    
-    private void setAutonPath(){
-        m_autonPath = m_autonPathEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH);
-    }
+
     /**
      * Gets the current value for the flywheel velocity from the shuffleboard
      * @return the flywheel velocity double from the shuffleboard
@@ -119,6 +123,25 @@ public class RobotShuffleboard {
         setFlywheelVelocity();
         return m_flywheelVelocity;
     }
+    
+    private void setAutonPath(){
+        m_autonPath = m_autonPathEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH);
+    }
+
+    public double getAutonPath(){
+        setAutonPath();
+        return m_autonPath;
+    }
+
+    private void setLaunchPreset(){
+        m_launchPreset = m_launchPresetEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET);
+    }
+
+    public double getLaunchPreset(){
+        setLaunchPreset();
+        return m_launchPreset;
+    }
+    
 
     /**
      * Gets the value for HighVelocityScalar and returns it
