@@ -19,11 +19,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 
 import com.kauailabs.navx.frc.AHRS;
 
-//Unused imports for commented-out code
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
-import edu.wpi.first.wpilibj.Encoder;
-import com.ctre.phoenix.ErrorCode;
-
 public class Drivetrain {
 
     // Insert object motor controllers 2 left TalonFX and 2 right TalonFX
@@ -106,17 +101,54 @@ public class Drivetrain {
     }
 
     /**
+     * Initialization method for the drivetrain.
+     * Brakes all Drivetrain motors, Configures factory default values for all drivetrain motors.
+     * Zeros encoders and gyro, Shifts initially to low gear, Inverts all right motors.
+     */
+    public void init(){
+        // Brakes all the motors in init so we are not moving when there is no power going to the robot
+        m_masterRightMotor.setNeutralMode(NeutralMode.Brake);
+        m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
+        m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
+        m_slaveRightMotor.setNeutralMode(NeutralMode.Brake);
+        // Reverts all configurations to factory default values to restore the motor controllers to a known state, allowing you to only config the settings that you intend to change
+        m_masterRightMotor.configFactoryDefault();
+        m_slaveRightMotor.configFactoryDefault();
+        m_masterLeftMotor.configFactoryDefault();
+        m_slaveLeftMotor.configFactoryDefault();
+        // Zeros encoders initially
+        zeroEncoders();
+        // Zeros gyro initially
+        zeroGyro();
+        // Intially starts robot in low gear
+        shiftGear(Gear.kLowGear);
+        // inverts the right motor so we don't spin in a circle because the motor is flipped
+        m_masterRightMotor.setInverted(true);
+        // sets the right slave motor to however the master motor it is following is inverted
+        // If the master is set to true for inverted, so is the slave. If it is false, the slave will be false
+        m_slaveRightMotor.setInverted(InvertType.FollowMaster);
+    }
+
+    /**
+     * arcadeDrive is a method for controlling the drivetrain using forward and reverse motion and a turn value
+     * @param forward velocity input (valid values: -1 to 1)
+     * @param turn rate of turn (valid values: -1 to 1)
+     */
+    public void arcadeDrive(double forward, double turn){
+        m_masterLeftMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
+        m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, -turn);
+        m_slaveLeftMotor.follow(m_masterLeftMotor);
+        m_slaveRightMotor.follow(m_masterRightMotor);
+
+        //System.out.println("Arcade Drive: [" + forward + "][" + turn + "]");
+    }
+
+    /**
      * zeroEncoders is a method to set the encoders to 0
      */
     public void zeroEncoders() {
-        //ErrorCode errorLeft = m_leftDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
-        //ErrorCode errorRight = m_rightDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
-
         m_leftDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
         m_rightDriveEncoder.setIntegratedSensorPosition(0, RobotMap.TIMEOUT_MS);
-        
-        //System.out.println("Resetting encoders. Result: R[" + errorRight.toString() + "] L[" + errorLeft.toString() + "]");
-    
     }
 
     /**
@@ -153,54 +185,10 @@ public class Drivetrain {
     }
 
     /**
-     * arcadeDrive is a method for controlling the drivetrain using forward and reverse motion and a turn value
-     * @param forward velocity input (valid values: -1 to 1)
-     * @param turn rate of turn (valid values: -1 to 1)
-     */
-    public void arcadeDrive(double forward, double turn){
-        m_masterLeftMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
-        m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, -turn);
-        m_slaveLeftMotor.follow(m_masterLeftMotor);
-        m_slaveRightMotor.follow(m_masterRightMotor);
-
-        //System.out.println("Arcade Drive: [" + forward + "][" + turn + "]");
-    }
-
-    /**
-     * Initialization method for the drivetrain.
-     * Brakes all Drivetrain motors, Configures factory default values for all drivetrain motors.
-     * Zeros encoders and gyro, Shifts initially to low gear, Inverts all right motors.
-     */
-    public void init(){
-        // Brakes all the motors in init so we are not moving when there is no power going to the robot
-        m_masterRightMotor.setNeutralMode(NeutralMode.Brake);
-        m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
-        m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
-        m_slaveRightMotor.setNeutralMode(NeutralMode.Brake);
-        // Reverts all configurations to factory default values to restore the motor controllers to a known state, allowing you to only config the settings that you intend to change
-        m_masterRightMotor.configFactoryDefault();
-        m_slaveRightMotor.configFactoryDefault();
-        m_masterLeftMotor.configFactoryDefault();
-        m_slaveLeftMotor.configFactoryDefault();
-        // Zeros encoders initially
-        zeroEncoders();
-        // Zeros gyro initially
-        zeroGyro();
-        // Intially starts robot in low gear
-        shiftGear(Gear.kLowGear);
-        // inverts the right motor so we don't spin in a circle because the motor is flipped
-        m_masterRightMotor.setInverted(true);
-        // sets the right slave motor to however the master motor it is following is inverted
-        // If the master is set to true for inverted, so is the slave. If it is false, the slave will be false
-        m_slaveRightMotor.setInverted(InvertType.FollowMaster);
-    }
-
-    /**
      * @return the position of the drivetrain's right encoder
      */
     public double getRightDriveEncoderPosition(){
         return m_masterRightMotor.getSelectedSensorPosition();
-        //return m_rightDriveEncoder.getIntegratedSensorPosition();
     }
 
     /**
@@ -208,7 +196,6 @@ public class Drivetrain {
      */
     public double getLeftDriveEncoderPosition(){
         return m_masterLeftMotor.getSelectedSensorPosition();
-        //return m_leftDriveEncoder.getIntegratedSensorPosition();
     }
 
     /**

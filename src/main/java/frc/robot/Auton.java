@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Intake.IntakeState;
 
 public class Auton{

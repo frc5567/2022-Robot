@@ -70,6 +70,26 @@ public class LimelightVision {
         disableLEDs();
         setPipeline(Pipeline.kStandard);
     }
+
+    /**
+     * Periodically updates the x and y angle offsets and the area of the screen taken up by the target
+     */
+    public void periodic(){
+        // Updates the table entry for the x offset
+        m_xAngleOffset = m_limelightTable.getEntry("tx").getDouble(0.0);
+        // Updates the table entry for the y offset
+        m_yAngleOffset = m_limelightTable.getEntry("ty").getDouble(0.0);
+        // Updates the table entry for the area of the screen taken up by the target
+        m_areaOfScreen = m_limelightTable.getEntry("ta").getDouble(0.0); 
+
+        // Puts the x angle offset value on the shuffleboard
+        SmartDashboard.putNumber("LimelightX Offset", m_xAngleOffset);
+        // Puts the y angle offset value on the shuffleboard
+        SmartDashboard.putNumber("LimelightY Offset", m_yAngleOffset);
+        // Puts the percentage of the screen that the target takes up on the shuffleboard
+        SmartDashboard.putNumber("LimelightArea Percentage", m_areaOfScreen);
+    }
+    
     /**
      * Sets pipeline number (0-9 value)
      * @param Pipeline Pipeline type to get ID number from
@@ -191,24 +211,4 @@ public class LimelightVision {
         }
         return m_distanceAdjustSpeed;
     }
-
-    /**
-     * Periodically updates the x and y angle offsets and the area of the screen taken up by the target
-     */
-    public void periodic(){
-        // Updates the table entry for the x offset
-        m_xAngleOffset = m_limelightTable.getEntry("tx").getDouble(0.0);
-        // Updates the table entry for the y offset
-        m_yAngleOffset = m_limelightTable.getEntry("ty").getDouble(0.0);
-        // Updates the table entry for the area of the screen taken up by the target
-        m_areaOfScreen = m_limelightTable.getEntry("ta").getDouble(0.0); 
-
-        // Puts the x angle offset value on the shuffleboard
-        SmartDashboard.putNumber("LimelightX Offset", m_xAngleOffset);
-        // Puts the y angle offset value on the shuffleboard
-        SmartDashboard.putNumber("LimelightY Offset", m_yAngleOffset);
-        // Puts the percentage of the screen that the target takes up on the shuffleboard
-        SmartDashboard.putNumber("LimelightArea Percentage", m_areaOfScreen);
-    }
-
 }
