@@ -5,9 +5,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 //Drivetrain import
 import frc.robot.Drivetrain.Gear;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-
 public class PilotController {
     // declares limelight object for aiming launcher and targeting
     private LimelightVision m_limelightVision;
@@ -38,6 +35,38 @@ public class PilotController {
 
         m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
         //puts input scalar widgets on the shuffleboard
+    }
+
+    /**
+     * Initialization method for the pilot controller
+     * Calls init for drivetrain
+     */
+    public void init(){
+        m_drivetrain.init();
+    }
+    
+    /**
+     * Periodic method for the pilot controller
+     * Calls turnToTarget, arcadeDriveCmd, and controlGear to set up the buttons needed for targeting, switching gears, and controlling the drive train on the xbox pilot controller
+     */
+    public void periodic() {
+        // When left bumper is pressed we turn to target
+        turnToTarget();
+        // Calls the drivetrain to be utilized. Right trigger is forward, left trigger is backward, and left stick is turn
+        arcadeDriveCmd();
+        // Controls the gear with x button being high gear and y button being low gear 
+        controlGear();
+     
+        // Periodically updates encoder ticks to our actual current encoder position
+        double currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
+        double currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
+        /**
+         * prints out our current right and left encoder ticks, prints only every 50 cycles 
+         */
+        if ((++m_sysOutCounter % 50) == 0){
+            System.out.println("Right Encoder Ticks: " + currentRightEncoderTicks);
+            System.out.println("Left Encoder Ticks: " + currentLeftEncoderTicks);
+        }
     }
 
     /**
@@ -134,37 +163,6 @@ public class PilotController {
             else if(m_limelightVision.seeTarget() == false){
                 m_drivetrain.arcadeDrive(0, RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED);
             }
-        }
-    }
-
-     /**
-     * Initialization method for the pilot controller
-     * Calls init for drivetrain
-     */
-    public void init(){
-        m_drivetrain.init();
-    }
-    /**
-     * Periodic method for the pilot controller
-     * Calls turnToTarget, arcadeDriveCmd, and controlGear to set up the buttons needed for targeting, switching gears, and controlling the drive train on the xbox pilot controller
-     */
-    public void periodic() {
-        // When left bumper is pressed we turn to target
-        turnToTarget();
-        // Calls the drivetrain to be utilized. Right trigger is forward, left trigger is backward, and left stick is turn
-        arcadeDriveCmd();
-        // Controls the gear with x button being high gear and y button being low gear 
-        controlGear();
-     
-        // Periodically updates encoder ticks to our actual current encoder position
-        double currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-        double currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
-        /**
-         * prints out our current right and left encoder ticks, prints only every 50 cycles 
-         */
-        if ((++m_sysOutCounter % 50) == 0){
-            System.out.println("Right Encoder Ticks: " + currentRightEncoderTicks);
-            System.out.println("Left Encoder Ticks: " + currentLeftEncoderTicks);
         }
     }
 }

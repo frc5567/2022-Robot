@@ -1,7 +1,5 @@
 package frc.robot;
 
-import frc.robot.Auton.AutonPath;
-
 public class RobotMap {
 
     //timeout in milliseconds for the CTRE config methods
