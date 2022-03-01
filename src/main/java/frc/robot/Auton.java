@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Intake.IntakeState;
 
 public class Auton{
@@ -100,6 +101,7 @@ public class Auton{
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kRightWall;
         m_drivetrain.zeroEncoders();
+        m_currentAutonPath = m_shuffleboard.getAutonPath();
     }
 
     /**
