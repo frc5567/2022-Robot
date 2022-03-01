@@ -63,7 +63,7 @@ public class RobotMap {
      */
     public static class CopilotControllerConstants{
         //Port on the comp computer for the copilot controller/gamepad
-        public static final int GAMEPAD_PORT = 1;
+        public static final int COPILOT_CONTROLLER_PORT = 1;
 
         //Constant to record stick deadband that works for our copilot controller. This should be tested once we have finalized a copilot controller 
         //TODO Keep this only if an Xbox controller will be used. If a joystick is used on the gamepad, the specific value for that joystick will need to be found
@@ -115,7 +115,7 @@ public class RobotMap {
         //These are untested placesholder values until we know what speed we actually need
         //TODO These values will need to be tuned
         public static final double ROLLER_SPEED = 0.5;
-        public static final double MAGAZINE_SPEED = 0.5;
+        public static final double MAGAZINE_SPEED = 1.0;
 
         //These are untested placesholder values until we know what speed we actually need but it is important that these are negative
         public static final double REVERSE_ROLLER_SPEED = -0.5;
@@ -164,8 +164,8 @@ public class RobotMap {
         public static final int CLIMBER_WINCH_ID = 4;
 
         //constants for motor speeds 
-        public static final double CLIMBER_MOTOR_SPEED = 0.8;
-        public static final double WINCH_MOTOR_SPEED = 0.8;
+        public static final double CLIMBER_MOTOR_SPEED = 0.5;
+        public static final double WINCH_MOTOR_SPEED = 0.5;
     }
 
     /**

@@ -177,10 +177,10 @@ public class Drivetrain {
         m_gear = gear;
         
         if (m_gear == Gear.kLowGear) {
-            setPistons(Value.kReverse);
+            setPistons(Value.kForward);
         }
         else if (m_gear == Gear.kHighGear) {
-            setPistons(Value.kForward);
+            setPistons(Value.kReverse);
         }
     }
 
