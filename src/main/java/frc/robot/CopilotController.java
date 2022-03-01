@@ -29,7 +29,7 @@ public class CopilotController {
         m_climber = climber;
         m_shuffleboard = shuffleboard;
         
-        m_controller = new XboxController(1);
+        m_controller = new XboxController(RobotMap.CopilotControllerConstants.COPILOT_CONTROLLER_PORT);
         //m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
     }
 

@@ -104,7 +104,6 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     m_pilotController.init();
     m_copilotController.init();
-    m_shuffleboard.init();
   }
 
   /** This function is called periodically during operator control. */
