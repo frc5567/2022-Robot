@@ -1,14 +1,16 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 // Import motor controllers
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 //Import Encoders
 import com.ctre.phoenix.motorcontrol.SensorCollection;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
-import edu.wpi.first.math.controller.PIDController;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -48,14 +50,12 @@ public class Launcher{
     private SensorCollection m_flywheelEncoder;
     private SensorCollection m_turretEncoder;
 
+
     //declares our double solenoid to be used on our trajectory control system
     private DoubleSolenoid m_solenoid;
 
     //declares state enum to track our current trajectory control state
     private TrajectoryPosition m_state;
-
-    //PID contoller for the Talon SRX motor that controlls the turret
-    PIDController m_turretPIDController;
 
     /**
      * Constructor for Launcher objects
@@ -240,5 +240,23 @@ public class Launcher{
      */
     private double getTurretPosition(){
         return m_turretEncoder.getQuadraturePosition();
+    }
+
+    private void turretPIDConfig (){
+        //Reverts all the configurations back to the factory default. This helps prevent unexpected behavior
+        m_turretMotor.configFactoryDefault();
+        //Configures Sensor Source for Primary PID. Selects using a primary close-loop
+        m_turretMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, RobotMap.LauncherConstants.PID_LOOP_IDX, RobotMap.TIMEOUT_MS);
+        //Configures the output deadband percentage for the turret motor.
+        m_turretMotor.configNeutralDeadband(RobotMap.LauncherConstants.TURRET_MOTOR_DEADBAND, RobotMap.TIMEOUT_MS);
+
+        //Configures the output and sensor direction for the Talon SRX
+        m_turretMotor.setSensorPhase(false);
+        m_turretMotor.setInverted(false);
+
+        //Sets relecant frame periods to be at least as fast as periodic rate
+        m_turretMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, RobotMap.TIMEOUT_MS);
+        m_turretMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, RobotMap.TIMEOUT_MS);
+
     }
 }
