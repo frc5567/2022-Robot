@@ -188,7 +188,7 @@ public class Launcher{
     /**
      * @return current speed of flywheel motor
      */
-    private double getRealSpeed(){
+    public double getRealSpeed(){
         return m_masterFlywheelMotor.getSelectedSensorVelocity();
     }
 
@@ -258,5 +258,51 @@ public class Launcher{
         m_turretMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, RobotMap.TIMEOUT_MS);
         m_turretMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, RobotMap.TIMEOUT_MS);
 
+    /**
+     * This is the preset for launching the ball 10 ft away into the low hub
+     * TODO: Test flywheel velocity needed to reach our target
+     */
+    public void lowPreset10(){
+        setTrajectoryPosition(TrajectoryPosition.kDown);
+        setFlywheelSpeed(0.7);
+        if(getRealSpeed() >= 0.7){
+            setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        }
+    }
+
+    /**
+     * This is the preset for launching the ball 20 ft away into the low hub
+     * TODO: Test flywheel velocity needed to reach our target
+     */
+    public void lowPreset20(){
+        setTrajectoryPosition(TrajectoryPosition.kDown);
+        setFlywheelSpeed(0.9);
+        if(getRealSpeed() >= 0.9){
+            setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        }
+    }
+
+    /**
+     * This is the preset for launching the ball 10 ft away into the high hub
+     * TODO: Test flywheel velocity needed to reach our target
+     */
+    public void highPreset10(){
+        setTrajectoryPosition(TrajectoryPosition.kUp);
+        setFlywheelSpeed(0.7);
+        if(getRealSpeed() >= 0.7){
+            setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        }
+    }
+
+    /**
+     * This is the preset for launching the ball 20 ft away into the high hub
+     * TODO: Test flywheel velocity needed to reach our target
+     */
+    public void highPreset20(){
+        setTrajectoryPosition(TrajectoryPosition.kUp);
+        setFlywheelSpeed(0.9);
+        if(getRealSpeed() >= 0.9){
+            setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        }
     }
 }

@@ -13,9 +13,12 @@ public class CopilotController {
     //declares shuffleboard to be used for flywheel velocity testing
     private RobotShuffleboard m_shuffleboard;
     private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
+    private double m_currentLaunchPreset = RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET;
     //for testing until we have a real gamepad
     private XboxController m_controller;
-    
+
+
+
     /**
      * constructor for copilot controller- passes in all of the systems that we interact with in this class.
      * @param intake we pass in intake so the copilot can control the intake system
@@ -31,6 +34,7 @@ public class CopilotController {
         
         m_controller = new XboxController(RobotMap.CopilotControllerConstants.COPILOT_CONTROLLER_PORT);
         //m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
+
     }
 
     /**
@@ -43,6 +47,8 @@ public class CopilotController {
         //m_gamePad.init();
         //sets our flywheel velocity for testing to the value put into the shuffleboard
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
+        m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
+        
     }
 
     /**
@@ -58,6 +64,8 @@ public class CopilotController {
         manualLauncherCmd();
         manualIntakeCmd();
         manualClimberCmd();
+        m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
+        m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
     }
 
@@ -149,15 +157,33 @@ public class CopilotController {
         }
 
         if(m_controller.getBButton()){
-            //Added for testing
-            m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-            //Commented out for testing purposes
-            //m_launcher.targetAndLaunch();
+            if(m_currentLaunchPreset == 0){
+                m_launcher.lowPreset10();
+            }
+            if(m_currentLaunchPreset == 1){
+                m_launcher.lowPreset20();
+            }
+            if(m_currentLaunchPreset == 2){
+                m_launcher.highPreset10();
+            }
+            if(m_currentLaunchPreset == 3){
+                m_launcher.highPreset20();
+            }
+            else{
+                System.out.println(m_currentLaunchPreset + "is not a vald preset");
+                return;
+            }
         }
-        else {
-            //Added for testing
-            m_launcher.setFeederSpeed(0);
-        }
+        // if(m_controller.getBButton()){
+        //     //Added for testing
+        //     m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        //     //Commented out for testing purposes
+        //     //m_launcher.targetAndLaunch();
+        // }
+        // else {
+        //     //Added for testing
+        //     m_launcher.setFeederSpeed(0);
+        // }
     }
 
     /**

@@ -68,6 +68,8 @@ public class RobotMap {
         //Constant to record stick deadband that works for our copilot controller. This should be tested once we have finalized a copilot controller 
         //TODO Keep this only if an Xbox controller will be used. If a joystick is used on the gamepad, the specific value for that joystick will need to be found
         public static final double STICK_DEADBAND = 0.09;
+
+
     }
 
     /**
@@ -159,6 +161,7 @@ public class RobotMap {
         public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.5;
         public static final double FLYWHEEL_DEFAULT_VELOCITY = 0.5;
         public static final double DEFAULT_AUTON_PATH = 0;
+        public static final int DEFAULT_LAUNCH_PRESET = 0;
     }
 
 
