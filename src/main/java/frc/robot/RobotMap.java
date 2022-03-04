@@ -104,6 +104,13 @@ public class RobotMap {
         //Ports are on the PCM 
         public static final int DOUBLESOLENOID_ANGLE_UP_PORT = 2;
         public static final int DOUBLESOLENOID_ANGLE_DOWN_PORT = 3;
+
+        // Constant for storing the PID values for the turret
+        public static final Gains TURRET_GAINS = new Gains(0.01, 0, 0, 0, 100, 1.0);
+        //sets the feedback sensor to be using a primary closed loop (0 = primary closed-loop, 1 = auxilary closed-loop)
+        public static final int PID_LOOP_IDX = 0;
+        //Constant representing the default deadband percentage for the turret motor (currently at 4%)
+        public static final double TURRET_MOTOR_DEADBAND = 0.04;
     }
 
     /**
