@@ -257,6 +257,7 @@ public class Launcher{
         //Sets relecant frame periods to be at least as fast as periodic rate
         m_turretMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, RobotMap.TIMEOUT_MS);
         m_turretMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, RobotMap.TIMEOUT_MS);
+    }
 
     /**
      * This is the preset for launching the ball 10 ft away into the low hub
