@@ -111,7 +111,7 @@ public class Robot extends TimedRobot {
     m_pilotController.periodic();
     m_copilotController.periodic();
     m_limelightVision.periodic();
-    m_intake.periodic();
+    //m_intake.periodic();
   }
 
   /** This function is called once when the robot is disabled. */
