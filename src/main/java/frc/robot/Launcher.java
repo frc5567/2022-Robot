@@ -2,9 +2,9 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 // Import motor controllers
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 //Import Encoders
@@ -41,10 +41,10 @@ public class Launcher{
     
     //Declares variables for the motors that move the launcher flywheel, the feeder wheel, and the turret angle
     //Not all of these motors will be TalonFXs, those are placeholders until we know what kinds of motors we'll be using
-    private WPI_TalonFX m_masterFlywheelMotor;
-    private WPI_TalonFX m_slaveFlywheelMotor;
-    private WPI_VictorSPX m_feederMotor;
-    private WPI_TalonSRX m_turretMotor;
+    private TalonFX m_masterFlywheelMotor;
+    private TalonFX m_slaveFlywheelMotor;
+    private VictorSPX m_feederMotor;
+    private TalonSRX m_turretMotor;
 
     //Declares variables for the encoders
     private SensorCollection m_flywheelEncoder;
@@ -65,10 +65,10 @@ public class Launcher{
         //Instantiates objects for the Launcher class
         m_limelightVision = limelightVision;
 
-        m_masterFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
-        m_slaveFlywheelMotor = new WPI_TalonFX(RobotMap.LauncherConstants.SLAVE_FLYWHEEL_FALCON_ID);
-        m_feederMotor = new WPI_VictorSPX(RobotMap.LauncherConstants.FEEDER_MOTOR_ID);
-        m_turretMotor = new WPI_TalonSRX(RobotMap.LauncherConstants.TURRET_MOTOR_ID);
+        m_masterFlywheelMotor = new TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
+        m_slaveFlywheelMotor = new TalonFX(RobotMap.LauncherConstants.SLAVE_FLYWHEEL_FALCON_ID);
+        m_feederMotor = new VictorSPX(RobotMap.LauncherConstants.FEEDER_MOTOR_ID);
+        m_turretMotor = new TalonSRX(RobotMap.LauncherConstants.TURRET_MOTOR_ID);
 
         m_flywheelEncoder = new SensorCollection (m_masterFlywheelMotor);
         m_turretEncoder = new SensorCollection (m_turretMotor);
@@ -257,6 +257,7 @@ public class Launcher{
         //Sets relecant frame periods to be at least as fast as periodic rate
         m_turretMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, RobotMap.TIMEOUT_MS);
         m_turretMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, RobotMap.TIMEOUT_MS);
+    }
 
     /**
      * This is the preset for launching the ball 10 ft away into the low hub
