@@ -73,7 +73,9 @@ public class Intake {
      * Sets intake initially to retracted
      */
     public void init(){
-        setIntakeExtension(IntakeState.kRetracted);
+        //setIntakeExtension(IntakeState.kRetracted);
+        //m_state = IntakeState.kRetracted;
+
     }
 
     /**
@@ -90,6 +92,7 @@ public class Intake {
             }
         }
     }
+    
 
     /**
      * Activates intake system by powering the roller wheels
