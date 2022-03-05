@@ -130,11 +130,11 @@ public class Drivetrain {
     }
 
     /**
-     * arcadeDrive is a method for controlling the drivetrain using forward and reverse motion and a turn value
+     * periodic is a method for controlling the drivetrain using forward and reverse motion and a turn value
      * @param forward velocity input (valid values: -1 to 1)
      * @param turn rate of turn (valid values: -1 to 1)
      */
-    public void arcadeDrive(double forward, double turn){
+    public void periodic(double forward, double turn){
         m_masterLeftMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
         m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, -turn);
         m_slaveLeftMotor.follow(m_masterLeftMotor);

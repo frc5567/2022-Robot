@@ -113,7 +113,7 @@ public class PilotController {
         leftStickXInput = stickFilter.calculate(leftStickXInput);
 
         // passes in our variables from this method (calculations) into our arcade drive in drivetrain
-        m_drivetrain.arcadeDrive(triggerInput, leftStickXInput);
+        m_drivetrain.periodic(triggerInput, leftStickXInput);
     }
 
     /**
@@ -149,19 +149,19 @@ public class PilotController {
                 // if target is outside of acceptable offset values, robot moves to aim at the target
                 //TODO: fix so turret aims
                 if (m_limelightVision.xAngleToTarget() < RobotMap.TOLERATED_TARGET_ERROR && m_limelightVision.xAngleToTarget() > -RobotMap.TOLERATED_TARGET_ERROR && m_limelightVision.yAngleToTarget() < RobotMap.TOLERATED_TARGET_ERROR && m_limelightVision.yAngleToTarget() > -RobotMap.TOLERATED_TARGET_ERROR){
-                    m_drivetrain.arcadeDrive(0, 0);
+                    m_drivetrain.periodic(0, 0);
                     // prints to let drivers know we are On Target
                     System.out.print("On Target");
                     return;  
                 }
                 // if target is within acceptable offset range, the robot stops moving
                 else{
-                    m_drivetrain.arcadeDrive(m_limelightVision.distanceAdjustToTargetSpeed(),m_limelightVision.turnAngleAdjustToTargetSpeed());
+                    m_drivetrain.periodic(m_limelightVision.distanceAdjustToTargetSpeed(),m_limelightVision.turnAngleAdjustToTargetSpeed());
                 }
             } 
             // if any part of the target is not visible, spin right until target is visible
             else if(m_limelightVision.seeTarget() == false){
-                m_drivetrain.arcadeDrive(0, RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED);
+                m_drivetrain.periodic(0, RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED);
             }
         }
     }
