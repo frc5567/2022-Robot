@@ -81,6 +81,7 @@ public class Intake {
         m_rollerCurrentSpeed = 0;
         m_magazineMotor.set(ControlMode.PercentOutput, 0);
         m_magazineCurrentSpeed = 0;
+        m_rollerMotor.setInverted(true);
     }
 
     /**

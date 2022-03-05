@@ -123,7 +123,7 @@ public class RobotMap {
       
         //These are untested placesholder values until we know what speed we actually need
         //TODO These values will need to be tuned
-        public static final double ROLLER_SPEED = 1.0;
+        public static final double ROLLER_SPEED = 0.6;
         public static final double MAGAZINE_SPEED = 0.5;
 
         //These are untested placesholder values until we know what speed we actually need but it is important that these are negative
@@ -135,10 +135,9 @@ public class RobotMap {
         public static final int DOUBLESOLENOID_RETRACTED_PORT = 4;
         public static final int DOUBLESOLENOID_EXTENDED_PORT = 5;
 
-        //TODO: Change to actual port numbers once we know what they are
         //The sensors on the magazine are plugged into ports on the RoboRio
-        public static final int MAGAZINE_SENSOR_0_PORT = 9;
-        public static final int MAGAZINE_SENSOR_1_PORT = 10;
+        public static final int MAGAZINE_SENSOR_0_PORT = 0;
+        public static final int MAGAZINE_SENSOR_1_PORT = 1;
     }
     
     /**
@@ -174,8 +173,8 @@ public class RobotMap {
         public static final int CLIMBER_WINCH_ID = 4;
 
         //constants for motor speeds 
-        public static final double CLIMBER_MOTOR_SPEED = 0.5;
-        public static final double WINCH_MOTOR_SPEED = 0.5;
+        public static final double CLIMBER_MOTOR_SPEED = 0.7;
+        public static final double WINCH_MOTOR_SPEED = 0.7;
     }
 
     /**
