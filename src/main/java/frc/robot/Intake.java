@@ -76,7 +76,7 @@ public class Intake {
      * Sets intake initially to retracted
      */
     public void init(){
-        setIntakeExtension(IntakeState.kRetracted);
+        //setIntakeExtension(IntakeState.kRetracted);
         m_rollerMotor.set(ControlMode.PercentOutput, 0);
         m_rollerCurrentSpeed = 0;
         m_magazineMotor.set(ControlMode.PercentOutput, 0);
@@ -97,6 +97,7 @@ public class Intake {
             }
         }
     }
+    
 
     /**
      * Activates intake system by powering the roller wheels
