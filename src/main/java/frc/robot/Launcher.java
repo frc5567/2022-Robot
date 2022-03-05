@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 // Import motor controllers
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -36,6 +35,7 @@ public class Launcher{
 
         }
     }
+
     //Declares limelight object
     private LimelightVision m_limelightVision;
     
@@ -56,6 +56,10 @@ public class Launcher{
 
     //declares state enum to track our current trajectory control state
     private TrajectoryPosition m_state;
+
+    private double m_feederCurrentSpeed;
+    private double m_turretCurrentSpeed;
+    private double m_flywheelCurrentSpeed;
 
     /**
      * Constructor for Launcher objects
@@ -85,6 +89,12 @@ public class Launcher{
         zeroEncoders();
         setTrajectoryPosition(TrajectoryPosition.kUp);
         m_slaveFlywheelMotor.setInverted(true);
+        m_feederCurrentSpeed = 0;
+        m_feederMotor.set(ControlMode.PercentOutput, 0);
+        m_turretCurrentSpeed = 0;
+        m_turretMotor.set(ControlMode.PercentOutput, 0);
+        m_flywheelCurrentSpeed = 0;
+        m_masterFlywheelMotor.set(ControlMode.PercentOutput, 0);
     }
     
     /**
@@ -135,7 +145,7 @@ public class Launcher{
 
             // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
             // 100 is arbitrary and needs to be tested (more will probably need to be done so this is more fine tuned)
-            double targetFlywheelSpeed = m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 100;
+            double targetFlywheelSpeed = m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 1000;
             setFlywheelSpeed(targetFlywheelSpeed);
             //Checks if our flywheel is at the target speed
             if(getRealSpeed() > targetFlywheelSpeed){
@@ -198,8 +208,11 @@ public class Launcher{
      * @param speed desired speed 
      */
     public void setFlywheelSpeed(double speed){
-        m_masterFlywheelMotor.set(ControlMode.PercentOutput, speed);
-        m_slaveFlywheelMotor.follow(m_masterFlywheelMotor);
+        if(m_flywheelCurrentSpeed != speed){
+            m_flywheelCurrentSpeed = speed;
+            m_masterFlywheelMotor.set(ControlMode.PercentOutput, speed);
+            m_slaveFlywheelMotor.follow(m_masterFlywheelMotor);
+        }
     }
 
     /**
@@ -208,7 +221,10 @@ public class Launcher{
      * @param speed desired speed (Positive for one direction, negative for the other)
      */
     public void setTurretSpeed(double speed){
-        m_turretMotor.set(ControlMode.PercentOutput, speed);
+        if(m_turretCurrentSpeed != speed){
+            m_turretCurrentSpeed = speed;
+            m_turretMotor.set(ControlMode.PercentOutput, speed);
+        }
     }
 
     /**
@@ -216,7 +232,10 @@ public class Launcher{
      * @param speed desired speed
      */
     public void setFeederSpeed(double speed){
-        m_feederMotor.set(ControlMode.PercentOutput, speed);
+        if(m_feederCurrentSpeed != speed){
+            m_feederCurrentSpeed = speed;
+            m_feederMotor.set(ControlMode.PercentOutput, speed);
+        }
     }
 
     /**
@@ -257,6 +276,7 @@ public class Launcher{
         //Sets relecant frame periods to be at least as fast as periodic rate
         m_turretMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, RobotMap.TIMEOUT_MS);
         m_turretMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, RobotMap.TIMEOUT_MS);
+    }
 
     /**
      * This is the preset for launching the ball 10 ft away into the low hub

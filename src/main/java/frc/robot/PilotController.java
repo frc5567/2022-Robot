@@ -58,15 +58,15 @@ public class PilotController {
         controlGear();
      
         // Periodically updates encoder ticks to our actual current encoder position
-        double currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-        double currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
+        // double currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
+        // double currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
         /**
          * prints out our current right and left encoder ticks, prints only every 50 cycles 
          */
-        if ((++m_sysOutCounter % 50) == 0){
-            System.out.println("Right Encoder Ticks: " + currentRightEncoderTicks);
-            System.out.println("Left Encoder Ticks: " + currentLeftEncoderTicks);
-        }
+        // if ((++m_sysOutCounter % 50) == 0){
+        //     System.out.println("Right Encoder Ticks: " + currentRightEncoderTicks);
+        //     System.out.println("Left Encoder Ticks: " + currentLeftEncoderTicks);
+        // }
     }
 
     /**

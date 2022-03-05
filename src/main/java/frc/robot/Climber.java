@@ -8,6 +8,9 @@ public class Climber {
     private WPI_VictorSPX m_climbMotor;
     private WPI_VictorSPX m_winchMotor; 
 
+    private double m_climberCurrentSpeed;
+    private double m_winchCurrentSpeed;
+
 
     /**
      * Initialization method for Climber
@@ -28,7 +31,10 @@ public class Climber {
       * @param climb  velocity input (valid values: -1 to 1)
       */
     public void climbCMD(double speed){
-        m_climbMotor.set(ControlMode.PercentOutput, speed);
+        if(m_climberCurrentSpeed != speed){
+            m_climberCurrentSpeed = speed;
+            m_climbMotor.set(ControlMode.PercentOutput, speed);
+        }
     }
 
     /**
@@ -36,6 +42,9 @@ public class Climber {
      * @param winch velocity input (valid values 0 to 1)
      */
     public void winchCMD(double speed){
-        m_winchMotor.set(ControlMode.PercentOutput, speed);
+        if(m_winchCurrentSpeed != speed){
+            m_winchCurrentSpeed = speed;
+            m_winchMotor.set(ControlMode.PercentOutput, speed);
+        }
     }
 }

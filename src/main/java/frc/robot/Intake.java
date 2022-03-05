@@ -1,7 +1,7 @@
 package frc.robot;
 
 //Import motors
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -37,8 +37,8 @@ public class Intake {
          
     }
     //Declares motors for the roller bar and interior magazine
-    private WPI_VictorSPX m_rollerMotor;
-    private WPI_VictorSPX m_magazineMotor;
+    private VictorSPX m_rollerMotor;
+    private VictorSPX m_magazineMotor;
 
     //Declares solenoids for extension and retraction
     private DoubleSolenoid m_solenoid;
@@ -52,13 +52,16 @@ public class Intake {
     //Declares a state enum
     private IntakeState m_state;
 
+    private double m_rollerCurrentSpeed;
+    private double m_magazineCurrentSpeed;
+
     /**
      * Constructor for intake and magazine mechanism
      */
     public Intake(){
         //Instatiate objects for intake class
-        m_rollerMotor = new WPI_VictorSPX(RobotMap.IntakeConstants.ROLLER_MOTOR_ID);
-        m_magazineMotor = new WPI_VictorSPX(RobotMap.IntakeConstants.MAGAZINE_MOTOR_ID);
+        m_rollerMotor = new VictorSPX(RobotMap.IntakeConstants.ROLLER_MOTOR_ID);
+        m_magazineMotor = new VictorSPX(RobotMap.IntakeConstants.MAGAZINE_MOTOR_ID);
 
         m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.DOUBLESOLENOID_EXTENDED_PORT);
 
@@ -74,6 +77,10 @@ public class Intake {
      */
     public void init(){
         setIntakeExtension(IntakeState.kRetracted);
+        m_rollerMotor.set(ControlMode.PercentOutput, 0);
+        m_rollerCurrentSpeed = 0;
+        m_magazineMotor.set(ControlMode.PercentOutput, 0);
+        m_magazineCurrentSpeed = 0;
     }
 
     /**
@@ -110,7 +117,10 @@ public class Intake {
      * @param speed desired speed
      */
     public void setRollerSpeed(double speed){
-        m_rollerMotor.set(ControlMode.PercentOutput, speed);
+        if(m_rollerCurrentSpeed != speed){
+            m_rollerCurrentSpeed = speed;
+            m_rollerMotor.set(ControlMode.PercentOutput, speed);
+        }
     }
 
     /**
@@ -118,7 +128,10 @@ public class Intake {
      * @param speed desired speed
      */
     public void setMagazineSpeed(double speed){
-        m_magazineMotor.set(ControlMode.PercentOutput, speed);
+        if(m_magazineCurrentSpeed != speed){
+            m_magazineCurrentSpeed = speed;
+            m_magazineMotor.set(ControlMode.PercentOutput, speed);
+        }
     }
 
     /**
