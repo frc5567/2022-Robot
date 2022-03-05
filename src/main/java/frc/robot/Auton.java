@@ -115,7 +115,7 @@ public class Auton{
         //calls the limelight periodic method in order to update the network tables every cycle
         m_limelightVision.periodic();
         //calls the intake periodic method for automatic indexing
-        m_intake.periodic();
+        //m_intake.periodic();
 
         m_currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
         m_currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
