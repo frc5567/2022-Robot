@@ -13,6 +13,7 @@ public class PilotController {
     private XboxController m_controller;
     private Drivetrain m_drivetrain;
     private RobotShuffleboard m_shuffleboard;
+    private Launcher m_launcher; 
 
     //Declares velocity and turn scalars used to control input value for arcade drive and store shuffleboard values
     private double m_currentVelocityScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
@@ -28,10 +29,11 @@ public class PilotController {
     /**
      * Constuctor for the pilot controller
      */
-    public PilotController(Drivetrain drivetrain, LimelightVision limelightVision, RobotShuffleboard shuffleboard){
+    public PilotController(Drivetrain drivetrain, LimelightVision limelightVision, RobotShuffleboard shuffleboard, Launcher launcher){
         m_drivetrain = drivetrain;
         m_limelightVision = limelightVision;
         m_shuffleboard = shuffleboard;
+        m_launcher = launcher;
 
         m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
         //puts input scalar widgets on the shuffleboard
@@ -114,6 +116,16 @@ public class PilotController {
 
         // passes in our variables from this method (calculations) into our arcade drive in drivetrain
         m_drivetrain.periodic(triggerInput, leftStickXInput);
+
+        if(m_controller.getLeftBumper()){
+            m_launcher.setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+        }
+        else if(m_controller.getRightBumper()){
+            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+        }
+        else{
+            m_launcher.setTurretSpeed(0);
+        }
     }
 
     /**

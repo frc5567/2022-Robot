@@ -139,16 +139,6 @@ public class CopilotController {
      * Manually controls the launcher and the turret for testing
      */
     private void manualLauncherCmd(){
-        if(m_controller.getLeftBumper()){
-            m_launcher.setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
-        }
-        else if(m_controller.getRightBumper()){
-            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
-        }
-        else{
-            m_launcher.setTurretSpeed(0);
-        }
-
         if(m_controller.getAButton()){
             m_launcher.setFlywheelSpeed(m_currentFlywheelVelocity);
         }
@@ -156,34 +146,34 @@ public class CopilotController {
             m_launcher.setFlywheelSpeed(0);
         }
 
-        if(m_controller.getBButton()){
-            if(m_currentLaunchPreset == 0){
-                m_launcher.lowPreset10();
-            }
-            if(m_currentLaunchPreset == 1){
-                m_launcher.lowPreset20();
-            }
-            if(m_currentLaunchPreset == 2){
-                m_launcher.highPreset10();
-            }
-            if(m_currentLaunchPreset == 3){
-                m_launcher.highPreset20();
-            }
-            else{
-                System.out.println(m_currentLaunchPreset + "is not a vald preset");
-                return;
-            }
-        }
         // if(m_controller.getBButton()){
-        //     //Added for testing
-        //     m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-        //     //Commented out for testing purposes
-        //     //m_launcher.targetAndLaunch();
-        // }
-        // else {
-        //     //Added for testing
-        //     m_launcher.setFeederSpeed(0);
-        // }
+        //     if(m_currentLaunchPreset == 0){
+        //         m_launcher.lowPreset10();
+        //     }
+        //     if(m_currentLaunchPreset == 1){
+        //         m_launcher.lowPreset20();
+        //     }
+        //     if(m_currentLaunchPreset == 2){
+        //         m_launcher.highPreset10();
+        //     }
+        //     if(m_currentLaunchPreset == 3){
+        //         m_launcher.highPreset20();
+        //     }
+        //     else{
+        //         System.out.println(m_currentLaunchPreset + "is not a vald preset");
+        //         return;
+        //     }
+        //}
+        if(m_controller.getBButton()){
+            //Added for testing
+            m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+            //Commented out for testing purposes
+            //m_launcher.targetAndLaunch();
+        }
+        else {
+            //Added for testing
+            m_launcher.setFeederSpeed(0);
+        }
     }
 
     /**
@@ -210,19 +200,32 @@ public class CopilotController {
             //Added for testing
             m_intake.setRollerSpeed(0);
         }
-        
+
+        if(m_controller.getLeftBumperPressed()){
+            m_intake.setIntakeExtension(IntakeState.kExtended);
+        }
+        else if(m_controller.getRightBumperPressed()) {
+            m_intake.setIntakeExtension(IntakeState.kRetracted);
+        }  
+              
         //Commented out for testing purposes. Also review double triggerInput (may not need to subtract the two but instead get one triggerAxis)
         //double triggerInput = (m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
         //m_intake.setRollerSpeed(triggerInput);
     }
 
     private void manualClimberCmd(){
-        if(m_controller.getLeftY() > RobotMap.CopilotControllerConstants.STICK_DEADBAND){
+        if(m_controller.getLeftStickButton()){
             m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
         }
+        else {
+            m_climber.climbCMD(0);
+        }
 
-        if(m_controller.getRightY() > RobotMap.CopilotControllerConstants.STICK_DEADBAND){
+        if(m_controller.getRightStickButton()){
             m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
+        }
+        else {
+            m_climber.climbCMD(0);
         }
     }
 
