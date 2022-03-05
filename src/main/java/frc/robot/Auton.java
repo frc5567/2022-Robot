@@ -159,7 +159,7 @@ public class Auton{
                 //Activates our drive to target method, which returns true once we have reached our target
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_ONE_TARGET_DISTANCE)){
                     //once drive to target returns true, zero encoders and drivetrain to stop the bot and prepare the sensors for the next step
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep2;
                     m_drivetrain.zeroEncoders();
                 }
@@ -171,7 +171,7 @@ public class Auton{
                 //Activates our turn to angle method, which returns true once we have reached our target
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_TWO_TARGET_ANGLE)){
                     //when turn to angle returns true, zero encoders, gyro and drivetrain to stop the robot and prepare the sensors for the next step
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep3;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
@@ -190,7 +190,7 @@ public class Auton{
                 //Activates intake and drives forward to a target in order to pick up a game piece
                 m_intake.takeIn();
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_FOUR_TARGET_DISTANCE)){
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep5;
                     m_drivetrain.zeroEncoders();
                 }
@@ -211,7 +211,7 @@ public class Auton{
             else if(m_step == AutonStep.kStep6){
                 //Turns the robot a full 180 degrees in order to face the hub
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_SIX_TARGET_ANGLE)){
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep7;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
@@ -235,7 +235,7 @@ public class Auton{
                     //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
                     if(m_xToTarget < RobotMap.TOLERATED_TARGET_ERROR && m_xToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
                         System.out.println("On Target");
-                        m_drivetrain.arcadeDrive(0,0);
+                        m_drivetrain.periodic(0,0);
                         m_drivetrain.zeroEncoders();
                         m_limelightVision.disableLEDs();
                         m_step = AutonStep.kStop;
@@ -245,14 +245,14 @@ public class Auton{
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");    
                         }
-                        m_drivetrain.arcadeDrive(0, RobotMap.AutonConstants.TARGETING_SPEED);
+                        m_drivetrain.periodic(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");
                         }
-                        m_drivetrain.arcadeDrive(0, -RobotMap.AutonConstants.TARGETING_SPEED);
+                        m_drivetrain.periodic(0, -RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                 }
                 else{
@@ -262,7 +262,7 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStop){
-                m_drivetrain.arcadeDrive(0, 0);
+                m_drivetrain.periodic(0, 0);
             }
         }
         else if (m_path == AutonPath.kRightWall){
@@ -270,7 +270,7 @@ public class Auton{
                 //Activates our drive to target method, which returns true once we have reached our target
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_ONE_TARGET_DISTANCE)){
                     //once drive to target returns true, zero encoders and drivetrain to stop the bot and prepare the sensors for the next step
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep2;
                     m_drivetrain.zeroEncoders();
                 }
@@ -282,7 +282,7 @@ public class Auton{
                 //Activates our turn to angle method, which returns true once we have reached our target
                 if(turnToAngle(RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_TWO_TARGET_ANGLE)){
                     //when turn to angle returns true, zero encoders, gyro and drivetrain to stop the robot and prepare the sensors for the next step
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep3;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
@@ -301,7 +301,7 @@ public class Auton{
                 //Activates intake and drives forward to a target in order to pick up a game piece
                 m_intake.takeIn();
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_FOUR_TARGET_DISTANCE)){
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep5;
                     m_drivetrain.zeroEncoders();
                 }
@@ -318,7 +318,7 @@ public class Auton{
             else if(m_step == AutonStep.kStep6){
                 //Turns the robot a full 180 degrees in order to face the hub
                 if(turnToAngle(RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_SIX_TARGET_ANGLE)){
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep7;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
@@ -342,7 +342,7 @@ public class Auton{
                     //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
                     if(m_xToTarget < RobotMap.TOLERATED_TARGET_ERROR && m_xToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
                         System.out.println("On Target");
-                        m_drivetrain.arcadeDrive(0,0);
+                        m_drivetrain.periodic(0,0);
                          m_drivetrain.zeroEncoders();
                          m_limelightVision.disableLEDs();
                          m_step = AutonStep.kStop;
@@ -352,14 +352,14 @@ public class Auton{
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");    
                         }
-                        m_drivetrain.arcadeDrive(0, RobotMap.AutonConstants.TARGETING_SPEED);
+                        m_drivetrain.periodic(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");    
                         }
-                        m_drivetrain.arcadeDrive(0, -RobotMap.AutonConstants.TARGETING_SPEED);
+                        m_drivetrain.periodic(0, -RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                 }
                 else{
@@ -369,7 +369,7 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStop){
-                m_drivetrain.arcadeDrive(0, 0);
+                m_drivetrain.periodic(0, 0);
             }
         }
         else if (m_path == AutonPath.kRightLine){ 
@@ -383,7 +383,7 @@ public class Auton{
                 //Activates intake and drives forward to a target in order to pick up a game piece
                 m_intake.takeIn();
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_TWO_TARGET_DISTANCE)){
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep3;
                     m_drivetrain.zeroEncoders();
                 }
@@ -400,7 +400,7 @@ public class Auton{
             else if(m_step == AutonStep.kStep4){
                 //Turns the robot a full 180 degrees in order to face the hub
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_FOUR_TARGET_ANGLE)){
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep5;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
@@ -424,7 +424,7 @@ public class Auton{
                     //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
                     if(m_xToTarget < RobotMap.TOLERATED_TARGET_ERROR && m_xToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
                         System.out.println("On Target");
-                        m_drivetrain.arcadeDrive(0,0);
+                        m_drivetrain.periodic(0,0);
                         m_drivetrain.zeroEncoders();
                         m_limelightVision.disableLEDs();
                         m_step = AutonStep.kStop;
@@ -434,14 +434,14 @@ public class Auton{
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");    
                         }
-                        m_drivetrain.arcadeDrive(0, RobotMap.AutonConstants.TARGETING_SPEED);
+                        m_drivetrain.periodic(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");
                         }
-                        m_drivetrain.arcadeDrive(0, -RobotMap.AutonConstants.TARGETING_SPEED);
+                        m_drivetrain.periodic(0, -RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                 }
                 else{
@@ -452,7 +452,7 @@ public class Auton{
             }
             else if(m_step == AutonStep.kStop){
                 System.out.println("Auton Completed");
-                m_drivetrain.arcadeDrive(0, 0);
+                m_drivetrain.periodic(0, 0);
             }
         }
         m_sysOutCounter++;
@@ -475,11 +475,11 @@ public class Auton{
             target = target * -1;
             if(target < 0){
                 if(leftEncoder > target || rightEncoder > target){
-                    m_drivetrain.arcadeDrive(speed,0);
+                    m_drivetrain.periodic(speed,0);
                     return false;
                 }
                 else{
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_drivetrain.zeroEncoders();
                     return true;
                 }
@@ -493,11 +493,11 @@ public class Auton{
         else if(speed > 0){
             if((target > 0) && (speed > 0)){
                 if((leftEncoder < target) || (rightEncoder < target)){
-                    m_drivetrain.arcadeDrive(speed, 0);
+                    m_drivetrain.periodic(speed, 0);
                     return false;
                 }
                 else{
-                    m_drivetrain.arcadeDrive(0,0);
+                    m_drivetrain.periodic(0,0);
                     m_drivetrain.zeroEncoders();
                     return true;
                 }
@@ -528,13 +528,13 @@ public class Auton{
             target = target * -1;
             //Rotate Bound is a percentage (we are within a certain percentage of are target angle where we will be close enough)
             if(currentAngle < (target * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
-                m_drivetrain.arcadeDrive(0,0);
+                m_drivetrain.periodic(0,0);
                 m_drivetrain.zeroGyro();
                 m_drivetrain.zeroEncoders();
                 return true;
             }
             else{
-                m_drivetrain.arcadeDrive(0, speed);
+                m_drivetrain.periodic(0, speed);
                 if(m_doSysOut == true){
                     System.out.println("Not At Target Angle " + currentAngle);
                 }
@@ -545,13 +545,13 @@ public class Auton{
         else{
             //Rotate Bound is a percentage (we are within a certain percentage of are target angle where we will be close enough)
             if(currentAngle > (target * (1 - RobotMap.AutonConstants.ROTATE_BOUND))){
-                m_drivetrain.arcadeDrive(0, 0);
+                m_drivetrain.periodic(0, 0);
                 m_drivetrain.zeroEncoders();
                 m_drivetrain.zeroGyro();
                 return true;
             }
             else{
-                m_drivetrain.arcadeDrive(0, speed);
+                m_drivetrain.periodic(0, speed);
                 if(m_doSysOut == true){
                     System.out.println("Not At Target Angle " + currentAngle);
                 }
