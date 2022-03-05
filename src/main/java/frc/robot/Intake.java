@@ -80,6 +80,7 @@ public class Intake {
 
     /**
      * This method is called many times a second in robotPeriodic. It is currently only used for automatic indexing
+     */
     public void periodic(){
         //If a game piece is in the first slot, and there is no game piece in the second slot, move the game piece to the second slot
         if(getMagazineSensor1()){
@@ -91,7 +92,7 @@ public class Intake {
             }
         }
     }
-    */
+    
 
     /**
      * Activates intake system by powering the roller wheels
