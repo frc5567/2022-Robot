@@ -54,8 +54,8 @@ public class RobotMap {
         public static final double STICK_DEADBAND = 0.09;
 
         //Constants for filters on acceleration and turning in order to prevent brownouts
-        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.3;
-        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 0.4;
+        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.6;
+        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 0.9;
     }
 
     /**
@@ -123,8 +123,8 @@ public class RobotMap {
       
         //These are untested placesholder values until we know what speed we actually need
         //TODO These values will need to be tuned
-        public static final double ROLLER_SPEED = 0.5;
-        public static final double MAGAZINE_SPEED = 1.0;
+        public static final double ROLLER_SPEED = 1.0;
+        public static final double MAGAZINE_SPEED = 0.5;
 
         //These are untested placesholder values until we know what speed we actually need but it is important that these are negative
         public static final double REVERSE_ROLLER_SPEED = -0.5;
@@ -132,8 +132,8 @@ public class RobotMap {
 
         //constants for solenoids (on the PCM) two ports are needed per double solenoid because the a and b sides are electrically independant 
         //Ports are on the PCM 
-        public static final int DOUBLESOLENOID_RETRACTED_PORT = 0;
-        public static final int DOUBLESOLENOID_EXTENDED_PORT = 1;
+        public static final int DOUBLESOLENOID_RETRACTED_PORT = 4;
+        public static final int DOUBLESOLENOID_EXTENDED_PORT = 5;
 
         //TODO: Change to actual port numbers once we know what they are
         //The sensors on the magazine are plugged into ports on the RoboRio
