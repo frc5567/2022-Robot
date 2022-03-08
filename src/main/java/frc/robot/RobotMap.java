@@ -6,7 +6,7 @@ public class RobotMap {
     public static final int TIMEOUT_MS = 30;
 
     //constant for alotted error for turning to a target used only for turning in auton and pilot controller
-    public static final double TOLERATED_TARGET_ERROR = 0.5;
+    public static final double TOLERATED_TARGET_ERROR = 5;
 
     /**
      * constant for PCM (Pneumatic Control Module) port on the CAN (Controller Area Network) bus
