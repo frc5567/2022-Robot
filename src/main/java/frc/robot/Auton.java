@@ -176,48 +176,35 @@ public class Auton{
                     return;
                 }
             }
-            else if(m_step == AutonStep.kStep2){
-                //Activates our turn to angle method, which returns true once we have reached our target
-                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_TWO_TARGET_ANGLE)){
-                    //when turn to angle returns true, zero encoders, gyro and drivetrain to stop the robot and prepare the sensors for the next step
-                    m_drivetrain.periodic(0,0);
-                    m_step = AutonStep.kStep3;
-                    m_drivetrain.zeroEncoders();
-                    m_drivetrain.zeroGyro();
-                }
-                else{
-                    return;
-                }
-            }
-            if(m_step == AutonStep.kStep3){
+            if(m_step == AutonStep.kStep2){
                 //extends intake to prepare for the next step, where we activate our intake
                 m_intake.setIntakeExtension(IntakeState.kExtended);
                 System.out.println("Intake Extended");
-                m_step = AutonStep.kStep4;
+                m_step = AutonStep.kStep3;
             }
-            if(m_step == AutonStep.kStep4){
+            if(m_step == AutonStep.kStep3){
                 //Activates intake and drives forward to a target in order to pick up a game piece
                 m_intake.takeIn();
-                if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_FOUR_TARGET_DISTANCE)){
+                if(driveToTarget(RobotMap.AutonConstants.INTAKE_DRIVE_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_THREE_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
-                    m_step = AutonStep.kStep5;
+                    m_step = AutonStep.kStep4;
                     m_drivetrain.zeroEncoders();
                 }
                 else{
                     return;
                 }
             }
-            if(m_step == AutonStep.kStep5){
+            if(m_step == AutonStep.kStep4){
                 //Sysout to tell drivers if we acually picked up a game piece
                 System.out.println("Game Piece Picked up:" + m_intake.getMagazineSensor1());
                 //Zeros roller speed before we retract the intake
                 m_intake.setRollerSpeed(0);
                 //Retract intake so that we can continue our path without risking breaking the intake system
-                m_intake.setIntakeExtension(IntakeState.kRetracted);
-                System.out.println("Intake Retracted");
-                m_step = AutonStep.kStep6;
+                //m_intake.setIntakeExtension(IntakeState.kRetracted);
+                //System.out.println("Intake Retracted");
+                m_step = AutonStep.kStep5;
             }
-            else if(m_step == AutonStep.kStep6){
+            else if(m_step == AutonStep.kStep5){
                 //Turns the robot a full 180 degrees in order to face the hub
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_SIX_TARGET_ANGLE)){
                     m_drivetrain.periodic(0,0);
@@ -229,12 +216,13 @@ public class Auton{
                     return;
                 }
             }
-            else if(m_step == AutonStep.kStep7){
+            else if(m_step == AutonStep.kStep6){
                 //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
                 if(m_limelightOff){
                     System.out.println("Turning on LEDS");
                     m_limelightVision.enableLEDs();
                 }
+                //TODO: Change to new target and launch method
                 //This is all currently placeholder code for vision/targeting testing, it will eventually be replaced with m_launcher.launch()
                 //Stores the current distance from the target to the center of the screen on the x axis in a variable
                 m_xToTarget = m_limelightVision.xAngleToTarget();
@@ -287,48 +275,39 @@ public class Auton{
                     return;
                 }
             }
-            else if(m_step == AutonStep.kStep2){
-                //Activates our turn to angle method, which returns true once we have reached our target
-                if(turnToAngle(RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_TWO_TARGET_ANGLE)){
-                    //when turn to angle returns true, zero encoders, gyro and drivetrain to stop the robot and prepare the sensors for the next step
-                    m_drivetrain.periodic(0,0);
-                    m_step = AutonStep.kStep3;
-                    m_drivetrain.zeroEncoders();
-                    m_drivetrain.zeroGyro();
-                }
-                else{
-                    return;
-                }
-            }
-            if(m_step == AutonStep.kStep3){
+            if(m_step == AutonStep.kStep2){
                 //extends intake to prepare for the next step, where we activate our intake
                 m_intake.setIntakeExtension(IntakeState.kExtended);
                 System.out.println("Intake Extended");
-                m_step = AutonStep.kStep4;
+                m_step = AutonStep.kStep3;
             }
-            if(m_step == AutonStep.kStep4){
+            if(m_step == AutonStep.kStep3){
                 //Activates intake and drives forward to a target in order to pick up a game piece
                 m_intake.takeIn();
-                if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_FOUR_TARGET_DISTANCE)){
+                if(driveToTarget(RobotMap.AutonConstants.INTAKE_DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_THREE_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
-                    m_step = AutonStep.kStep5;
+                    m_step = AutonStep.kStep4;
                     m_drivetrain.zeroEncoders();
                 }
                 else{
                     return;
                 }
             }
-            if(m_step == AutonStep.kStep5){
+            if(m_step == AutonStep.kStep4){
+                //Sysout to tell drivers if we acually picked up a game piece
+                System.out.println("Game Piece Picked up:" + m_intake.getMagazineSensor1());
+                //Zeros roller speed before we retract the intake
+                m_intake.setRollerSpeed(0);
                 //Retract intake so that we can continue our path without risking breaking the intake system
-                m_intake.setIntakeExtension(IntakeState.kRetracted);
-                System.out.println("Intake Retracted");
-                m_step = AutonStep.kStep6;
+                //m_intake.setIntakeExtension(IntakeState.kRetracted);
+                //System.out.println("Intake Retracted");
+                m_step = AutonStep.kStep5;
             }
-            else if(m_step == AutonStep.kStep6){
+            else if(m_step == AutonStep.kStep5){
                 //Turns the robot a full 180 degrees in order to face the hub
                 if(turnToAngle(RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_SIX_TARGET_ANGLE)){
                     m_drivetrain.periodic(0,0);
-                    m_step = AutonStep.kStep7;
+                    m_step = AutonStep.kStep6;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
                 }
@@ -336,12 +315,13 @@ public class Auton{
                     return;
                 }
             }
-            else if(m_step == AutonStep.kStep7){
+            else if(m_step == AutonStep.kStep6){
                 //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
                 if(m_limelightOff){
                     System.out.println("Turning on LEDS");
                     m_limelightVision.enableLEDs();
                 }
+                //TODO: Change to new target and launch method
                 //This is all currently placeholder code for vision/targeting testing, it will eventually be replaced with m_launcher.launch()
                 //Stores the current distance from the target to the center of the screen on the x axis in a variable
                 m_xToTarget = m_limelightVision.xAngleToTarget();

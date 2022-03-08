@@ -6,7 +6,7 @@ public class RobotMap {
     public static final int TIMEOUT_MS = 30;
 
     //constant for alotted error for turning to a target used only for turning in auton and pilot controller
-    public static final double TOLERATED_TARGET_ERROR = 0.3;
+    public static final double TOLERATED_TARGET_ERROR = 5;
 
     /**
      * constant for PCM (Pneumatic Control Module) port on the CAN (Controller Area Network) bus
@@ -186,7 +186,8 @@ public class RobotMap {
         public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (21.125 / 15);
         public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (21.125 / 7.92);
 
-        public static final double DRIVE_SPEED = 0.1;
+        public static final double DRIVE_SPEED = 0.4;
+        public static final double INTAKE_DRIVE_SPEED = 0.1;
         public static final double TURN_SPEED = 0.2;
         public static final double TARGETING_SPEED = 0.1;
 
@@ -198,23 +199,18 @@ public class RobotMap {
 
         public static final double FULL_TURN = 180;
         //This value is passed into driveToTarget method in Auton to move the robot 84.75 inches
-        public static final double LEFT_WALL_STEP_ONE_TARGET_DISTANCE = 84.75;
-        //TODO: find exact angle, this is a guess
-        //This value is passed into turnToTarget method in Auton to turn the robot 30 degrees
-        public static final double LEFT_WALL_STEP_TWO_TARGET_ANGLE = 30;
+        public static final double LEFT_WALL_STEP_ONE_TARGET_DISTANCE = 67.09;
         //This value is passed into driveToTarget method in Auton to move the robot 75 inches 
-        public static final double LEFT_WALL_STEP_FOUR_TARGET_DISTANCE = 75;
+        public static final double LEFT_WALL_STEP_THREE_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees 
         public static final double LEFT_WALL_STEP_SIX_TARGET_ANGLE = 160;
 
         //This value is passed into driveToTarget method in Auton to move the robot 84.75 inches
-        public static final double RIGHT_WALL_STEP_ONE_TARGET_DISTANCE = 84.75;
+        public static final double RIGHT_WALL_STEP_ONE_TARGET_DISTANCE = 67.09;
         //TODO: find exact angle, this is a guess
-        //This value is passed into turnToTarget method in Auton to turn the robot 30 degrees 
-        public static final double RIGHT_WALL_STEP_TWO_TARGET_ANGLE = 30;
 
         //This value is passed into driveToTarget method in Auton to move the robot 75 inches
-        public static final double RIGHT_WALL_STEP_FOUR_TARGET_DISTANCE = 75;
+        public static final double RIGHT_WALL_STEP_THREE_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees
         public static final double RIGHT_WALL_STEP_SIX_TARGET_ANGLE = 160;
 
