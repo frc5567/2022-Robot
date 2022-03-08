@@ -225,7 +225,7 @@ public class CopilotController {
             m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
         }
         else {
-            m_climber.climbCMD(0);
+            m_climber.winchCMD(0);
         }
     }
 

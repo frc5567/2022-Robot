@@ -16,6 +16,10 @@ public class Climber {
      * Initialization method for Climber
      */
     public void init(){
+        m_climbMotor.set(ControlMode.PercentOutput, 0);
+        m_climberCurrentSpeed = 0;
+        m_winchMotor.set(ControlMode.PercentOutput, 0);
+        m_winchCurrentSpeed = 0;
     }
 
     /**
