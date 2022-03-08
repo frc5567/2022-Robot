@@ -85,14 +85,15 @@ public class RobotMap {
         //These are untested placesholder values until we know what speeds we actually need
         public static final double FEEDING_SPEED = 0.5;
         public static final double EXPEL_SPEED = 0.25;
-        public static final double TURRET_ROTATION_SPEED = 0.25;
+        public static final double TURRET_ROTATION_SPEED = 0.15;
+        public static final double FLYWHEEL_SPEED = 0.8;
 
         //Constant for our turret encoder limit so we don't overturn and damage wiring
         public static final double TURRET_ENCODER_LIMIT = 75000;
 
         //Constant for distance from directly on center we allow the target to be 
         //TODO Tune when limelight is set up
-        public static final double TOLERATED_TURRET_ERROR = 0.08;
+        public static final double TOLERATED_TURRET_ERROR = 0.8;
         //Constant for how much error we allow the flywheel speed before we launch
         //TODO: This value is a guess and needs to be tuned. Might need to use PID instead of this or adjust the logic
         public static final double TOLERATED_FLYWHEEL_SPEED_ERROR = 0.05;
@@ -123,7 +124,7 @@ public class RobotMap {
       
         //These are untested placesholder values until we know what speed we actually need
         //TODO These values will need to be tuned
-        public static final double ROLLER_SPEED = 0.6;
+        public static final double ROLLER_SPEED = 0.7;
         public static final double MAGAZINE_SPEED = 0.5;
 
         //These are untested placesholder values until we know what speed we actually need but it is important that these are negative
@@ -185,7 +186,7 @@ public class RobotMap {
         public static final double INCHES_TO_ENCODER_TICKS_LOWGEAR = 2048 / (21.125 / 15);
         public static final double INCHES_TO_ENCODER_TICKS_HIGHGEAR = 2048 / (21.125 / 7.92);
 
-        public static final double DRIVE_SPEED = 0.2;
+        public static final double DRIVE_SPEED = 0.1;
         public static final double TURN_SPEED = 0.2;
         public static final double TARGETING_SPEED = 0.1;
 
@@ -216,8 +217,8 @@ public class RobotMap {
 
         //TODO: find exact angle/distance, this is a guess
         //This value is passed into driveToTarget method in Auton to move the robot 48 inches
-        public static final double RIGHT_LINE_STEP_TWO_TARGET_DISTANCE = 48;
+        public static final double RIGHT_LINE_STEP_TWO_TARGET_DISTANCE = 65;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees
-        public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 160;
+        public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 180;
     }
 }

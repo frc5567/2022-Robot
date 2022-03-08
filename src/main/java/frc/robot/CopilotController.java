@@ -166,14 +166,14 @@ public class CopilotController {
         //}
         if(m_controller.getBButton()){
             //Added for testing
-            m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+            //m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
             //Commented out for testing purposes
-            //m_launcher.targetAndLaunch();
+            m_launcher.targetAndLaunch();
         }
-        else {
+        //else {
             //Added for testing
-            m_launcher.setFeederSpeed(0);
-        }
+            //m_launcher.setFeederSpeed(0);
+       // }
     }
 
     /**

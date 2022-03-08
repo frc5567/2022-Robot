@@ -37,6 +37,9 @@ public class Auton{
         kStop;
     }
     
+    //this is a quick and dirty workaround because the sensors are not functional at the moment
+    private int m_loopCount = 0; 
+
     //declares variables for the auton class
     //Enums to store what step we are on and what path we chose
     private AutonStep m_step;
@@ -393,7 +396,7 @@ public class Auton{
             }
             else if(m_step == AutonStep.kStep3){
                 //Retract intake so that we can continue our path without risking breaking the intake system
-                m_intake.setIntakeExtension(IntakeState.kRetracted);
+                //m_intake.setIntakeExtension(IntakeState.kRetracted);
                 System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep4;
             }
@@ -404,6 +407,7 @@ public class Auton{
                     m_step = AutonStep.kStep5;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
+                    m_launcher.setFlywheelSpeed(RobotMap.LauncherConstants.FLYWHEEL_SPEED);
                 }
                 else{
                     return;
@@ -449,6 +453,16 @@ public class Auton{
                         System.out.println("No Target Detected");
                     }
                 }
+            }
+            else if (m_step == AutonStep.kStep6){
+                if(m_loopCount <= 1000){
+                    m_loopCount ++; 
+                    m_launcher.targetAndLaunch();
+                }
+                else{
+                    m_step = AutonStep.kStop;
+                }
+                
             }
             else if(m_step == AutonStep.kStop){
                 System.out.println("Auton Completed");
