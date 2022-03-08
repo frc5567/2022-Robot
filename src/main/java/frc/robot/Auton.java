@@ -34,6 +34,8 @@ public class Auton{
 
         kStep8,
 
+        kStep9,
+
         kStop;
     }
     
@@ -55,6 +57,8 @@ public class Auton{
     private RobotShuffleboard m_shuffleboard;
     private double m_currentAutonPath = RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH;
 
+    //Varaible that is only true if we have a second ball to launch
+    boolean m_secondBall = false;
     //Variable that is only true the first time through the auton periodic loop to print out that we have started auton
     boolean m_autonStartFlag = true;
     //Variable to store the current state of our Limelight LEDS
@@ -454,15 +458,38 @@ public class Auton{
                     }
                 }
             }
-            else if (m_step == AutonStep.kStep6){
-                if(m_loopCount <= 1000){
-                    m_loopCount ++; 
-                    m_launcher.targetAndLaunch();
+            else if (m_step == AutonStep.kStep6){ 
+                m_launcher.targetAndLaunch();
+                if(m_intake.getMagazineSensor2() == false){
+                    m_loopCount ++;
+                }
+                else if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
+                    //zeros the loop count to be used again
+                    m_loopCount = 0;
+                    m_step = AutonStep.kStep7;
+                }
+            }
+            else if (m_step == AutonStep.kStep7){
+                if (m_intake.getMagazineSensor1()){
+                    m_secondBall = true;
+                }
+                if (m_intake.getMagazineSensor2() == false && m_secondBall == true){
+                    m_intake.periodic();
                 }
                 else{
+                    m_step = AutonStep.kStep8;
+                }
+            }
+            else if (m_step == AutonStep.kStep8){ 
+                m_launcher.targetAndLaunch();
+                if(m_intake.getMagazineSensor2() == false){
+                    m_loopCount ++;
+                }
+                else if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
+                    //zeros the loop count to be used again
+                    m_loopCount = 0;
                     m_step = AutonStep.kStop;
                 }
-                
             }
             else if(m_step == AutonStep.kStop){
                 System.out.println("Auton Completed");

@@ -172,7 +172,7 @@ public class Intake {
     /**
      * @return whether or not the second magazine sensor is being activated
      */
-    private boolean getMagazineSensor2() {
+    public boolean getMagazineSensor2() {
         return m_sensor2.get();
     }
 

@@ -190,6 +190,9 @@ public class RobotMap {
         public static final double TURN_SPEED = 0.2;
         public static final double TARGETING_SPEED = 0.1;
 
+        //constant for number of loops after a ball is launched to move to the next step
+        public static final double LOOPS_AFTER_LAUNCH = 20;
+
         //constant for rotation error acceptance
         public static final double ROTATE_BOUND = 0.03;
 
