@@ -88,8 +88,13 @@ public class RobotMap {
         public static final double TURRET_ROTATION_SPEED = 0.15;
         public static final double FLYWHEEL_SPEED = 0.8;
 
-        //Constant for our turret encoder limit so we don't overturn and damage wiring
-        public static final double TURRET_ENCODER_LIMIT = 75000;
+        //Constant for converting inches to encoder ticks for the turret to be used to determine the limit for how far left or right the turret can rotate
+        // the 4096 is the number of encoder ticks for the motor, 44.019 is the the circumference of the turret in inches, 70 is the gear ratio for the turret
+        public static final double INCHES_TO_ENCODER_TICKS_TURRET = 4096 / (44.019/70);
+
+        //Constant for our turret encoder limit so we don't overturn and damage wiring.
+        //2.69 (inches) is the maximum distance we want the turret to be able to turn
+        public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
 
         //Constant for distance from directly on center we allow the target to be 
         //TODO Tune when limelight is set up
