@@ -126,11 +126,15 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     m_copilotController.init();
+    m_pilotController.init();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_copilotController.periodic();
+    m_copilotController.testPeriodic();
+    m_pilotController.testPeriodic();
+    m_limelightVision.periodic();
+    //m_intake.periodic();
   }
 }

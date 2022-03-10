@@ -57,15 +57,23 @@ public class CopilotController {
      * This method should be called periodically in Teleop in order to control all systems
      */
     public void periodic(){
-        //when testing with xbox controller, comment out intake, launcher, and climber
-        //TODO: uncomment these when testing is complete
-        //controlIntake();
-        //controlLauncher();
-        //controlClimber();
-        //for testing purposes
+        controlIntake();
+        controlLauncher();
+        controlClimber();
+        
+        m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
+        m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
+        m_shuffleboard.periodic();
+    }
+
+    /**
+     * Periodic method for copilot controller that includes manual testing controls
+     */
+    public void testPeriodic(){
         manualLauncherCmd();
         manualIntakeCmd();
         manualClimberCmd();
+
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
