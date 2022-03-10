@@ -159,7 +159,7 @@ public class PilotController {
     }
 
     /**
-     * Turns to target when left bumper button is pressed
+     * Turns to target when A button is pressed
      * TODO: Remove this method once we know turret autotargeting works because this method will be redundant 
      */
     private void turnToTarget(){
