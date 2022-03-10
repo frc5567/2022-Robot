@@ -216,7 +216,9 @@ public class RobotMap {
 
         //TODO: find exact angle/distance, this is a guess
         //This value is passed into driveToTarget method in Auton to move the robot 48 inches
-        public static final double RIGHT_LINE_STEP_TWO_TARGET_DISTANCE = 65;
+        public static final double RIGHT_LINE_STEP_ONE_TARGET_DISTANCE = 35;
+        //This value is passed into driveToTarget method in Auton to move the robot 48 inches
+        public static final double RIGHT_LINE_STEP_THREE_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees
         public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 180;
     }
