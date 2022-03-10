@@ -112,6 +112,8 @@ public class RobotMap {
         public static final int PID_LOOP_IDX = 0;
         //Constant representing the default deadband percentage for the turret motor (currently at 4%)
         public static final double TURRET_MOTOR_DEADBAND = 0.04;
+
+        public static final double MAX_ON_TARGET_CYCLES = 30;
     }
 
     /**
