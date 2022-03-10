@@ -153,8 +153,8 @@ public class Auton{
         }
 
         if(m_doSysOut == true){
-            System.out.println("Right Encoder Ticks: " + m_currentRightEncoderTicks);
-            System.out.println("Left Encoder Ticks: " + m_currentLeftEncoderTicks);   
+           // System.out.println("Right Encoder Ticks: " + m_currentRightEncoderTicks);
+           // System.out.println("Left Encoder Ticks: " + m_currentLeftEncoderTicks);   
         }
 
         //Starts auton pathing in one of our three paths: Left Wall, Right Wall, or Right Line
@@ -174,7 +174,7 @@ public class Auton{
             if(m_step == AutonStep.kStep2){
                 //extends intake to prepare for the next step, where we activate our intake
                 m_intake.setIntakeExtension(IntakeState.kExtended);
-                System.out.println("Intake Extended");
+                //System.out.println("Intake Extended");
                 m_step = AutonStep.kStep3;
             }
             if(m_step == AutonStep.kStep3){
@@ -191,7 +191,7 @@ public class Auton{
             }
             if(m_step == AutonStep.kStep4){
                 //Sysout to tell drivers if we acually picked up a game piece
-                System.out.println("Game Piece Picked up:" + m_intake.getMagazineSensor1());
+                //System.out.println("Game Piece Picked up:" + m_intake.getMagazineSensor1());
                 //Zeros roller speed before we retract the intake
                 m_intake.setRollerSpeed(0);
                 //Retract intake so that we can continue our path without risking breaking the intake system
@@ -214,14 +214,14 @@ public class Auton{
             else if(m_step == AutonStep.kStep6){
                 //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
                 if(m_limelightOff){
-                    System.out.println("Turning on LEDS");
+                    //System.out.println("Turning on LEDS");
                     m_limelightVision.enableLEDs();
                 }
                 //TODO: Change to new target and launch method
                 //This is all currently placeholder code for vision/targeting testing, it will eventually be replaced with m_launcher.launch()
                 //Stores the current distance from the target to the center of the screen on the x axis in a variable
                 m_xToTarget = m_limelightVision.xAngleToTarget();
-                System.out.println(m_xToTarget);
+                //System.out.println(m_xToTarget);
                 //If we can see the target, move on to the next logic
                 if(m_limelightVision.seeTarget()){
                     //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
@@ -306,7 +306,7 @@ public class Auton{
             if(m_step == AutonStep.kStep2){
                 //extends intake to prepare for the next step, where we activate our intake
                 m_intake.setIntakeExtension(IntakeState.kExtended);
-                System.out.println("Intake Extended");
+                //System.out.println("Intake Extended");
                 m_step = AutonStep.kStep3;
             }
             if(m_step == AutonStep.kStep3){
@@ -323,7 +323,7 @@ public class Auton{
             }
             if(m_step == AutonStep.kStep4){
                 //Sysout to tell drivers if we acually picked up a game piece
-                System.out.println("Game Piece Picked up:" + m_intake.getMagazineSensor1());
+                //System.out.println("Game Piece Picked up:" + m_intake.getMagazineSensor1());
                 //Zeros roller speed before we retract the intake
                 m_intake.setRollerSpeed(0);
                 //Retract intake so that we can continue our path without risking breaking the intake system
@@ -346,14 +346,14 @@ public class Auton{
             else if(m_step == AutonStep.kStep6){
                 //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
                 if(m_limelightOff){
-                    System.out.println("Turning on LEDS");
+                    //System.out.println("Turning on LEDS");
                     m_limelightVision.enableLEDs();
                 }
                 //TODO: Change to new target and launch method
                 //This is all currently placeholder code for vision/targeting testing, it will eventually be replaced with m_launcher.launch()
                 //Stores the current distance from the target to the center of the screen on the x axis in a variable
                 m_xToTarget = m_limelightVision.xAngleToTarget();
-                System.out.println(m_xToTarget);
+                //System.out.println(m_xToTarget);
                 //If we can see the target, move on to the next logic
                 if(m_limelightVision.seeTarget()){
                     //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
@@ -439,7 +439,7 @@ public class Auton{
             if(m_step == AutonStep.kStep2){
                 //extends intake to prepare for the next step, where we activate our intake
                 m_intake.setIntakeExtension(IntakeState.kExtended);
-                System.out.println("Intake Extended");
+                //System.out.println("Intake Extended");
                 m_step = AutonStep.kStep3;
             }
             if(m_step == AutonStep.kStep3){
@@ -457,7 +457,7 @@ public class Auton{
             else if(m_step == AutonStep.kStep4){
                 //Retract intake so that we can continue our path without risking breaking the intake system
                 //m_intake.setIntakeExtension(IntakeState.kRetracted);
-                System.out.println("Intake Retracted");
+                //System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep5;
             }
             else if(m_step == AutonStep.kStep5){
@@ -476,13 +476,13 @@ public class Auton{
             else if(m_step == AutonStep.kStep6){
                 //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
                 if(m_limelightOff){
-                    System.out.println("Turning on LEDS");
+                    //System.out.println("Turning on LEDS");
                     m_limelightVision.enableLEDs();
                 }
                 //This is all currently placeholder code for vision/targeting testing, it will eventually be replaced with m_launcher.launch()
                 //Stores the current distance from the target to the center of the screen on the x axis in a variable
                 m_xToTarget = m_limelightVision.xAngleToTarget();
-                System.out.println(m_xToTarget);
+                //System.out.println(m_xToTarget);
                 //If we can see the target, move on to the next logic
                 if(m_limelightVision.seeTarget()){
                     //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
