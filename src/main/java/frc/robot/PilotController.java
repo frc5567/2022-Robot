@@ -75,7 +75,7 @@ public class PilotController {
      * Periodic method for pilot controller that includes manual testing controls
      */
     public void testPeriodic(){
-        // When left bumper is pressed we turn to target
+        // When A is pressed we turn to target
         turnToTarget();
         // Calls the drivetrain to be utilized. Right trigger is forward, left trigger is backward, and left stick is turn
         arcadeDriveCmd();
