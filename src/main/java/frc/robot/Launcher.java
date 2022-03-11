@@ -373,43 +373,46 @@ public class Launcher{
     public void lowPreset10(){
         setTrajectoryPosition(TrajectoryPosition.kDown);
         setFlywheelSpeed(0.7);
-        if((getRealSpeed() / 6000) >= 0.7){
+        if((getRealSpeed() / RobotMap.LauncherConstants.MAX_FLYWHEEL_RPM) >= 0.7){
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
     }
 
     /**
      * This is the preset for launching the ball 20 ft away into the low hub
+     * The getRealSPeed is being converted to a percent speed in the if statement. The Max RPM value it can go is 6380
      * TODO: Test flywheel velocity needed to reach our target
      */
     public void lowPreset20(){
         setTrajectoryPosition(TrajectoryPosition.kDown);
         setFlywheelSpeed(0.9);
-        if((getRealSpeed() / 6000) >= 0.9){
+        if((getRealSpeed() / RobotMap.LauncherConstants.MAX_FLYWHEEL_RPM) >= 0.9){
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
     }
 
     /**
      * This is the preset for launching the ball 10 ft away into the high hub
+     * The getRealSPeed is being converted to a percent speed in the if statement. The Max RPM value it can go is 6380
      * TODO: Test flywheel velocity needed to reach our target
      */
     public void highPreset10(){
         setTrajectoryPosition(TrajectoryPosition.kUp);
         setFlywheelSpeed(0.7);
-        if((getRealSpeed() / 6000) >= 0.7){
+        if((getRealSpeed() / RobotMap.LauncherConstants.MAX_FLYWHEEL_RPM) >= 0.7){
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
     }
 
     /**
      * This is the preset for launching the ball 20 ft away into the high hub
+     * The getRealSPeed is being converted to a percent speed in the if statement. The Max RPM value it can go is 6380
      * TODO: Test flywheel velocity needed to reach our target
      */
     public void highPreset20(){
         setTrajectoryPosition(TrajectoryPosition.kUp);
         setFlywheelSpeed(0.9);
-        if((getRealSpeed() / 6000) >= 0.9){
+        if((getRealSpeed() / RobotMap.LauncherConstants.MAX_FLYWHEEL_RPM) >= 0.9){
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
     }

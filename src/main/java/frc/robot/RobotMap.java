@@ -89,7 +89,8 @@ public class RobotMap {
         public static final double FLYWHEEL_SPEED = 0.8;
 
         // This is the target speed we want the flywheel to be moving (in RPM) before launching
-        public static final double TARGET_FLYWHEEL_SPEED = 2124;
+        // This value should be tested. Currently the 5104 is 80% of the power
+        public static final double TARGET_FLYWHEEL_SPEED = 5104;
 
         //Constant for converting inches to encoder ticks for the turret to be used to determine the limit for how far left or right the turret can rotate
         // the 4096 is the number of encoder ticks for the motor, 44.019 is the the circumference of the turret in inches, 70 is the gear ratio for the turret
@@ -98,6 +99,9 @@ public class RobotMap {
         //Constant for our turret encoder limit so we don't overturn and damage wiring.
         //2.69 (inches) is the maximum distance we want the turret to be able to turn
         public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
+
+        // This is the max RPM value that the flywheel can be moving
+        public static final double MAX_FLYWHEEL_RPM = 6380;
 
         //Constant for distance from directly on center we allow the target to be 
         //TODO Tune when limelight is set up
