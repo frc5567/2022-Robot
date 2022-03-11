@@ -88,6 +88,9 @@ public class RobotMap {
         public static final double TURRET_ROTATION_SPEED = 0.15;
         public static final double FLYWHEEL_SPEED = 0.8;
 
+        // This is the target speed we want the flywheel to be moving (in RPM) before launching
+        public static final double TARGET_FLYWHEEL_SPEED = 2124;
+
         //Constant for converting inches to encoder ticks for the turret to be used to determine the limit for how far left or right the turret can rotate
         // the 4096 is the number of encoder ticks for the motor, 44.019 is the the circumference of the turret in inches, 70 is the gear ratio for the turret
         public static final double INCHES_TO_ENCODER_TICKS_TURRET = 4096 / (44.019/70);

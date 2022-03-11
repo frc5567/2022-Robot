@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public class Launcher{
@@ -39,6 +40,9 @@ public class Launcher{
     //Declares limelight object
     private LimelightVision m_limelightVision;
     
+    //Declares a Shuffleboard object
+    private RobotShuffleboard m_shuffleboard;
+
     //Declares variables for the motors that move the launcher flywheel, the feeder wheel, and the turret angle
     //Not all of these motors will be TalonFXs, those are placeholders until we know what kinds of motors we'll be using
     private TalonFX m_masterFlywheelMotor;
@@ -66,9 +70,12 @@ public class Launcher{
      * Constructor for Launcher objects
      * @param limelightVision we pass in limelight to use in launch targeting
      */
-    public Launcher(LimelightVision limelightVision){
+    public Launcher(LimelightVision limelightVision, RobotShuffleboard shuffleboard){
         //Instantiates objects for the Launcher class
         m_limelightVision = limelightVision;
+
+        //Instantiates the shuffleboard so the values for target flywheel speed on it can be used
+        m_shuffleboard = shuffleboard;
 
         m_masterFlywheelMotor = new TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
         m_slaveFlywheelMotor = new TalonFX(RobotMap.LauncherConstants.SLAVE_FLYWHEEL_FALCON_ID);
@@ -155,11 +162,10 @@ public class Launcher{
             // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
             // 100 is arbitrary and needs to be tested (more will probably need to be done so this is more fine tuned)
            // double targetFlywheelSpeed = m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 1000;
-            double targetFlywheelSpeed = 14500;
             setFlywheelSpeed(RobotMap.LauncherConstants.FLYWHEEL_SPEED);
             System.out.println("Real Flywheel speed" + getRealSpeed());
             //Checks if our flywheel is at the target speed
-            if(getRealSpeed() > targetFlywheelSpeed){
+            if(getRealSpeed() > m_shuffleboard.getTargetFlywheelSpeed()){
                 flywheelMotorReady = true;
             }
             else{
@@ -210,10 +216,10 @@ public class Launcher{
     }
 
     /**
-     * @return current speed of flywheel motor
+     * @return current speed of flywheel motor in RPM
      */
     public double getRealSpeed(){
-        return m_masterFlywheelMotor.getSelectedSensorVelocity();
+        return ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600) / 4096);
     }
 
     /**
@@ -299,7 +305,7 @@ public class Launcher{
     public void lowPreset10(){
         setTrajectoryPosition(TrajectoryPosition.kDown);
         setFlywheelSpeed(0.7);
-        if(getRealSpeed() >= 0.7){
+        if((getRealSpeed() / 6000) >= 0.7){
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
     }
@@ -311,7 +317,7 @@ public class Launcher{
     public void lowPreset20(){
         setTrajectoryPosition(TrajectoryPosition.kDown);
         setFlywheelSpeed(0.9);
-        if(getRealSpeed() >= 0.9){
+        if((getRealSpeed() / 6000) >= 0.9){
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
     }
@@ -323,7 +329,7 @@ public class Launcher{
     public void highPreset10(){
         setTrajectoryPosition(TrajectoryPosition.kUp);
         setFlywheelSpeed(0.7);
-        if(getRealSpeed() >= 0.7){
+        if((getRealSpeed() / 6000) >= 0.7){
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
     }
@@ -335,7 +341,7 @@ public class Launcher{
     public void highPreset20(){
         setTrajectoryPosition(TrajectoryPosition.kUp);
         setFlywheelSpeed(0.9);
-        if(getRealSpeed() >= 0.9){
+        if((getRealSpeed() / 6000) >= 0.9){
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
     }
