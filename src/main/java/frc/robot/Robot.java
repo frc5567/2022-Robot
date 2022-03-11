@@ -36,13 +36,13 @@ public class Robot extends TimedRobot {
     m_intake = new Intake();
     m_limelightVision = new LimelightVision();
     m_drivetrain = new Drivetrain();
-    m_launcher = new Launcher(m_limelightVision);
+    m_launcher = new Launcher(m_limelightVision, m_drivetrain, m_shuffleboard);
     m_climber = new Climber();
     m_shuffleboard = new RobotShuffleboard();
     m_shuffleboard.drivetrainShuffleboardConfig();
     
     m_pilotController = new PilotController(m_drivetrain, m_limelightVision, m_shuffleboard, m_launcher);
-    m_copilotController = new CopilotController(m_intake, m_launcher, m_climber, m_shuffleboard);
+    m_copilotController = new CopilotController(m_intake, m_launcher, m_climber, m_shuffleboard, m_limelightVision);
     m_auton = new Auton(m_drivetrain, m_launcher, m_intake, m_limelightVision, m_shuffleboard);
   }
 
@@ -105,11 +105,15 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     m_copilotController.init();
+    m_pilotController.init();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_copilotController.periodic();
+    m_copilotController.testPeriodic();
+    m_pilotController.testPeriodic();
+    m_limelightVision.periodic();
+    //m_intake.periodic();
   }
 }

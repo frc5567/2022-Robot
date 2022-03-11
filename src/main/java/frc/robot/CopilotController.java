@@ -10,6 +10,7 @@ public class CopilotController {
     private Launcher m_launcher;
     private Intake m_intake;
     private Climber m_climber;
+    private LimelightVision m_limelight;
     //declares shuffleboard to be used for flywheel velocity testing
     private RobotShuffleboard m_shuffleboard;
     private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
@@ -25,12 +26,13 @@ public class CopilotController {
      * @param launcher we pass in launcher so the copilot can control the launcher system
      * @param climber we pass in climber so the copilot can control the climber system
      */
-    public CopilotController(Intake intake, Launcher launcher, Climber climber, RobotShuffleboard shuffleboard){
+    public CopilotController(Intake intake, Launcher launcher, Climber climber, RobotShuffleboard shuffleboard, LimelightVision limelight){
         //instatiates objects for copilot class
         m_intake = intake;
         m_launcher = launcher;
         m_climber = climber;
         m_shuffleboard = shuffleboard;
+        m_limelight = limelight;
         
         m_controller = new XboxController(RobotMap.CopilotControllerConstants.COPILOT_CONTROLLER_PORT);
         //m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
@@ -55,15 +57,23 @@ public class CopilotController {
      * This method should be called periodically in Teleop in order to control all systems
      */
     public void periodic(){
-        //when testing with xbox controller, comment out intake, launcher, and climber
-        //TODO: uncomment these when testing is complete
-        //controlIntake();
-        //controlLauncher();
-        //controlClimber();
-        //for testing purposes
+        controlIntake();
+        controlLauncher();
+        controlClimber();
+        
+        m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
+        m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
+        m_shuffleboard.periodic();
+    }
+
+    /**
+     * Periodic method for copilot controller that includes manual testing controls
+     */
+    public void testPeriodic(){
         manualLauncherCmd();
         manualIntakeCmd();
         manualClimberCmd();
+
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
@@ -102,6 +112,7 @@ public class CopilotController {
         else{
             m_launcher.setFlywheelSpeed(0);
             m_launcher.setTurretSpeed(0);
+            m_limelight.disableLEDs();
         }
 
         if (m_gamePad.getTrajectoryUpPressed()){
@@ -170,10 +181,11 @@ public class CopilotController {
             //Commented out for testing purposes
             m_launcher.targetAndLaunch();
         }
-        //else {
-            //Added for testing
-            //m_launcher.setFeederSpeed(0);
-       // }
+        else {
+            m_launcher.setFeederSpeed(0);
+            m_limelight.disableLEDs();
+            m_launcher.zeroTurretPosition();
+        }
     }
 
     /**

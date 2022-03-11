@@ -88,6 +88,10 @@ public class RobotMap {
         public static final double TURRET_ROTATION_SPEED = 0.15;
         public static final double FLYWHEEL_SPEED = 0.8;
 
+        // This is the target speed we want the flywheel to be moving (in RPM) before launching
+        // This value should be tested. Currently the 5104 is 80% of the power
+        public static final double TARGET_FLYWHEEL_SPEED = 5104;
+
         //Constant for converting inches to encoder ticks for the turret to be used to determine the limit for how far left or right the turret can rotate
         // the 4096 is the number of encoder ticks for the motor, 44.019 is the the circumference of the turret in inches, 70 is the gear ratio for the turret
         public static final double INCHES_TO_ENCODER_TICKS_TURRET = 4096 / (44.019/70);
@@ -95,6 +99,9 @@ public class RobotMap {
         //Constant for our turret encoder limit so we don't overturn and damage wiring.
         //2.69 (inches) is the maximum distance we want the turret to be able to turn
         public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
+
+        // This is the max RPM value that the flywheel can be moving
+        public static final double MAX_FLYWHEEL_RPM = 6380;
 
         //Constant for distance from directly on center we allow the target to be 
         //TODO Tune when limelight is set up
@@ -117,6 +124,8 @@ public class RobotMap {
         public static final int PID_LOOP_IDX = 0;
         //Constant representing the default deadband percentage for the turret motor (currently at 4%)
         public static final double TURRET_MOTOR_DEADBAND = 0.04;
+
+        public static final double MAX_ON_TARGET_CYCLES = 30;
     }
 
     /**
@@ -203,28 +212,26 @@ public class RobotMap {
         public static final double ROTATE_BOUND = 0.03;
 
         public static final double FULL_TURN = 180;
-        //This value is passed into driveToTarget method in Auton to move the robot 84.75 inches
+        //This value is passed into driveToTarget method in Auton to move the robot 67.09 inches
         public static final double LEFT_WALL_STEP_ONE_TARGET_DISTANCE = 67.09;
-        //This value is passed into driveToTarget method in Auton to move the robot 75 inches 
+        //This value is passed into driveToTarget method in Auton to move the robot 14 inches 
         public static final double LEFT_WALL_STEP_THREE_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees 
         public static final double LEFT_WALL_STEP_SIX_TARGET_ANGLE = 160;
 
-        //This value is passed into driveToTarget method in Auton to move the robot 84.75 inches
+        //This value is passed into driveToTarget method in Auton to move the robot 67.09 inches
         public static final double RIGHT_WALL_STEP_ONE_TARGET_DISTANCE = 67.09;
-        //TODO: find exact angle, this is a guess
 
-        //This value is passed into driveToTarget method in Auton to move the robot 75 inches
+        //This value is passed into driveToTarget method in Auton to move the robot 14 inches
         public static final double RIGHT_WALL_STEP_THREE_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees
         public static final double RIGHT_WALL_STEP_SIX_TARGET_ANGLE = 160;
 
-        //TODO: find exact angle/distance, this is a guess
-        //This value is passed into driveToTarget method in Auton to move the robot 48 inches
+        //This value is passed into driveToTarget method in Auton to move the robot 35 inches
         public static final double RIGHT_LINE_STEP_ONE_TARGET_DISTANCE = 35;
-        //This value is passed into driveToTarget method in Auton to move the robot 48 inches
+        //This value is passed into driveToTarget method in Auton to move the robot 14 inches
         public static final double RIGHT_LINE_STEP_THREE_TARGET_DISTANCE = 14;
-        //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees
+        //This value is passed into turnToTarget method in Auton to turn the robot 180 degrees
         public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 180;
     }
 }
