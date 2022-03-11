@@ -184,6 +184,7 @@ public class CopilotController {
         else {
             m_launcher.setFeederSpeed(0);
             m_limelight.disableLEDs();
+            m_launcher.zeroTurretPosition();
         }
     }
 
