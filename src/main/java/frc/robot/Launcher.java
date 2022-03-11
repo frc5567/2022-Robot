@@ -87,11 +87,7 @@ public class Launcher{
      * Constructor for Launcher objects
      * @param limelightVision we pass in limelight to use in launch targeting
      */
-<<<<<<< HEAD
-    public Launcher(LimelightVision limelightVision, RobotShuffleboard shuffleboard){
-=======
-    public Launcher(LimelightVision limelightVision, Drivetrain drivetrain){
->>>>>>> 3479230f7ec5257866d36596040df34fcf3341c8
+    public Launcher(LimelightVision limelightVision,  Drivetrain drivetrain, RobotShuffleboard shuffleboard){
         //Instantiates objects for the Launcher class
         m_limelightVision = limelightVision;
         m_drivetrain = drivetrain;
@@ -214,7 +210,6 @@ public class Launcher{
                 m_onTarget = false;
                 setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }
-<<<<<<< HEAD
 
             // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
             // 100 is arbitrary and needs to be tested (more will probably need to be done so this is more fine tuned)
@@ -230,7 +225,7 @@ public class Launcher{
             }
 
             //Prints out a message telling the driver when our robot is ready to launch and moves game pieces into the flywheel
-            if(turretAngleReady == true && flywheelMotorReady == true){
+            if(m_onTarget == true && flywheelMotorReady == true){
                 setTrajectoryPosition(TrajectoryPosition.kUp);
                 System.out.println("Commencing Launch Sequence");
                 setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
@@ -240,8 +235,6 @@ public class Launcher{
             else{
                 setFeederSpeed(0);
             }
-=======
->>>>>>> 3479230f7ec5257866d36596040df34fcf3341c8
         }
         else {
             System.out.println("No Target Detected");
