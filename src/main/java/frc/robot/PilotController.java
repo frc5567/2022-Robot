@@ -72,6 +72,27 @@ public class PilotController {
     }
 
     /**
+     * Periodic method for pilot controller that includes manual testing controls
+     */
+    public void testPeriodic(){
+        // When A is pressed we turn to target
+        turnToTarget();
+        // Calls the drivetrain to be utilized. Right trigger is forward, left trigger is backward, and left stick is turn
+        arcadeDriveCmd();
+        // Controls the gear with x button being high gear and y button being low gear 
+        controlGear();
+        if(m_controller.getLeftBumper()){
+            m_launcher.setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+        }
+        else if(m_controller.getRightBumper()){
+            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+        }
+        else{
+            m_launcher.setTurretSpeed(0);
+        }
+    }
+
+    /**
      * Takes away the deadband value from any input (creates a deadband close to 0)
      * @param stickInput value that you want to pass through the deadband, likely only used for the left stick on the pilot controller
      * @return adjusted stick value
@@ -116,16 +137,6 @@ public class PilotController {
 
         // passes in our variables from this method (calculations) into our arcade drive in drivetrain
         m_drivetrain.periodic(triggerInput, leftStickXInput);
-
-        if(m_controller.getLeftBumper()){
-            m_launcher.setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
-        }
-        else if(m_controller.getRightBumper()){
-            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
-        }
-        else{
-            m_launcher.setTurretSpeed(0);
-        }
     }
 
     /**
@@ -148,12 +159,12 @@ public class PilotController {
     }
 
     /**
-     * Turns to target when left bumper button is pressed
+     * Turns to target when A button is pressed
      * TODO: Remove this method once we know turret autotargeting works because this method will be redundant 
      */
     private void turnToTarget(){
         // checks if left bumper button is pressed and executes code if it is
-        if(m_controller.getLeftBumper()){
+        if(m_controller.getAButton()){
             // change into low gear for defense and more accurate aim
             m_drivetrain.shiftGear(Gear.kLowGear);
             // checks if any part of the target is visible
