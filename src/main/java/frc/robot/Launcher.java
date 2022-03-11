@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public class Launcher{
@@ -38,7 +39,7 @@ public class Launcher{
 
     //Declares limelight object
     private LimelightVision m_limelightVision;
-
+    private RobotShuffleboard m_shuffleboard;
     private Drivetrain m_drivetrain;
     
     //Declares variables for the motors that move the launcher flywheel, the feeder wheel, and the turret angle
@@ -64,6 +65,8 @@ public class Launcher{
     private double m_flywheelCurrentSpeed;
     private boolean m_ledEnabled;
 
+    private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
+
     //Boolean to store whether or not we are currently on target
     boolean m_onTarget = false;
 
@@ -83,10 +86,11 @@ public class Launcher{
      * Constructor for Launcher objects
      * @param limelightVision we pass in limelight to use in launch targeting
      */
-    public Launcher(LimelightVision limelightVision, Drivetrain drivetrain){
+    public Launcher(LimelightVision limelightVision, Drivetrain drivetrain, RobotShuffleboard shuffleboard){
         //Instantiates objects for the Launcher class
         m_limelightVision = limelightVision;
         m_drivetrain = drivetrain;
+        m_shuffleboard = shuffleboard;
 
         m_masterFlywheelMotor = new TalonFX(RobotMap.LauncherConstants.MASTER_FLYWHEEL_FALCON_ID);
         m_slaveFlywheelMotor = new TalonFX(RobotMap.LauncherConstants.SLAVE_FLYWHEEL_FALCON_ID);
@@ -116,6 +120,8 @@ public class Launcher{
         m_masterFlywheelMotor.set(ControlMode.PercentOutput, 0);
         m_limelightVision.disableLEDs();
         m_ledEnabled = false;
+
+        m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
     }
 
     
@@ -127,12 +133,14 @@ public class Launcher{
         m_rightDriveEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
         m_turretEncoderTicks = getTurretPosition();
 
+        double angleToTarget = m_limelightVision.xAngleToTarget();
+
         boolean flywheelMotorReady = false;
 
-        if (!m_ledEnabled){
-            m_limelightVision.enableLEDs();
-            m_ledEnabled = true;
-        }
+        // if (!m_ledEnabled){
+        //     m_limelightVision.enableLEDs();
+        //     m_ledEnabled = true;
+        // }
 
         if (m_onTarget && !m_limelightVision.seeTarget()){
             if(m_leftDriveEncoderTicks != m_onTargetLeftTicks){
@@ -151,8 +159,8 @@ public class Launcher{
         // We devide the distance in inches by a large number to get a reasonable value for our flywheel motor speed.
         // 100 is arbitrary and needs to be tested (more will probably need to be done so this is more fine tuned)
         // double targetFlywheelSpeed = m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_HEIGHT) / 1000;
-        double targetFlywheelSpeed = 14500;
-        setFlywheelSpeed(RobotMap.LauncherConstants.FLYWHEEL_SPEED);
+        double targetFlywheelSpeed = 14000;
+        setFlywheelSpeed(m_currentFlywheelVelocity);
         System.out.println("Real Flywheel speed" + getRealSpeed());
         //Checks if our flywheel is at the target speed
         if(getRealSpeed() >= targetFlywheelSpeed){
@@ -169,37 +177,38 @@ public class Launcher{
             //checks if the turret encoder is within the tolerated range, and if we're not print a message and adjust
             if(getTurretPosition() > -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT && getTurretPosition() < RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
                 //this if statements checks to see if we are within the tolerated error range, and if we are set turret bool to true
-                if(m_limelightVision.xAngleToTarget() < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR && m_limelightVision.xAngleToTarget() > -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                if(angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR && angleToTarget > -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
                     setTurretSpeed(0);
                     m_onTargetLeftTicks = m_leftDriveEncoderTicks;
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;
                     m_onTargetTurretTicks = m_turretEncoderTicks;
                     m_onTarget = true;
+                    System.out.print("Ready to Launch ------------------");
                 }
                 //if we are above the tolerated error range, turn the turret toward the tolerated error range
-                else if(m_limelightVision.xAngleToTarget() > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                else if(angleToTarget > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
-                    System.out.println("Not Ready to Launch");
+                    System.out.println("Not Ready to Launch 1:" + angleToTarget);
                     m_onTarget = false;
                     setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
                 }
                 //if we are below the tolerated error range, turn the turret toward the tolerated error range
-                else if(m_limelightVision.xAngleToTarget() < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                else if(angleToTarget < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
-                    System.out.println("Not Ready to Launch");
+                    System.out.println("Not Ready to Launch 2:" + angleToTarget);
                     m_onTarget = false;
                     setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
                 }
             }
             //If we are to the left of our motor limit, print out a message and turn right
             else if(getTurretPosition() < -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
-                System.out.println("Not Ready to Launch");
+                System.out.println("Not Ready to Launch 3");
                 m_onTarget = false;
                 setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }
             //If we are to the right of our motor limit, print out a message and turn left
             else if(getTurretPosition() > RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
-                System.out.println("Not Ready to Launch");
+                System.out.println("Not Ready to Launch 4");
                 m_onTarget = false;
                 setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }
@@ -210,13 +219,13 @@ public class Launcher{
 
         //Prints out a message telling the driver when our robot is ready to launch and moves game pieces into the flywheel
         if(m_onTarget && flywheelMotorReady){
-            setTrajectoryPosition(TrajectoryPosition.kUp);
+            //setTrajectoryPosition(TrajectoryPosition.kUp);
             System.out.println("Commencing Launch Sequence");
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-            m_ledEnabled = false;
             m_onTargetCounter++;
             if(m_onTargetCounter >= RobotMap.LauncherConstants.MAX_ON_TARGET_CYCLES){
                 m_onTarget = false;
+                //m_ledEnabled = false;
             }
         }
         else{
@@ -244,10 +253,10 @@ public class Launcher{
         m_state = trajectoryPosition;
 
         if(m_state == TrajectoryPosition.kUp){
-            setPiston(Value.kForward);
+            setPiston(Value.kReverse);
         }
         else if (m_state == TrajectoryPosition.kDown){
-            setPiston(Value.kReverse);
+            setPiston(Value.kForward);
         }
     }
 
