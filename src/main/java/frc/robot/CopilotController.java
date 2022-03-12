@@ -29,7 +29,6 @@ public class CopilotController {
      */
     public CopilotController(Intake intake, Launcher launcher, Climber climber, RobotShuffleboard shuffleboard, LimelightVision limelight){
         //instatiates objects for copilot class
-        //m_gamePad = new GamePad();
         m_intake = intake;
         m_launcher = launcher;
         m_climber = climber;
