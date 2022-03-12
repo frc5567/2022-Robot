@@ -83,14 +83,14 @@ public class RobotMap {
         public static final int TURRET_MOTOR_ID = 3;
         
         //These are untested placesholder values until we know what speeds we actually need
-        public static final double FEEDING_SPEED = 0.5;
+        public static final double FEEDING_SPEED = 0.7;
         public static final double EXPEL_SPEED = 0.25;
         public static final double TURRET_ROTATION_SPEED = 0.15;
-        public static final double FLYWHEEL_SPEED = 0.8;
+        public static final double FLYWHEEL_SPEED = 0.7;
 
         // This is the target speed we want the flywheel to be moving (in RPM) before launching
         // This value should be tested. Currently the 5104 is 80% of the power
-        public static final double TARGET_FLYWHEEL_SPEED = 5104;
+        public static final double TARGET_FLYWHEEL_SPEED = 1900;
 
         //Constant for converting inches to encoder ticks for the turret to be used to determine the limit for how far left or right the turret can rotate
         // the 4096 is the number of encoder ticks for the motor, 44.019 is the the circumference of the turret in inches, 70 is the gear ratio for the turret
@@ -202,11 +202,11 @@ public class RobotMap {
 
         public static final double DRIVE_SPEED = 0.4;
         public static final double INTAKE_DRIVE_SPEED = 0.1;
-        public static final double TURN_SPEED = 0.2;
-        public static final double TARGETING_SPEED = 0.1;
+        public static final double TURN_SPEED = 0.4;
+        public static final double TARGETING_SPEED = 0.25;
 
         //constant for number of loops after a ball is launched to move to the next step
-        public static final double LOOPS_AFTER_LAUNCH = 20;
+        public static final double LOOPS_AFTER_LAUNCH = 150;
 
         //constant for rotation error acceptance
         public static final double ROTATE_BOUND = 0.03;
@@ -230,7 +230,9 @@ public class RobotMap {
         //This value is passed into driveToTarget method in Auton to move the robot 35 inches
         public static final double RIGHT_LINE_STEP_ONE_TARGET_DISTANCE = 35;
         //This value is passed into driveToTarget method in Auton to move the robot 14 inches
-        public static final double RIGHT_LINE_STEP_THREE_TARGET_DISTANCE = 14;
+        public static final double RIGHT_LINE_STEP_THREE_TARGET_DISTANCE = 7;
+        //This value is passed into driveToTarget method in Auton to move the robot 14 inches
+        public static final double RIGHT_LINE_STEP_EIGHT_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 180 degrees
         public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 180;
     }

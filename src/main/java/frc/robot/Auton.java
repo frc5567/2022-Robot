@@ -95,7 +95,7 @@ public class Auton{
 
         //Sets the current step to step 1 and the path to whatever path we are currently running
         m_step = AutonStep.kStep1;
-        m_path = AutonPath.kRightWall;
+        m_path = AutonPath.kRightLine;
     }
 
     /**
@@ -107,7 +107,7 @@ public class Auton{
         m_intake.init();
         m_limelightVision.init();
         m_step = AutonStep.kStep1;
-        m_path = AutonPath.kRightWall;
+        m_path = AutonPath.kRightLine;
         //m_currentAutonPath = m_shuffleboard.getAutonPath();
         m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
     }
@@ -152,9 +152,17 @@ public class Auton{
             m_doSysOut = false;
         }
 
+        boolean sensor1 = m_intake.getMagazineSensor1();
+        boolean sensor2 = m_intake.getMagazineSensor2();
+
+
+
         if(m_doSysOut == true){
-           // System.out.println("Right Encoder Ticks: " + m_currentRightEncoderTicks);
-           // System.out.println("Left Encoder Ticks: " + m_currentLeftEncoderTicks);   
+            System.out.println("Right Encoder Ticks: " + m_currentRightEncoderTicks);
+            System.out.println("Left Encoder Ticks: " + m_currentLeftEncoderTicks); 
+            System.out.println("Current Angle: " + m_drivetrain.getGyro());
+            //System.out.println("Sensor 1: " + sensor1);
+            //System.out.println("Sensor 2: " + sensor2);
         }
 
         //Starts auton pathing in one of our three paths: Left Wall, Right Wall, or Right Line
@@ -229,7 +237,7 @@ public class Auton{
                         System.out.println("On Target");
                         m_drivetrain.periodic(0,0);
                         m_drivetrain.zeroEncoders();
-                        m_limelightVision.disableLEDs();
+                        //m_limelightVision.disableLEDs();
                         m_step = AutonStep.kStep7;
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
@@ -361,7 +369,7 @@ public class Auton{
                         System.out.println("On Target");
                         m_drivetrain.periodic(0,0);
                          m_drivetrain.zeroEncoders();
-                         m_limelightVision.disableLEDs();
+                        // m_limelightVision.disableLEDs();
                          m_step = AutonStep.kStep7;
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
@@ -423,8 +431,11 @@ public class Auton{
             }
         }
         else if (m_path == AutonPath.kRightLine){ 
-            
             if(m_step == AutonStep.kStep1){
+                m_intake.setIntakeExtension(IntakeState.kExtended);
+                //Activates intake and drives forward to a target in order to pick up a game piece
+                m_intake.takeIn();
+                m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_ONE_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep2;
@@ -434,35 +445,18 @@ public class Auton{
                     return;
                 }
             }
-            if(m_step == AutonStep.kStep2){
-                //extends intake to prepare for the next step, where we activate our intake
-                m_intake.setIntakeExtension(IntakeState.kExtended);
-                //System.out.println("Intake Extended");
-                m_step = AutonStep.kStep3;
-            }
-            if(m_step == AutonStep.kStep3){
-                //Activates intake and drives forward to a target in order to pick up a game piece
-                m_intake.takeIn();
-                if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_THREE_TARGET_DISTANCE)){
-                    m_drivetrain.periodic(0,0);
-                    m_step = AutonStep.kStep4;
-                    m_drivetrain.zeroEncoders();
-                }
-                else{
-                    return;
-                }
-            }
-            else if(m_step == AutonStep.kStep4){
+            else if(m_step == AutonStep.kStep2){
                 //Retract intake so that we can continue our path without risking breaking the intake system
                 //m_intake.setIntakeExtension(IntakeState.kRetracted);
                 //System.out.println("Intake Retracted");
-                m_step = AutonStep.kStep5;
+                m_step = AutonStep.kStep3;
             }
-            else if(m_step == AutonStep.kStep5){
+            else if(m_step == AutonStep.kStep3){
                 //Turns the robot a full 180 degrees in order to face the hub
+                m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_FOUR_TARGET_ANGLE)){
                     m_drivetrain.periodic(0,0);
-                    m_step = AutonStep.kStep6;
+                    m_step = AutonStep.kStep4;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
                     m_launcher.setFlywheelSpeed(RobotMap.LauncherConstants.FLYWHEEL_SPEED);
@@ -471,12 +465,10 @@ public class Auton{
                     return;
                 }
             }
-            else if(m_step == AutonStep.kStep6){
+            else if(m_step == AutonStep.kStep4){
                 //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
-                if(m_limelightOff){
-                    //System.out.println("Turning on LEDS");
-                    m_limelightVision.enableLEDs();
-                }
+                System.out.println("Activating Limelight");
+                m_limelightVision.enableLEDs();
                 //This is all currently placeholder code for vision/targeting testing, it will eventually be replaced with m_launcher.launch()
                 //Stores the current distance from the target to the center of the screen on the x axis in a variable
                 m_xToTarget = m_limelightVision.xAngleToTarget();
@@ -488,8 +480,8 @@ public class Auton{
                         System.out.println("On Target");
                         m_drivetrain.periodic(0,0);
                         m_drivetrain.zeroEncoders();
-                        m_limelightVision.disableLEDs();
-                        m_step = AutonStep.kStep7;
+                        //m_limelightVision.disableLEDs();
+                        m_step = AutonStep.kStep6;
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
@@ -512,41 +504,34 @@ public class Auton{
                     }
                 }
             }
-            else if (m_step == AutonStep.kStep7){ 
+            else if (m_step == AutonStep.kStep6){ 
                 m_launcher.targetAndLaunch();
-                if(m_intake.getMagazineSensor2() == false){
-                    m_loopCount ++;
-                }
-                else if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
+                m_loopCount ++;
+                if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
                     m_loopCount = 0;
-                    m_step = AutonStep.kStep8;
+                    m_step = AutonStep.kStep7;
                 }
             }
-            else if (m_step == AutonStep.kStep8){
-                if (m_intake.getMagazineSensor1()){
-                    m_secondBall = true;
-                }
-                if (m_intake.getMagazineSensor2() == false && m_secondBall == true){
-                    m_intake.periodic();
+            else if (m_step == AutonStep.kStep7){
+                if(driveToTarget(-RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_EIGHT_TARGET_DISTANCE)){
+                    m_drivetrain.periodic(0,0);
+                    m_step = AutonStep.kStop;
+                    m_drivetrain.zeroEncoders();
                 }
                 else{
-                    m_step = AutonStep.kStep9;
-                }
-            }
-            else if (m_step == AutonStep.kStep9){ 
-                m_launcher.targetAndLaunch();
-                if(m_intake.getMagazineSensor2() == false){
-                    m_loopCount ++;
-                }
-                else if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
-                    //zeros the loop count to be used again
-                    m_loopCount = 0;
-                    m_step = AutonStep.kStop;
+                    return;
                 }
             }
             else if(m_step == AutonStep.kStop){
-                System.out.println("Auton Completed");
+                m_launcher.setFeederSpeed(0);
+                m_launcher.setTurretSpeed(0);
+                m_launcher.setFlywheelSpeed(0);
+                m_limelightVision.disableLEDs();
+                m_intake.setIntakeExtension(IntakeState.kRetracted);
+                if(m_doSysOut == true){
+                    System.out.println("Auton Completed");
+                }
                 m_drivetrain.periodic(0, 0);
             }
         }

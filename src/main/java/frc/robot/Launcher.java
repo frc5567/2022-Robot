@@ -259,7 +259,7 @@ public class Launcher{
      * @return current speed of flywheel motor in RPM
      */
     public double getRealSpeed(){
-        return ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600) / 4096);
+        return ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600) / 2048);
     }
 
     /**
