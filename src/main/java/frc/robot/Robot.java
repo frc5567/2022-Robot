@@ -68,6 +68,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_drivetrain.brakeMode();
     m_auton.init();
   }
 
@@ -80,6 +81,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    m_drivetrain.brakeMode();
     m_pilotController.init();
     //m_copilotController.init();
   }
@@ -95,7 +97,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_drivetrain.coastMode();
+  }
 
   /** This function is called periodically when disabled. */
   @Override
@@ -104,6 +108,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
+    m_drivetrain.brakeMode();
     m_copilotController.init();
     m_pilotController.init();
   }

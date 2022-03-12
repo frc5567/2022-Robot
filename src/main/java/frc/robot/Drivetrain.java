@@ -106,11 +106,6 @@ public class Drivetrain {
      * Zeros encoders and gyro, Shifts initially to low gear, Inverts all right motors.
      */
     public void init(){
-        // Brakes all the motors in init so we are not moving when there is no power going to the robot
-        m_masterRightMotor.setNeutralMode(NeutralMode.Brake);
-        m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
-        m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
-        m_slaveRightMotor.setNeutralMode(NeutralMode.Brake);
         // Reverts all configurations to factory default values to restore the motor controllers to a known state, allowing you to only config the settings that you intend to change
         m_masterRightMotor.configFactoryDefault();
         m_slaveRightMotor.configFactoryDefault();
@@ -156,6 +151,26 @@ public class Drivetrain {
      */
     public void zeroGyro(){
         m_gyro.zeroYaw();
+    }
+
+    /**
+     * public method to be used when we want to be able to push the bot around, such as disabled Periodic
+     */
+    public void coastMode(){
+        m_masterRightMotor.setNeutralMode(NeutralMode.Coast);
+        m_masterLeftMotor.setNeutralMode(NeutralMode.Coast);
+        m_slaveLeftMotor.setNeutralMode(NeutralMode.Coast);
+        m_slaveRightMotor.setNeutralMode(NeutralMode.Coast);
+    }
+
+    /**
+     * public method to be used when we do not want the robot to move unless values are passed in, such as teleop periodic
+     */
+    public void brakeMode(){
+        m_masterRightMotor.setNeutralMode(NeutralMode.Brake);
+        m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
+        m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
+        m_slaveRightMotor.setNeutralMode(NeutralMode.Brake);
     }
 
     /**
