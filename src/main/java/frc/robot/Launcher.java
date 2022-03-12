@@ -322,13 +322,13 @@ public class Launcher{
     }
 
     /**
-     * Turns the turret back to center within a deadband of 0.04. If we are within the deadband, the turret stops moving and the encoder is set to zero
+     * Turns the turret back to center within a deadband of 10 ticks. If we are within the deadband, the turret stops moving and the encoder is set to zero
      */
     public void zeroTurretPosition(){
-        if(getTurretPosition() >= RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+        if(getTurretPosition() >= RobotMap.LauncherConstants.TURRET_ENCODER_BAND){
             m_turretMotor.set(ControlMode.PercentOutput, RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
         }
-        else if(getTurretPosition() <= -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+        else if(getTurretPosition() <= -RobotMap.LauncherConstants.TURRET_ENCODER_BAND){
             m_turretMotor.set(ControlMode.PercentOutput, -RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
         }
         else {
