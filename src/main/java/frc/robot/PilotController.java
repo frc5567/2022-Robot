@@ -90,6 +90,7 @@ public class PilotController {
         // else{
         //     m_launcher.setTurretSpeed(0);
         // }
+        System.out.println("Gyro Angle: " + m_drivetrain.getGyro());
     }
 
     /**

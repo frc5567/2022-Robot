@@ -94,11 +94,12 @@ public class RobotMap {
 
         //Constant for converting inches to encoder ticks for the turret to be used to determine the limit for how far left or right the turret can rotate
         // the 4096 is the number of encoder ticks for the motor, 44.019 is the the circumference of the turret in inches, 70 is the gear ratio for the turret
-        public static final double INCHES_TO_ENCODER_TICKS_TURRET = 4096 / (44.019/70);
+        public static final double INCHES_TO_ENCODER_TICKS_TURRET = 2048 / (44.019/70);
 
         //Constant for our turret encoder limit so we don't overturn and damage wiring.
         //2.69 (inches) is the maximum distance we want the turret to be able to turn
-        public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
+        //public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
+        public static final double TURRET_ENCODER_LIMIT = 4400;
 
         // This is the max RPM value that the flywheel can be moving
         public static final double MAX_FLYWHEEL_RPM = 6380;
@@ -215,7 +216,7 @@ public class RobotMap {
         public static final double LOOPS_AFTER_LAUNCH = 150;
 
         //constant for rotation error acceptance
-        public static final double ROTATE_BOUND = 0.03;
+        public static final double ROTATE_BOUND = 0.07;
 
         public static final double FULL_TURN = 180;
         //This value is passed into driveToTarget method in Auton to move the robot 67.09 inches

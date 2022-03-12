@@ -256,6 +256,7 @@ public class Auton{
                     }
                 }
                 else{
+                    m_drivetrain.periodic(0,0);
                     if(m_doSysOut == true){
                         System.out.println("No Target Detected");
                     }

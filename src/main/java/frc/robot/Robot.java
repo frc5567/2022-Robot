@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Intake.IntakeState;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -99,6 +100,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_drivetrain.coastMode();
+    m_intake.setIntakeExtension(IntakeState.kRetracted);
+    m_limelightVision.disableLEDs();
   }
 
   /** This function is called periodically when disabled. */
