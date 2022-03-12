@@ -166,13 +166,13 @@ public class Drivetrain {
     /**
      * public method to be used when we do not want the robot to move unless values are passed in, such as teleop periodic
      */
-    public void breakMode(){
+    public void brakeMode(){
         m_masterRightMotor.setNeutralMode(NeutralMode.Brake);
         m_masterLeftMotor.setNeutralMode(NeutralMode.Brake);
         m_slaveLeftMotor.setNeutralMode(NeutralMode.Brake);
         m_slaveRightMotor.setNeutralMode(NeutralMode.Brake);
     }
-    
+
     /**
      * setPiston is a method for changing the state between Value.kForward and Value.kReverse
      * @param value what state state to set the pistons to (kForward, kReverse)
