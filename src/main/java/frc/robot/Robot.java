@@ -36,9 +36,9 @@ public class Robot extends TimedRobot {
     m_intake = new Intake();
     m_limelightVision = new LimelightVision();
     m_drivetrain = new Drivetrain();
+    m_shuffleboard = new RobotShuffleboard();
     m_launcher = new Launcher(m_limelightVision, m_drivetrain, m_shuffleboard);
     m_climber = new Climber();
-    m_shuffleboard = new RobotShuffleboard();
     m_shuffleboard.drivetrainShuffleboardConfig();
     
     m_pilotController = new PilotController(m_drivetrain, m_limelightVision, m_shuffleboard, m_launcher);
@@ -81,14 +81,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     m_pilotController.init();
-    m_copilotController.init();
+    //m_copilotController.init();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     m_pilotController.periodic();
-    m_copilotController.periodic();
+    //m_copilotController.periodic();
     m_limelightVision.periodic();
     //m_intake.periodic();
   }
