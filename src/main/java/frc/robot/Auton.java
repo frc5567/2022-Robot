@@ -262,7 +262,7 @@ public class Auton{
                     return;
                 }
             }
-            //steps to zero everything for the end of auton
+            //step to finish zeroing everything for the end of auton
             else if(m_step == AutonStep.kStop){
                 m_intake.setIntakeExtension(IntakeState.kRetracted);
                 if(m_doSysOut == true){
@@ -367,7 +367,7 @@ public class Auton{
                     return;
                 }
             }
-            //steps to zero everything for the end of auton
+            //step to finish zeroing everything for the end of auton
             else if(m_step == AutonStep.kStop){
                 m_intake.setIntakeExtension(IntakeState.kRetracted);
                 if(m_doSysOut == true){
@@ -397,7 +397,7 @@ public class Auton{
                 //System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep3;
             }
-            //Turns the robot a full 180 degrees in order to face the hub. also brings ball up to the feeder.
+            //step to Turn the robot a full 180 degrees in order to face the hub. Also brings ball up to the feeder.
             else if(m_step == AutonStep.kStep3){
                 m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_FOUR_TARGET_ANGLE)){
@@ -411,7 +411,7 @@ public class Auton{
                     return;
                 }
             }
-            //turns robot roughly to the target to be fine tuned by the turret
+            //step to turn robot roughly to the target to be fine tuned by the turret
             else if(m_step == AutonStep.kStep4){
                 //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
                 System.out.println("Activating Limelight");
@@ -472,7 +472,7 @@ public class Auton{
                     return;
                 }
             }
-            //steps to zero everything for the end of auton
+            //step to finish zeroing everything for the end of auton
             else if(m_step == AutonStep.kStop){
                 m_intake.setIntakeExtension(IntakeState.kRetracted);
                 if(m_doSysOut == true){
