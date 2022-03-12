@@ -276,10 +276,10 @@ public class Launcher{
         m_state = trajectoryPosition;
 
         if(m_state == TrajectoryPosition.kUp){
-            setPiston(Value.kForward);
+            setPiston(Value.kReverse);
         }
         else if (m_state == TrajectoryPosition.kDown){
-            setPiston(Value.kReverse);
+            setPiston(Value.kForward);
         }
     }
 

@@ -158,6 +158,13 @@ public class CopilotController {
             m_launcher.setFlywheelSpeed(0);
         }
 
+        if(m_controller.getStartButtonPressed()){
+            m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
+        }
+        else if(m_controller.getBackButtonPressed()){
+            m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
+        }
+
         // if(m_controller.getBButton()){
         //     if(m_currentLaunchPreset == 0){
         //         m_launcher.lowPreset10();
