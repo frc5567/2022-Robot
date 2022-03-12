@@ -187,7 +187,7 @@ public class Auton{
                 //System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep3;
             }
-            //Turns the robot a full 180 degrees in order to face the hub. also brings ball up to the feeder.
+            //Turns the robot a full 180 degrees in order to face the hub. Also brings ball up to the feeder.
             else if(m_step == AutonStep.kStep3){
                 m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_THREE_TARGET_ANGLE)){
@@ -247,8 +247,12 @@ public class Auton{
                     m_step = AutonStep.kStep6;
                 }
             }
-            //step to move backwards, away from the tarmac
+            //step to move backwards, out of tarmac and zero everything other than drivetrain
             else if (m_step == AutonStep.kStep6){
+                m_launcher.setFeederSpeed(0);
+                m_launcher.setTurretSpeed(0);
+                m_launcher.setFlywheelSpeed(0);
+                m_limelightVision.disableLEDs();
                 if(driveToTarget(-RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_SIX_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStop;
@@ -260,10 +264,6 @@ public class Auton{
             }
             //steps to zero everything for the end of auton
             else if(m_step == AutonStep.kStop){
-                m_launcher.setFeederSpeed(0);
-                m_launcher.setTurretSpeed(0);
-                m_launcher.setFlywheelSpeed(0);
-                m_limelightVision.disableLEDs();
                 m_intake.setIntakeExtension(IntakeState.kRetracted);
                 if(m_doSysOut == true){
                     System.out.println("Auton Completed");
@@ -292,7 +292,7 @@ public class Auton{
                 //System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep3;
             }
-            //Turns the robot a full 180 degrees in order to face the hub. also brings ball up to the feeder.
+            //Turns the robot a full 180 degrees in order to face the hub. Also brings ball up to the feeder.
             else if(m_step == AutonStep.kStep3){
                 m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(turnToAngle(RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_THREE_TARGET_ANGLE)){
@@ -352,8 +352,12 @@ public class Auton{
                     m_step = AutonStep.kStep6;
                 }
             }
-            //step to move backwards, away from the tarmac
+            //step to move backwards, out of tarmac and zero everything other than drivetrain
             else if (m_step == AutonStep.kStep6){
+                m_launcher.setFeederSpeed(0);
+                m_launcher.setTurretSpeed(0);
+                m_launcher.setFlywheelSpeed(0);
+                m_limelightVision.disableLEDs();
                 if(driveToTarget(-RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_SIX_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStop;
@@ -365,10 +369,6 @@ public class Auton{
             }
             //steps to zero everything for the end of auton
             else if(m_step == AutonStep.kStop){
-                m_launcher.setFeederSpeed(0);
-                m_launcher.setTurretSpeed(0);
-                m_launcher.setFlywheelSpeed(0);
-                m_limelightVision.disableLEDs();
                 m_intake.setIntakeExtension(IntakeState.kRetracted);
                 if(m_doSysOut == true){
                     System.out.println("Auton Completed");
@@ -457,8 +457,12 @@ public class Auton{
                     m_step = AutonStep.kStep6;
                 }
             }
-            //step to move backwards, away from the tarmac
+            //step to move backwards, out of tarmac and zero everything other than drivetrain
             else if (m_step == AutonStep.kStep6){
+                m_launcher.setFeederSpeed(0);
+                m_launcher.setTurretSpeed(0);
+                m_launcher.setFlywheelSpeed(0);
+                m_limelightVision.disableLEDs();
                 if(driveToTarget(-RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_SIX_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStop;
@@ -470,10 +474,6 @@ public class Auton{
             }
             //steps to zero everything for the end of auton
             else if(m_step == AutonStep.kStop){
-                m_launcher.setFeederSpeed(0);
-                m_launcher.setTurretSpeed(0);
-                m_launcher.setFlywheelSpeed(0);
-                m_limelightVision.disableLEDs();
                 m_intake.setIntakeExtension(IntakeState.kRetracted);
                 if(m_doSysOut == true){
                     System.out.println("Auton Completed");
