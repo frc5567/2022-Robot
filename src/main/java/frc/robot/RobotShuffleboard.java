@@ -14,8 +14,9 @@ public class RobotShuffleboard {
     double m_lowVelocityScalar;
     double m_highTurnScalar;
     double m_lowTurnScalar;
-    // Declares member variable for manual launcher testing
+    // Declares member variables for manual launcher testing
     double m_flywheelVelocity;
+    double m_targetFlywheelSpeed;
     // Declares member variable for choosing an auton path
     double m_autonPath;
     double m_launchPreset;
@@ -27,6 +28,7 @@ public class RobotShuffleboard {
     private NetworkTableEntry m_flywheelVelocityEntry;
     private NetworkTableEntry m_autonPathEntry;
     private NetworkTableEntry m_launchPresetEntry;
+    private NetworkTableEntry m_targetFlywheelSpeedEntry;
 
     /**
      * Constructor for robot shuffleboard class
@@ -48,6 +50,7 @@ public class RobotShuffleboard {
         setFlywheelVelocity();
         setAutonPath();
         setLaunchPreset();
+        setTargetFlywheelSpeed();
     }
 
     /**
@@ -59,6 +62,7 @@ public class RobotShuffleboard {
         setFlywheelVelocity();
         setAutonPath();
         setLaunchPreset();
+        setTargetFlywheelSpeed();
     }
 
     /**
@@ -90,6 +94,9 @@ public class RobotShuffleboard {
         m_launchPresetEntry = m_driverTab.addPersistent("Launch Preset", RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
+        m_targetFlywheelSpeedEntry = m_driverTab.addPersistent("Target Flywheel Speed", RobotMap.LauncherConstants.TARGET_FLYWHEEL_SPEED)
+                                    .withWidget(BuiltInWidgets.kTextView)
+                                    .getEntry();
     }
 
     /**
@@ -108,7 +115,7 @@ public class RobotShuffleboard {
 
     /**
      * Sets the velocity of the flywheel equal to the value on the shuffleboard. 
-     * If no value is found on the shuffleboard, returns with nothing, the value will be set to 0.5 from RobotMap
+     * If no value is found on the shuffleboard for flywheelVelocity, returns with nothing, the value will be set to 0.5 from RobotMap
      */
     private void setFlywheelVelocity(){
         m_flywheelVelocity = m_flywheelVelocityEntry.getDouble(RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY);
@@ -122,6 +129,23 @@ public class RobotShuffleboard {
         // Gets the updated value from the shuffleboard
         setFlywheelVelocity();
         return m_flywheelVelocity;
+    }
+
+    /**
+     * Sets the targetFlywheelSpeed to be equal to the value on the shuffleboard
+     * If no valued is found on the shuffleboard for targetFlywheelSpeed, meaning returns with nothing, the value will be set to 2,124 RPM
+     */
+    private void setTargetFlywheelSpeed(){
+        m_targetFlywheelSpeed = m_targetFlywheelSpeedEntry.getDouble(RobotMap.LauncherConstants.TARGET_FLYWHEEL_SPEED);
+    }
+
+    /**
+     * Gets the current target flywheel speed from the shuffleboard
+     * @return the speed in RPM that we want the flywheels to be going before launching
+     */
+    public double getTargetFlywheelSpeed(){
+        setTargetFlywheelSpeed();
+        return m_targetFlywheelSpeed;
     }
     
     private void setAutonPath(){

@@ -66,6 +66,8 @@ public class CopilotController {
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
+
+
     }
 
     /**
@@ -79,6 +81,8 @@ public class CopilotController {
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
+
+        //System.out.println("Turret Encoder Ticks:" + m_launcher.getTurretPosition());
     }
 
     /**
@@ -188,7 +192,7 @@ public class CopilotController {
             m_launcher.setFeederSpeed(0);
             m_launcher.setTurretSpeed(0);
             m_limelight.disableLEDs();
-
+            m_launcher.zeroTurretPosition();
         }
 
         if(m_controller.getStartButtonPressed()){
