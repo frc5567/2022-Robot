@@ -99,7 +99,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    m_drivetrain.coastMode();
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override

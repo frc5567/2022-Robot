@@ -159,6 +159,16 @@ public class Drivetrain {
     }
 
     /**
+     * public method to be used when we want to be able to push the bot around, such as disabled Periodic
+     */
+    public void coastMode(){
+        m_masterRightMotor.setNeutralMode(NeutralMode.Coast);
+        m_masterLeftMotor.setNeutralMode(NeutralMode.Coast);
+        m_slaveLeftMotor.setNeutralMode(NeutralMode.Coast);
+        m_slaveRightMotor.setNeutralMode(NeutralMode.Coast);
+    }
+
+    /**
      * setPiston is a method for changing the state between Value.kForward and Value.kReverse
      * @param value what state state to set the pistons to (kForward, kReverse)
      */
