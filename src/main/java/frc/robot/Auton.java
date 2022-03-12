@@ -108,7 +108,7 @@ public class Auton{
         m_limelightVision.init();
         m_step = AutonStep.kStep1;
         m_path = AutonPath.kRightWall;
-        m_currentAutonPath = m_shuffleboard.getAutonPath();
+        //m_currentAutonPath = m_shuffleboard.getAutonPath();
         m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
     }
 
@@ -425,8 +425,6 @@ public class Auton{
         else if (m_path == AutonPath.kRightLine){ 
             
             if(m_step == AutonStep.kStep1){
-                //Activates intake and drives forward to a target in order to pick up a game piece
-                m_intake.takeIn();
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_ONE_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep2;

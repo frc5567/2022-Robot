@@ -81,15 +81,15 @@ public class PilotController {
         arcadeDriveCmd();
         // Controls the gear with x button being high gear and y button being low gear 
         controlGear();
-        if(m_controller.getLeftBumper()){
-            m_launcher.setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
-        }
-        else if(m_controller.getRightBumper()){
-            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
-        }
-        else{
-            m_launcher.setTurretSpeed(0);
-        }
+        // if(m_controller.getLeftBumper()){
+        //     m_launcher.setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+        // }
+        // else if(m_controller.getRightBumper()){
+        //     m_launcher.setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+        // }
+        // else{
+        //     m_launcher.setTurretSpeed(0);
+        // }
     }
 
     /**

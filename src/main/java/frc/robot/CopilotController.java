@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.Intake.IntakeState;
 import frc.robot.Launcher.TrajectoryPosition;
+import frc.robot.RobotMap.CopilotControllerConstants;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class CopilotController {
@@ -28,6 +29,7 @@ public class CopilotController {
      */
     public CopilotController(Intake intake, Launcher launcher, Climber climber, RobotShuffleboard shuffleboard, LimelightVision limelight){
         //instatiates objects for copilot class
+        //m_gamePad = new GamePad(RobotMap.);
         m_intake = intake;
         m_launcher = launcher;
         m_climber = climber;
@@ -65,6 +67,8 @@ public class CopilotController {
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
+
+
     }
 
     /**
@@ -78,6 +82,8 @@ public class CopilotController {
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
+
+        //System.out.println("Turret Encoder Ticks:" + m_launcher.getTurretPosition());
     }
 
     /**
@@ -187,12 +193,21 @@ public class CopilotController {
             //Added for testing
             //m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
             //Commented out for testing purposes
+            m_limelight.enableLEDs();
             m_launcher.targetAndLaunch();
         }
         else {
             m_launcher.setFeederSpeed(0);
+            m_launcher.setTurretSpeed(0);
             m_limelight.disableLEDs();
             m_launcher.zeroTurretPosition();
+        }
+
+        if(m_controller.getStartButtonPressed()){
+            m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
+        }
+        else if(m_controller.getBackButtonPressed()){
+            m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
     }
 
