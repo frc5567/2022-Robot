@@ -101,6 +101,8 @@ public class RobotMap {
         //public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
         public static final double TURRET_ENCODER_LIMIT = 4400;
 
+        public static final int TURRET_ENCODER_BAND = 10;
+
         // This is the max RPM value that the flywheel can be moving
         public static final double MAX_FLYWHEEL_RPM = 6380;
 
