@@ -220,26 +220,25 @@ public class RobotMap {
 
         public static final double FULL_TURN = 180;
         //This value is passed into driveToTarget method in Auton to move the robot 67.09 inches
-        public static final double LEFT_WALL_STEP_ONE_TARGET_DISTANCE = 67.09;
+        public static final double LEFT_WALL_STEP_ONE_TARGET_DISTANCE = 82.09;
         //This value is passed into driveToTarget method in Auton to move the robot 14 inches 
-        public static final double LEFT_WALL_STEP_THREE_TARGET_DISTANCE = 14;
+        public static final double LEFT_WALL_STEP_SIX_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees 
-        public static final double LEFT_WALL_STEP_SIX_TARGET_ANGLE = 160;
+        public static final double LEFT_WALL_STEP_THREE_TARGET_ANGLE = 160;
 
-        //This value is passed into driveToTarget method in Auton to move the robot 67.09 inches
-        public static final double RIGHT_WALL_STEP_ONE_TARGET_DISTANCE = 67.09;
-
+        //This value is passed into driveToTarget method in Auton to move the robot 81.09 inches
+        public static final double RIGHT_WALL_STEP_ONE_TARGET_DISTANCE = 81.09;
         //This value is passed into driveToTarget method in Auton to move the robot 14 inches
-        public static final double RIGHT_WALL_STEP_THREE_TARGET_DISTANCE = 14;
+        public static final double RIGHT_WALL_STEP_SIX_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees
-        public static final double RIGHT_WALL_STEP_SIX_TARGET_ANGLE = 160;
+        public static final double RIGHT_WALL_STEP_THREE_TARGET_ANGLE = 160;
+
+
 
         //This value is passed into driveToTarget method in Auton to move the robot 35 inches
         public static final double RIGHT_LINE_STEP_ONE_TARGET_DISTANCE = 35;
         //This value is passed into driveToTarget method in Auton to move the robot 14 inches
-        public static final double RIGHT_LINE_STEP_THREE_TARGET_DISTANCE = 7;
-        //This value is passed into driveToTarget method in Auton to move the robot 14 inches
-        public static final double RIGHT_LINE_STEP_EIGHT_TARGET_DISTANCE = 14;
+        public static final double RIGHT_LINE_STEP_SIX_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 180 degrees
         public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 180;
     }
