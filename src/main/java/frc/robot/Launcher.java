@@ -65,7 +65,6 @@ public class Launcher{
     private double m_feederCurrentSpeed;
     private double m_turretCurrentSpeed;
     private double m_flywheelCurrentSpeed;
-    private boolean m_ledEnabled;
 
     private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
 
@@ -124,7 +123,6 @@ public class Launcher{
         m_flywheelCurrentSpeed = 0;
         m_masterFlywheelMotor.set(ControlMode.PercentOutput, 0);
         m_limelightVision.disableLEDs();
-        m_ledEnabled = false;
 
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
     }
@@ -142,10 +140,6 @@ public class Launcher{
 
         boolean flywheelMotorReady = false;
 
-        // if (!m_ledEnabled){
-        //     m_limelightVision.enableLEDs();
-        //     m_ledEnabled = true;
-        // }
 
         if (m_onTarget && !m_limelightVision.seeTarget()){
             if(m_leftDriveEncoderTicks != m_onTargetLeftTicks){
@@ -227,7 +221,6 @@ public class Launcher{
             m_onTargetCounter++;
             if(m_onTargetCounter >= RobotMap.LauncherConstants.MAX_ON_TARGET_CYCLES){
                 m_onTarget = false;
-                //m_ledEnabled = false;
             }
         }
         else{
