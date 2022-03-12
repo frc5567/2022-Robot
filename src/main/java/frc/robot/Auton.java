@@ -170,8 +170,8 @@ public class Auton{
             //Activates intake and drives forward to a target in order to pick up a game piece
             if(m_step == AutonStep.kStep1){
                 m_intake.setIntakeExtension(IntakeState.kExtended);
-                m_intake.takeIn();
-                m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+                m_intake.takeIn(RobotMap.IntakeConstants.ROLLER_SPEED);
+                //m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_ONE_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep2;
@@ -183,13 +183,13 @@ public class Auton{
             }
             //step to retract intake if build finds a way to do this
             else if(m_step == AutonStep.kStep2){
-                //m_intake.setIntakeExtension(IntakeState.kRetracted);
-                //System.out.println("Intake Retracted");
+                // m_intake.setIntakeExtension(IntakeState.kRetracted);
+                // System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep3;
             }
             //Turns the robot a full 180 degrees in order to face the hub. Also brings ball up to the feeder.
             else if(m_step == AutonStep.kStep3){
-                m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+                //m_intake.setMagazineSpeed(0);
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.LEFT_WALL_STEP_THREE_TARGET_ANGLE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep4;
@@ -276,7 +276,7 @@ public class Auton{
             //Activates intake and drives forward to a target in order to pick up a game piece
             if(m_step == AutonStep.kStep1){
                 m_intake.setIntakeExtension(IntakeState.kExtended);
-                m_intake.takeIn();
+                m_intake.takeIn(RobotMap.IntakeConstants.ROLLER_SPEED);
                 m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_WALL_STEP_ONE_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
@@ -289,8 +289,8 @@ public class Auton{
             }
             //step to retract intake if build finds a way to do this
             else if(m_step == AutonStep.kStep2){
-                //m_intake.setIntakeExtension(IntakeState.kRetracted);
-                //System.out.println("Intake Retracted");
+                // m_intake.setIntakeExtension(IntakeState.kRetracted);
+                // System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep3;
             }
             //Turns the robot a full 180 degrees in order to face the hub. Also brings ball up to the feeder.
@@ -381,7 +381,7 @@ public class Auton{
             //Activates intake and drives forward to a target in order to pick up a game piece
             if(m_step == AutonStep.kStep1){
                 m_intake.setIntakeExtension(IntakeState.kExtended);
-                m_intake.takeIn();
+                m_intake.takeIn(RobotMap.IntakeConstants.ROLLER_SPEED);
                 m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_ONE_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
@@ -394,8 +394,8 @@ public class Auton{
             }
             //step to retract intake if build finds a way to do this
             else if(m_step == AutonStep.kStep2){
-                //m_intake.setIntakeExtension(IntakeState.kRetracted);
-                //System.out.println("Intake Retracted");
+                // m_intake.setIntakeExtension(IntakeState.kRetracted);
+                // System.out.println("Intake Retracted");
                 m_step = AutonStep.kStep3;
             }
             //step to Turn the robot a full 180 degrees in order to face the hub. Also brings ball up to the feeder.

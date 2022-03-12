@@ -83,7 +83,7 @@ public class RobotMap {
         public static final int TURRET_MOTOR_ID = 3;
         
         //These are untested placesholder values until we know what speeds we actually need
-        public static final double FEEDING_SPEED = 0.7;
+        public static final double FEEDING_SPEED = 0.8;
         public static final double EXPEL_SPEED = 0.25;
         public static final double TURRET_ROTATION_SPEED = 0.15;
         public static final double FLYWHEEL_SPEED = 0.7;
@@ -101,7 +101,7 @@ public class RobotMap {
         //public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
         public static final double TURRET_ENCODER_LIMIT = 4400;
 
-        public static final int TURRET_ENCODER_BAND = 10;
+        public static final int TURRET_ENCODER_BAND = 5;
 
         // This is the max RPM value that the flywheel can be moving
         public static final double MAX_FLYWHEEL_RPM = 6380;
@@ -169,7 +169,7 @@ public class RobotMap {
         //TODO change camera angle after camera is mounted
         public static final double CAMERA_HEIGHT = 23.25; //in inches
         public static final double HUB_HEIGHT = 104.0; //in inches
-        public static final double CAMERA_DEGREES_FROM_GROUND = 45;
+        public static final double CAMERA_DEGREES_FROM_GROUND = 57;
         // constant for the minimum speed for aiming at target
         //TODO tune the speed we move at
         public static final double MINIMUM_SEEKING_TARGET_SPEED = 0.15;
@@ -226,7 +226,7 @@ public class RobotMap {
         //This value is passed into driveToTarget method in Auton to move the robot 14 inches 
         public static final double LEFT_WALL_STEP_SIX_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees 
-        public static final double LEFT_WALL_STEP_THREE_TARGET_ANGLE = 160;
+        public static final double LEFT_WALL_STEP_THREE_TARGET_ANGLE = 140;
 
         //This value is passed into driveToTarget method in Auton to move the robot 81.09 inches
         public static final double RIGHT_WALL_STEP_ONE_TARGET_DISTANCE = 81.09;

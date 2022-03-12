@@ -76,21 +76,17 @@ public class CopilotController {
     public void testPeriodic(){
         manualLauncherCmd();
         manualIntakeCmd();
-        manualClimberCmd();
+        //manualClimberCmd();
 
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
 
-        boolean sensor1 = m_intake.getMagazineSensor1();
-        boolean sensor2 = m_intake.getMagazineSensor2();
+        // boolean sensor1 = m_intake.getMagazineSensor1();
+        // boolean sensor2 = m_intake.getMagazineSensor2();
 
-        // System.out.println("Sensor 1: " + sensor1);
-        // System.out.println("Sensor 2: " + sensor2);
-
-        //System.out.println("Turret Encoder Ticks:" + m_launcher.getTurretPosition());
-
-        
+        System.out.println("Current Distance: " + m_limelight.distToTarget(RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND) + " ---- ");
+        System.out.print("Current RPM: "+ m_launcher.getRealSpeed());
     }
 
     /**
@@ -107,7 +103,7 @@ public class CopilotController {
         //if statement to control the power of the intake
         if (m_gamePad.getIntakeCMD()){
             // If the button getInakeCMD is pressed and the intake is extended, we activate the intake
-            m_intake.takeIn();
+            m_intake.takeIn(0);
         }
         else{
             // If the button is not pressed or the intake is not extended, set intake to not run
@@ -199,7 +195,6 @@ public class CopilotController {
         if(m_controller.getBButton()){
             //Added for testing
             //m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-            //Commented out for testing purposes
             m_limelight.enableLEDs();
             m_launcher.targetAndLaunch();
         }
@@ -208,13 +203,6 @@ public class CopilotController {
             m_launcher.setTurretSpeed(0);
             m_limelight.disableLEDs();
             m_launcher.zeroTurretPosition();
-        }
-
-        if(m_controller.getStartButtonPressed()){
-            m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
-        }
-        else if(m_controller.getBackButtonPressed()){
-            m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
     }
 

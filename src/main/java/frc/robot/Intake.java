@@ -103,10 +103,10 @@ public class Intake {
     /**
      * Activates intake system by powering the roller wheels
      */
-    public void takeIn(){
+    public void takeIn(double speed){
         // Check to see if the intake is extended before activating the front roller motors
         if(m_state == IntakeState.kExtended){
-            setRollerSpeed(RobotMap.IntakeConstants.ROLLER_SPEED);
+            setRollerSpeed(speed);
         } 
         else {
             setRollerSpeed(0);
