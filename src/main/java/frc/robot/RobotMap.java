@@ -234,4 +234,14 @@ public class RobotMap {
         //This value is passed into turnToTarget method in Auton to turn the robot 180 degrees
         public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 180;
     }
+
+    /**
+     * Stores constants for the GamePad
+     */
+    public static class GamePadConstants {
+        // This is the port for the GamePad
+        // TODO chang this port to be 1 after the xbox controller for the Copilot controller is no longer being used
+        public static final int GAMEPAD_PORT = 2;
+    }
+
 }
