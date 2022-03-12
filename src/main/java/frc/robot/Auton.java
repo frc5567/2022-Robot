@@ -106,9 +106,9 @@ public class Auton{
         m_launcher.init();
         m_intake.init();
         m_limelightVision.init();
-        m_step = AutonStep.kStep1;
-        m_path = AutonPath.kRightLine;
-        //m_currentAutonPath = m_shuffleboard.getAutonPath();
+        m_step = AutonStep.kStep1;   
+        m_currentAutonPath = m_shuffleboard.getAutonPath();
+        selectPath();
         m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
     }
 
@@ -514,6 +514,10 @@ public class Auton{
                 }
             }
             else if (m_step == AutonStep.kStep7){
+                m_launcher.setFeederSpeed(0);
+                m_launcher.setTurretSpeed(0);
+                m_launcher.setFlywheelSpeed(0);
+                m_limelightVision.disableLEDs();
                 if(driveToTarget(-RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_EIGHT_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStop;
@@ -524,10 +528,6 @@ public class Auton{
                 }
             }
             else if(m_step == AutonStep.kStop){
-                m_launcher.setFeederSpeed(0);
-                m_launcher.setTurretSpeed(0);
-                m_launcher.setFlywheelSpeed(0);
-                m_limelightVision.disableLEDs();
                 m_intake.setIntakeExtension(IntakeState.kRetracted);
                 if(m_doSysOut == true){
                     System.out.println("Auton Completed");
@@ -596,7 +596,7 @@ public class Auton{
     }
 
     /**
-     * code taken from 2021 auton (protobranch)
+     * 
      * @param speed speed at which we want to turn
      * @param target target angle in degrees we want to turn to
      * @return whether or not we have reached our target angle

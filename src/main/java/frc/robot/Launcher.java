@@ -67,6 +67,8 @@ public class Launcher{
     private double m_flywheelCurrentSpeed;
 
     private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
+    private double m_currentMaxTurretSpeed = RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED;
+    private double m_proportionalConstant = RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT;
 
     //Boolean to store whether or not we are currently on target
     boolean m_onTarget = false;
@@ -124,6 +126,7 @@ public class Launcher{
         m_masterFlywheelMotor.set(ControlMode.PercentOutput, 0);
         m_limelightVision.disableLEDs();
 
+        m_currentMaxTurretSpeed = m_shuffleboard.getTurretValues();
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
     }
 
@@ -181,19 +184,19 @@ public class Launcher{
                     System.out.print("Ready to Launch ------------------");
                 }
                 //if we are above the tolerated error range, turn the turret toward the tolerated error range
-                else if(angleToTarget > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                else{
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
                     System.out.println("Not Ready to Launch 1:" + angleToTarget);
                     m_onTarget = false;
-                    setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+                    setTurretSpeed(calcTurretSpeed(angleToTarget));
                 }
                 //if we are below the tolerated error range, turn the turret toward the tolerated error range
-                else if(angleToTarget < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
-                    //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
-                    System.out.println("Not Ready to Launch 2:" + angleToTarget);
-                    m_onTarget = false;
-                    setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
-                }
+                // else if(angleToTarget < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                //     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
+                //     System.out.println("Not Ready to Launch 2:" + angleToTarget);
+                //     m_onTarget = false;
+                //     setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+                // }
             }
             //If we are to the left of our motor limit, print out a message and turn right
             else if(getTurretPosition() < -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
@@ -336,6 +339,25 @@ public class Launcher{
             m_turretEncoder.setQuadraturePosition(0, RobotMap.TIMEOUT_MS);
 
         }
+    }
+
+    /**
+     * Calculates the speed to set the turret to based on how close we are to our taget. The closer we are, the slower we go.
+     * @param currentAngle the current x angle to the target from the limelight
+     * @return calculated speed of the turret
+     */
+    private double calcTurretSpeed(double currentAngle){
+        //22 is the max angle our turret can turn to
+        double t = RobotMap.LauncherConstants.MAX_TURRET_ROTATION - Math.abs(currentAngle);
+        double output = m_currentMaxTurretSpeed * Math.exp(-1 * m_proportionalConstant * t); 
+        if(output < RobotMap.LauncherConstants.MIN_TURRET_SPEED){
+            output = RobotMap.LauncherConstants.MIN_TURRET_SPEED;
+        }
+
+        if (currentAngle < 0){
+            output *= -1;
+        }
+        return output;
     }
 
     private void turretPIDConfig (){

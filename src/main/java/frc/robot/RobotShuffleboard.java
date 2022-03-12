@@ -20,6 +20,9 @@ public class RobotShuffleboard {
     // Declares member variable for choosing an auton path
     double m_autonPath;
     double m_launchPreset;
+    // Declares member variables for max turret speed and proportional constant
+    double m_maxTurretSpeed;
+    double m_proportionalConstant;
     // Declares member variables for the entries on the table
     private NetworkTableEntry m_highVelocityScalarEntry;
     private NetworkTableEntry m_lowVelocityScalarEntry;
@@ -29,6 +32,8 @@ public class RobotShuffleboard {
     private NetworkTableEntry m_autonPathEntry;
     private NetworkTableEntry m_launchPresetEntry;
     private NetworkTableEntry m_targetFlywheelSpeedEntry;
+    private NetworkTableEntry m_maxTurretSpeedEntry;
+    private NetworkTableEntry m_proportionalConstantEntry;
 
     /**
      * Constructor for robot shuffleboard class
@@ -51,6 +56,7 @@ public class RobotShuffleboard {
         setAutonPath();
         setLaunchPreset();
         setTargetFlywheelSpeed();
+        setTurretValues();
     }
 
     /**
@@ -63,6 +69,7 @@ public class RobotShuffleboard {
         setAutonPath();
         setLaunchPreset();
         setTargetFlywheelSpeed();
+        setTurretValues();
     }
 
     /**
@@ -95,6 +102,12 @@ public class RobotShuffleboard {
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
         m_targetFlywheelSpeedEntry = m_driverTab.addPersistent("Target Flywheel Speed", RobotMap.LauncherConstants.TARGET_FLYWHEEL_SPEED)
+                                    .withWidget(BuiltInWidgets.kTextView)
+                                    .getEntry();
+        m_maxTurretSpeedEntry = m_driverTab.addPersistent("Max Turret Speed", RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED)
+                                    .withWidget(BuiltInWidgets.kTextView)
+                                    .getEntry();
+        m_proportionalConstantEntry = m_driverTab.addPersistent("Proportional Constant", RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
     }
@@ -146,6 +159,19 @@ public class RobotShuffleboard {
     public double getTargetFlywheelSpeed(){
         setTargetFlywheelSpeed();
         return m_targetFlywheelSpeed;
+    }
+
+    /**
+     * Sets maxTurretSpeed and proportional constant equal to value input on the shuffleboard
+     */
+    private void setTurretValues(){
+        m_maxTurretSpeed = m_maxTurretSpeedEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED);
+        m_proportionalConstant = m_proportionalConstantEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT);
+    }
+
+    public double getTurretValues(){
+        setTurretValues();
+        return m_maxTurretSpeed;
     }
     
     private void setAutonPath(){

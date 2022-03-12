@@ -126,6 +126,10 @@ public class RobotMap {
         public static final double TURRET_MOTOR_DEADBAND = 0.04;
 
         public static final double MAX_ON_TARGET_CYCLES = 30;
+
+        public static final double MAX_TURRET_ROTATION = 22;
+
+        public static final double MIN_TURRET_SPEED = 0.1;
     }
 
     /**
@@ -176,6 +180,8 @@ public class RobotMap {
         public static final double FLYWHEEL_DEFAULT_VELOCITY = 0.5;
         public static final double DEFAULT_AUTON_PATH = 0;
         public static final int DEFAULT_LAUNCH_PRESET = 0;
+        public static final double DEFAULT_MAX_TURRET_SPEED = 0.75;
+        public static final double DEFAULT_PROPORTIONAL_CONSTANT = 0.1;
     }
 
 
