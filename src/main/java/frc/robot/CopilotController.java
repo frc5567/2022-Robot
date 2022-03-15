@@ -82,6 +82,12 @@ public class CopilotController {
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
 
+        boolean sensor1 = m_intake.getMagazineSensor1();
+        boolean sensor2 = m_intake.getMagazineSensor2();
+
+        System.out.println("Sensor 1: " + sensor1);
+        System.out.println("Sensor 2: " + sensor2);
+
         //System.out.println("Turret Encoder Ticks:" + m_launcher.getTurretPosition());
     }
 
