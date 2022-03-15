@@ -97,7 +97,7 @@ public class Drivetrain {
         // Instantiate PID Controller
         m_PIDTurnController = new PIDController(RobotMap.DrivetrainConstants.TURN_GAINS.kP, RobotMap.DrivetrainConstants.TURN_GAINS.kI, RobotMap.DrivetrainConstants.TURN_GAINS.kD);
         //Configures the turn PID so we can recieve continuous input
-        turnPIDConfig();
+        //turnPIDConfig();
     }
 
     /**
@@ -150,6 +150,7 @@ public class Drivetrain {
      * zeroGyro is a method to set the gyro to 0
      */
     public void zeroGyro(){
+        System.out.println("zero gyro");
         m_gyro.zeroYaw();
     }
 

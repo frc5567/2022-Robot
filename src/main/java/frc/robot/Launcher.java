@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 //Import Encoders
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -128,6 +129,8 @@ public class Launcher{
 
         m_currentMaxTurretSpeed = m_shuffleboard.getTurretValues();
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
+
+        m_feederMotor.setNeutralMode(NeutralMode.Brake);
     }
 
     

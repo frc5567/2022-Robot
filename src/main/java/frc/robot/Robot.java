@@ -84,14 +84,14 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     m_drivetrain.brakeMode();
     m_pilotController.init();
-    //m_copilotController.init();
+    m_copilotController.init();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     m_pilotController.periodic();
-    //m_copilotController.periodic();
+    m_copilotController.periodic();
     m_limelightVision.periodic();
     //m_intake.periodic();
   }
