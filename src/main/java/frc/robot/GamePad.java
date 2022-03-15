@@ -26,15 +26,18 @@ public class GamePad extends GenericHID {
 	// this enum defines the buttons and what they do when active
 	private enum GamePadControls {
 		//Port values for the different gamepad buttons
-		Extend_Intake(0),
-		Retract_Intake(1),
-		IntakeCMD(2),
-		LaunchCMD(3),
+		Trajectory_Down(1),
+		Manual_Feed(2),
+		Manual_Launch(3),
 		Trajectory_Up(4),
-		Trajectory_Down(5),
-		Move_Climber_Up(6),
-		Move_Climber_Down(7),
-        Move_Robot_Up(8);
+		IntakeCMD(5),
+		Retract_Intake(6),
+		Extend_Intake(7),
+		targetAndLaunchCMD(8),
+		Carwash(9),
+		ExpelCMD(10);
+        
+		
 
 		//Variable used to get port values 
 		public final int portNum;
@@ -49,14 +52,14 @@ public class GamePad extends GenericHID {
 	 * Method to check if the Extend Intake button was pressed
 	 */
 	public boolean getExtendIntakePressed() {
-		return super.getRawButtonPressed(GamePadControls.Extend_Intake.portNum);
+		return super.getRawButton(GamePadControls.Extend_Intake.portNum);
 	}
 
 	/**
 	 * Method to check if the Retract Intake button was pressed
      */
 	public boolean getRetractIntakePressed() {
-		return super.getRawButtonPressed(GamePadControls.Retract_Intake.portNum);
+		return super.getRawButton(GamePadControls.Retract_Intake.portNum);
 	}
 
 	/**
@@ -69,42 +72,46 @@ public class GamePad extends GenericHID {
 	/**
 	 * Method to check if the Launch CMD button was pressed
 	 */
-	public boolean getLaunchCMD() {
-		return super.getRawButtonPressed(GamePadControls.LaunchCMD.portNum);
+	public boolean getTargetAndLaunch() {
+		return super.getRawButton(GamePadControls.targetAndLaunchCMD.portNum);
 	}
 
 	/**
 	 * Method to check if the Trajectory Up button was pressed
 	 */
 	public boolean getTrajectoryUpPressed() {
-		return super.getRawButtonPressed(GamePadControls.Trajectory_Up.portNum);
+		return super.getRawButton(GamePadControls.Trajectory_Up.portNum);
 	}
 
 	/**
 	 * Method to check if the Trajectory Down button was pressed
 	 */
 	public boolean getTrajectoryDownPressed() {
-		return super.getRawButtonPressed(GamePadControls.Trajectory_Down.portNum);
+		return super.getRawButton(GamePadControls.Trajectory_Down.portNum);
 	}
 
 	/**
 	 * Method to check if the Move Climber Up button was pressed
 	 */
-	public boolean getMoveClimberUp() {
-		return super.getRawButton(GamePadControls.Move_Climber_Up.portNum);
+	public boolean getExpell() {
+		return super.getRawButton(GamePadControls.ExpelCMD.portNum);
 	}
 
 	/**
 	 * Method to check if the Move Climber Down button was pressed 
 	 */
-	public boolean getMoveClimberDown(){
-		return super.getRawButton(GamePadControls.Move_Climber_Down.portNum);
+	public boolean getCarwash(){
+		return super.getRawButton(GamePadControls.Carwash.portNum);
 	}
 		
 	/**
 	 * Method to check if the Move Robot Up button was pressed
 	 */
-	public boolean getMoveRobotUp() {
-		return super.getRawButton(GamePadControls.Move_Robot_Up.portNum);
+	public boolean getFeedCMD() {
+		return super.getRawButton(GamePadControls.Manual_Feed.portNum);
+	}
+
+	public boolean getManualLaunch() {
+		return super.getRawButton(GamePadControls.Manual_Launch.portNum);
 	}
 }

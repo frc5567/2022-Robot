@@ -55,6 +55,8 @@ public class Intake {
     private double m_rollerCurrentSpeed;
     private double m_magazineCurrentSpeed;
 
+    private boolean m_currentlyIndexing = false;
+
     /**
      * Constructor for intake and magazine mechanism
      */
@@ -87,15 +89,24 @@ public class Intake {
     /**
      * This method is called many times a second in robotPeriodic. It is currently only used for automatic indexing
      */
-    public void periodic(){
+    public void indexing(){
         //If a game piece is in the first slot, and there is no game piece in the second slot, move the game piece to the second slot
         if(getMagazineSensor1()){
             if(getMagazineSensor2()){
+                m_currentlyIndexing = false;
                 return;
             }
             else{
-                setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+                m_currentlyIndexing = true;
             }
+        }
+
+        if(getMagazineSensor2()){
+            m_currentlyIndexing = false;
+        }
+
+        if(m_currentlyIndexing){
+            setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
         }
     }
     
@@ -103,10 +114,10 @@ public class Intake {
     /**
      * Activates intake system by powering the roller wheels
      */
-    public void takeIn(){
+    public void takeIn(double speed){
         // Check to see if the intake is extended before activating the front roller motors
         if(m_state == IntakeState.kExtended){
-            setRollerSpeed(RobotMap.IntakeConstants.ROLLER_SPEED);
+            setRollerSpeed(speed);
         } 
         else {
             setRollerSpeed(0);

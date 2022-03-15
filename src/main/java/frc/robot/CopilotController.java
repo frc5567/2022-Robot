@@ -48,7 +48,7 @@ public class CopilotController {
         m_intake.init();
         m_launcher.init();
         m_climber.init();
-        //m_gamePad.init();
+        m_gamePad.init();
         //sets our flywheel velocity for testing to the value put into the shuffleboard
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
@@ -61,13 +61,13 @@ public class CopilotController {
     public void periodic(){
         controlIntake();
         controlLauncher();
-        controlClimber();
+        //controlClimber();
+
+        m_intake.indexing();
         
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
-
-
     }
 
     /**
@@ -76,19 +76,19 @@ public class CopilotController {
     public void testPeriodic(){
         manualLauncherCmd();
         manualIntakeCmd();
-        manualClimberCmd();
+        //manualClimberCmd();
 
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
 
-        boolean sensor1 = m_intake.getMagazineSensor1();
-        boolean sensor2 = m_intake.getMagazineSensor2();
+        m_intake.indexing();
 
-        System.out.println("Sensor 1: " + sensor1);
-        System.out.println("Sensor 2: " + sensor2);
+        // boolean sensor1 = m_intake.getMagazineSensor1();
+        // boolean sensor2 = m_intake.getMagazineSensor2();
 
-        //System.out.println("Turret Encoder Ticks:" + m_launcher.getTurretPosition());
+        // System.out.println("Current Distance: " + m_limelight.distToTarget(RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND) + " ---- ");
+        // System.out.print("Current RPM: "+ m_launcher.getRealSpeed());
     }
 
     /**
@@ -105,7 +105,7 @@ public class CopilotController {
         //if statement to control the power of the intake
         if (m_gamePad.getIntakeCMD()){
             // If the button getInakeCMD is pressed and the intake is extended, we activate the intake
-            m_intake.takeIn();
+            m_intake.takeIn(RobotMap.IntakeConstants.ROLLER_SPEED);
         }
         else{
             // If the button is not pressed or the intake is not extended, set intake to not run
@@ -118,13 +118,34 @@ public class CopilotController {
      */
     private void controlLauncher(){
         //uses one button to aim and launch
-        if (m_gamePad.getLaunchCMD()){
+        if (m_gamePad.getTargetAndLaunch()){
+            m_limelight.enableLEDs();
             m_launcher.targetAndLaunch();
+            m_intake.setMagazineSpeed(0);
+        }
+        else if(m_gamePad.getManualLaunch()){
+            m_launcher.setFlywheelSpeed(RobotMap.LauncherConstants.FLYWHEEL_SPEED);
         }
         else{
             m_launcher.setFlywheelSpeed(0);
+            m_launcher.setFeederSpeed(0);
             m_launcher.setTurretSpeed(0);
             m_limelight.disableLEDs();
+            m_intake.indexing();
+        }
+
+        if(m_gamePad.getFeedCMD()){
+            m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        }
+        else{
+            m_launcher.setFeederSpeed(0);
+        }
+
+        if (m_gamePad.getCarwash()){
+            m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+        }
+        else{
+            m_intake.setMagazineSpeed(0);
         }
 
         if (m_gamePad.getTrajectoryUpPressed()){
@@ -133,30 +154,38 @@ public class CopilotController {
         else if (m_gamePad.getTrajectoryDownPressed()){
             m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
+
+        if(m_gamePad.getExpell()){
+            m_launcher.expel();
+        }
+        else{
+            m_launcher.setFlywheelSpeed(0);
+            m_launcher.setFeederSpeed(0);
+        }
     }
 
     /**
      * This method controls the climber using three buttons to pass in values of power to two motors; the climber motor and the winch motor.
      */
-    private void controlClimber(){
-        //controls Climber motor with two buttons, up or down
-        if(m_gamePad.getMoveClimberUp()){
-            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
-        }
-        else if(m_gamePad.getMoveClimberDown()){
-            m_climber.climbCMD(-RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
-        }
-        else{
-            m_climber.climbCMD(0);
-        }
-        //controls Climber winch with one button, up
-        if(m_gamePad.getMoveRobotUp()){
-            m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
-        }
-        else{
-            m_climber.winchCMD(0);
-        }
-    }
+    // private void controlClimber(){
+    //     //controls Climber motor with two buttons, up or down
+    //     if(m_gamePad.getMoveClimberUp()){
+    //         m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
+    //     }
+    //     else if(m_gamePad.getMoveClimberDown()){
+    //         m_climber.climbCMD(-RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
+    //     }
+    //     else{
+    //         m_climber.climbCMD(0);
+    //     }
+    //     //controls Climber winch with one button, up
+    //     if(m_gamePad.getMoveRobotUp()){
+    //         m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
+    //     }
+    //     else{
+    //         m_climber.winchCMD(0);
+    //     }
+    // }
 
     /**
      * Manually controls the launcher and the turret for testing
@@ -197,22 +226,16 @@ public class CopilotController {
         if(m_controller.getBButton()){
             //Added for testing
             //m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-            //Commented out for testing purposes
             m_limelight.enableLEDs();
             m_launcher.targetAndLaunch();
+            m_intake.setMagazineSpeed(0);
         }
         else {
             m_launcher.setFeederSpeed(0);
             m_launcher.setTurretSpeed(0);
             m_limelight.disableLEDs();
             m_launcher.zeroTurretPosition();
-        }
 
-        if(m_controller.getStartButtonPressed()){
-            m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
-        }
-        else if(m_controller.getBackButtonPressed()){
-            m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
     }
 

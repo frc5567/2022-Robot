@@ -26,6 +26,9 @@ public class PilotController {
     // Sysout counter
     int m_sysOutCounter = 0;
 
+    //Boolean for Sysout counter
+    boolean m_doSysOut = true;
+
     /**
      * Constuctor for the pilot controller
      */
@@ -90,6 +93,16 @@ public class PilotController {
         // else{
         //     m_launcher.setTurretSpeed(0);
         // }
+
+        // Periodically updates encoder ticks to our actual current encoder position
+        // double currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
+        // double currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
+        /**
+         * prints out our current right and left encoder ticks, prints only every 50 cycles 
+         */
+        if ((++m_sysOutCounter % 25) == 0){
+            System.out.println("Gyro: " + m_drivetrain.getGyro());
+        }
     }
 
     /**

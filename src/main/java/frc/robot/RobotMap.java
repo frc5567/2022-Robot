@@ -63,7 +63,7 @@ public class RobotMap {
      */
     public static class CopilotControllerConstants{
         //Port on the comp computer for the copilot controller/gamepad
-        public static final int COPILOT_CONTROLLER_PORT = 1;
+        public static final int COPILOT_CONTROLLER_PORT = 2;
 
         //Constant to record stick deadband that works for our copilot controller. This should be tested once we have finalized a copilot controller 
         //TODO Keep this only if an Xbox controller will be used. If a joystick is used on the gamepad, the specific value for that joystick will need to be found
@@ -83,7 +83,7 @@ public class RobotMap {
         public static final int TURRET_MOTOR_ID = 3;
         
         //These are untested placesholder values until we know what speeds we actually need
-        public static final double FEEDING_SPEED = 0.7;
+        public static final double FEEDING_SPEED = -0.8;
         public static final double EXPEL_SPEED = 0.25;
         public static final double TURRET_ROTATION_SPEED = 0.15;
         public static final double FLYWHEEL_SPEED = 0.7;
@@ -94,11 +94,14 @@ public class RobotMap {
 
         //Constant for converting inches to encoder ticks for the turret to be used to determine the limit for how far left or right the turret can rotate
         // the 4096 is the number of encoder ticks for the motor, 44.019 is the the circumference of the turret in inches, 70 is the gear ratio for the turret
-        public static final double INCHES_TO_ENCODER_TICKS_TURRET = 4096 / (44.019/70);
+        public static final double INCHES_TO_ENCODER_TICKS_TURRET = 2048 / (44.019/70);
 
         //Constant for our turret encoder limit so we don't overturn and damage wiring.
         //2.69 (inches) is the maximum distance we want the turret to be able to turn
-        public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
+        //public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
+        public static final double TURRET_ENCODER_LIMIT = 4400;
+
+        public static final int TURRET_ENCODER_BAND = 5;
 
         // This is the max RPM value that the flywheel can be moving
         public static final double MAX_FLYWHEEL_RPM = 6380;
@@ -126,6 +129,10 @@ public class RobotMap {
         public static final double TURRET_MOTOR_DEADBAND = 0.04;
 
         public static final double MAX_ON_TARGET_CYCLES = 30;
+
+        public static final double MAX_TURRET_ROTATION = 22;
+
+        public static final double MIN_TURRET_SPEED = 0.1;
     }
 
     /**
@@ -151,8 +158,8 @@ public class RobotMap {
         public static final int DOUBLESOLENOID_EXTENDED_PORT = 5;
 
         //The sensors on the magazine are plugged into ports on the RoboRio
-        public static final int MAGAZINE_SENSOR_0_PORT = 0;
-        public static final int MAGAZINE_SENSOR_1_PORT = 1;
+        public static final int MAGAZINE_SENSOR_0_PORT = 1;
+        public static final int MAGAZINE_SENSOR_1_PORT = 0;
     }
     
     /**
@@ -162,7 +169,7 @@ public class RobotMap {
         //TODO change camera angle after camera is mounted
         public static final double CAMERA_HEIGHT = 23.25; //in inches
         public static final double HUB_HEIGHT = 104.0; //in inches
-        public static final double CAMERA_DEGREES_FROM_GROUND = 45;
+        public static final double CAMERA_DEGREES_FROM_GROUND = 57;
         // constant for the minimum speed for aiming at target
         //TODO tune the speed we move at
         public static final double MINIMUM_SEEKING_TARGET_SPEED = 0.15;
@@ -176,6 +183,8 @@ public class RobotMap {
         public static final double FLYWHEEL_DEFAULT_VELOCITY = 0.5;
         public static final double DEFAULT_AUTON_PATH = 0;
         public static final int DEFAULT_LAUNCH_PRESET = 0;
+        public static final double DEFAULT_MAX_TURRET_SPEED = 0.75;
+        public static final double DEFAULT_PROPORTIONAL_CONSTANT = 0.1;
     }
 
 
@@ -203,37 +212,37 @@ public class RobotMap {
         public static final double DRIVE_SPEED = 0.4;
         public static final double INTAKE_DRIVE_SPEED = 0.1;
         public static final double TURN_SPEED = 0.4;
+        public static final double TURN_SPEED_LEFT_WALL = -0.4;
         public static final double TARGETING_SPEED = 0.25;
 
+        public static final double INTAKE_WAITING_LOOPS = 30;
         //constant for number of loops after a ball is launched to move to the next step
-        public static final double LOOPS_AFTER_LAUNCH = 150;
+        public static final double LOOPS_AFTER_LAUNCH = 50;
 
         //constant for rotation error acceptance
-        public static final double ROTATE_BOUND = 0.03;
+        public static final double ROTATE_BOUND = 0.02;
 
         public static final double FULL_TURN = 180;
         //This value is passed into driveToTarget method in Auton to move the robot 67.09 inches
-        public static final double LEFT_WALL_STEP_ONE_TARGET_DISTANCE = 81.09;
+        public static final double LEFT_WALL_STEP_ONE_TARGET_DISTANCE = 82.09;
         //This value is passed into driveToTarget method in Auton to move the robot 14 inches 
         public static final double LEFT_WALL_STEP_SIX_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees 
-        public static final double LEFT_WALL_STEP_THREE_TARGET_ANGLE = 160;
+        public static final double LEFT_WALL_STEP_THREE_TARGET_ANGLE = 179;
 
         //This value is passed into driveToTarget method in Auton to move the robot 81.09 inches
         public static final double RIGHT_WALL_STEP_ONE_TARGET_DISTANCE = 81.09;
         //This value is passed into driveToTarget method in Auton to move the robot 14 inches
         public static final double RIGHT_WALL_STEP_SIX_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees
-        public static final double RIGHT_WALL_STEP_THREE_TARGET_ANGLE = 160;
-
-
+        public static final double RIGHT_WALL_STEP_THREE_TARGET_ANGLE = 179;
 
         //This value is passed into driveToTarget method in Auton to move the robot 35 inches
         public static final double RIGHT_LINE_STEP_ONE_TARGET_DISTANCE = 35;
         //This value is passed into driveToTarget method in Auton to move the robot 14 inches
         public static final double RIGHT_LINE_STEP_SIX_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 180 degrees
-        public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 180;
+        public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 179;
     }
 
     /**
@@ -242,7 +251,7 @@ public class RobotMap {
     public static class GamePadConstants {
         // This is the port for the GamePad
         // TODO chang this port to be 1 after the xbox controller for the Copilot controller is no longer being used
-        public static final int GAMEPAD_PORT = 2;
+        public static final int GAMEPAD_PORT = 1;
     }
 
 }

@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Intake.IntakeState;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -83,14 +84,14 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     m_drivetrain.brakeMode();
     m_pilotController.init();
-    //m_copilotController.init();
+    m_copilotController.init();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     m_pilotController.periodic();
-    //m_copilotController.periodic();
+    m_copilotController.periodic();
     m_limelightVision.periodic();
     //m_intake.periodic();
   }
@@ -99,6 +100,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_drivetrain.coastMode();
+    m_intake.setIntakeExtension(IntakeState.kRetracted);
+    m_limelightVision.disableLEDs();
   }
 
   /** This function is called periodically when disabled. */
