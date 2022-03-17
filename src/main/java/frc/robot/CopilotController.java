@@ -74,15 +74,15 @@ public class CopilotController {
      * Periodic method for copilot controller that includes manual testing controls
      */
     public void testPeriodic(){
-        manualLauncherCmd();
-        manualIntakeCmd();
+        // manualLauncherCmd();
+        // manualIntakeCmd();
         //manualClimberCmd();
 
-        m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
-        m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
-        m_shuffleboard.periodic();
+        // m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
+        // m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
+        // m_shuffleboard.periodic();
 
-        m_intake.indexing();
+        // m_intake.indexing();
 
         // boolean sensor1 = m_intake.getMagazineSensor1();
         // boolean sensor2 = m_intake.getMagazineSensor2();
@@ -120,22 +120,32 @@ public class CopilotController {
         //uses one button to aim and launch
         if (m_gamePad.getTargetAndLaunch()){
             m_limelight.enableLEDs();
-            m_launcher.targetAndLaunch();
+            m_launcher.targetAndLaunch(m_shuffleboard.getFlywheelVelocity(), m_shuffleboard.getTargetFlywheelSpeed());
             m_intake.setMagazineSpeed(0);
         }
         else if(m_gamePad.getManualLaunch()){
-            m_launcher.setFlywheelSpeed(RobotMap.LauncherConstants.FLYWHEEL_SPEED);
+            m_launcher.launch();
         }
+        else if(m_gamePad.getExpell()){
+            m_launcher.expel();
+        }
+        // else if(m_gamePad.getFeedCMD()){
+        //     return;
+        // }
         else{
             m_launcher.setFlywheelSpeed(0);
             m_launcher.setFeederSpeed(0);
             m_launcher.setTurretSpeed(0);
             m_limelight.disableLEDs();
             m_intake.indexing();
+            m_launcher.zeroFlywheelRevCounter();
         }
 
         if(m_gamePad.getFeedCMD()){
             m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        }
+        else if(m_gamePad.getTargetAndLaunch() || m_gamePad.getManualLaunch()){
+            return;
         }
         else{
             m_launcher.setFeederSpeed(0);
@@ -155,13 +165,16 @@ public class CopilotController {
             m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
 
-        if(m_gamePad.getExpell()){
-            m_launcher.expel();
-        }
-        else{
-            m_launcher.setFlywheelSpeed(0);
-            m_launcher.setFeederSpeed(0);
-        }
+        // if(m_gamePad.getExpell()){
+        //     m_launcher.expel();
+        // }
+        // else if(m_gamePad.getTargetAndLaunch() || m_gamePad.getManualLaunch() || m_gamePad.getFeedCMD()){
+        //     return;
+        // }
+        // else{
+        //     m_launcher.setFlywheelSpeed(0);
+        //     m_launcher.setFeederSpeed(0);
+        // }
     }
 
     /**
@@ -227,13 +240,13 @@ public class CopilotController {
             //Added for testing
             //m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
             m_limelight.enableLEDs();
-            m_launcher.targetAndLaunch();
+            m_launcher.targetAndLaunch(m_shuffleboard.getTargetFlywheelSpeed(), m_shuffleboard.getTargetFlywheelSpeed());
             m_intake.setMagazineSpeed(0);
         }
         else {
             m_launcher.setFeederSpeed(0);
             m_launcher.setTurretSpeed(0);
-            m_limelight.disableLEDs();
+           // m_limelight.disableLEDs();
             m_launcher.zeroTurretPosition();
 
         }

@@ -83,7 +83,7 @@ public class RobotMap {
         public static final int TURRET_MOTOR_ID = 3;
         
         //These are untested placesholder values until we know what speeds we actually need
-        public static final double FEEDING_SPEED = -0.8;
+        public static final double FEEDING_SPEED = -0.95;
         public static final double EXPEL_SPEED = 0.25;
         public static final double TURRET_ROTATION_SPEED = 0.15;
         public static final double FLYWHEEL_SPEED = 0.7;
@@ -101,7 +101,7 @@ public class RobotMap {
         //public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
         public static final double TURRET_ENCODER_LIMIT = 4400;
 
-        public static final int TURRET_ENCODER_BAND = 5;
+        public static final int TURRET_ENCODER_BAND = 25;
 
         // This is the max RPM value that the flywheel can be moving
         public static final double MAX_FLYWHEEL_RPM = 6380;

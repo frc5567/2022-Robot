@@ -86,6 +86,8 @@ public class Launcher{
     //counts how many times we have cycled through targetAndLaunch while on target so we know when the ball has exited to robot
     double m_onTargetCounter = 0;
 
+    double m_flywheelRevCounter = 0;
+
     /**
      * Constructor for Launcher objects
      * @param limelightVision we pass in limelight to use in launch targeting
@@ -137,7 +139,7 @@ public class Launcher{
     /**
      * Prepares launch sequence by turning turret towards the target and revving the launcher flywheel to the required speed
      */
-    public void targetAndLaunch(){
+    public void targetAndLaunch(double speed, double targetRpm){
         m_leftDriveEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
         m_rightDriveEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
         m_turretEncoderTicks = getTurretPosition();
@@ -161,15 +163,24 @@ public class Launcher{
             }
         }
 
-        setFlywheelSpeed(m_currentFlywheelVelocity);
+        m_flywheelRevCounter++;
+
+        setFlywheelSpeed(speed);
         System.out.println("Real Flywheel speed" + getRealSpeed());
-        //Checks if our flywheel is at the target speed
-        if(getRealSpeed() > m_shuffleboard.getTargetFlywheelSpeed()){
+        if(m_flywheelRevCounter >= 50){
+
             flywheelMotorReady = true;
         }
         else{
             flywheelMotorReady = false;
         }
+        //Checks if our flywheel is at the target speed
+        // if(getRealSpeed() > targetRpm){
+        //     flywheelMotorReady = true;
+        // }
+        // else{
+        //     flywheelMotorReady = false;
+        // }
 
         //this if statement makes it so if we don't see a target, don't run the method and instead print "No Target Detected"
         if(m_limelightVision.seeTarget()){
@@ -226,6 +237,7 @@ public class Launcher{
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
             m_onTargetCounter++;
             if(m_onTargetCounter >= RobotMap.LauncherConstants.MAX_ON_TARGET_CYCLES){
+                m_flywheelRevCounter = 0;
                 m_onTarget = false;
             }
         }
@@ -233,6 +245,16 @@ public class Launcher{
             setFeederSpeed(0);
             m_onTargetCounter = 0;
         }
+    }
+
+    public void launch(){
+        setFlywheelSpeed(m_currentFlywheelVelocity);
+        System.out.println("Real Flywheel speed" + getRealSpeed());
+        //Checks if our flywheel is at the target speed
+        // if(getRealSpeed() > m_shuffleboard.getTargetFlywheelSpeed()){
+        //     System.out.println("Commencing Launch Sequence");
+        //     setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        // }
     }
 
     /**
@@ -429,5 +451,9 @@ public class Launcher{
         if((getRealSpeed() / RobotMap.LauncherConstants.MAX_FLYWHEEL_RPM) >= 0.9){
             setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
+    }
+    
+    public void zeroFlywheelRevCounter(){
+        m_flywheelRevCounter = 0;
     }
 }

@@ -250,7 +250,7 @@ public class Auton{
             //step to aim with the turret and launch
             else if (m_step == AutonStep.kStep5){
                 m_intake.setMagazineSpeed(0); 
-                m_launcher.targetAndLaunch();
+                m_launcher.targetAndLaunch(m_shuffleboard.getTargetFlywheelSpeed(), m_shuffleboard.getTargetFlywheelSpeed());
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -267,7 +267,7 @@ public class Auton{
                 }
             }
             else if (m_step == AutonStep.kStep7){
-                m_launcher.targetAndLaunch();
+                m_launcher.targetAndLaunch(m_shuffleboard.getTargetFlywheelSpeed(), m_shuffleboard.getTargetFlywheelSpeed());
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -378,7 +378,7 @@ public class Auton{
             }
             //step to aim with the turret and launch
             else if (m_step == AutonStep.kStep5){ 
-                m_launcher.targetAndLaunch();
+                m_launcher.targetAndLaunch(m_shuffleboard.getTargetFlywheelSpeed(), m_shuffleboard.getTargetFlywheelSpeed());
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -395,7 +395,7 @@ public class Auton{
                 }
             }
             else if (m_step == AutonStep.kStep7){
-                m_launcher.targetAndLaunch();
+                m_launcher.targetAndLaunch(m_shuffleboard.getTargetFlywheelSpeed(), m_shuffleboard.getTargetFlywheelSpeed());
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -505,7 +505,7 @@ public class Auton{
             }
             //step to aim with the turret and launch
             else if (m_step == AutonStep.kStep5){ 
-                m_launcher.targetAndLaunch();
+                m_launcher.targetAndLaunch(m_shuffleboard.getTargetFlywheelSpeed(), m_shuffleboard.getTargetFlywheelSpeed());
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -522,7 +522,7 @@ public class Auton{
                 }
             }
             else if (m_step == AutonStep.kStep7){
-                m_launcher.targetAndLaunch();
+                m_launcher.targetAndLaunch(m_shuffleboard.getTargetFlywheelSpeed(), m_shuffleboard.getTargetFlywheelSpeed());
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
