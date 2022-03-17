@@ -261,6 +261,7 @@ public class Launcher{
      * Shoots any game pieces out at a low speed to eject game pieces we don't want
      */
     public void expel(){
+        setTrajectoryPosition(TrajectoryPosition.kDown);
         setFlywheelSpeed(RobotMap.LauncherConstants.EXPEL_SPEED);
         setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
     }

@@ -84,7 +84,7 @@ public class RobotMap {
         
         //These are untested placesholder values until we know what speeds we actually need
         public static final double FEEDING_SPEED = -0.95;
-        public static final double EXPEL_SPEED = 0.25;
+        public static final double EXPEL_SPEED = 0.35;
         public static final double TURRET_ROTATION_SPEED = 0.15;
         public static final double FLYWHEEL_SPEED = 0.7;
 
