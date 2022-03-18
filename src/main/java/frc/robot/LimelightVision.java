@@ -88,6 +88,8 @@ public class LimelightVision {
         SmartDashboard.putNumber("LimelightY Offset", m_yAngleOffset);
         // Puts the percentage of the screen that the target takes up on the shuffleboard
         SmartDashboard.putNumber("LimelightArea Percentage", m_areaOfScreen);
+
+
     }
     
     /**
@@ -152,6 +154,10 @@ public class LimelightVision {
      */
     public double yAngleToTarget(){
         return(m_yAngleOffset);
+    }
+
+    public double Ta(){
+        return(m_areaOfScreen);
     }
 
     /**

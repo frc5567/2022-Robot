@@ -78,6 +78,11 @@ public class PilotController {
         //     System.out.println("Right Encoder Ticks: " + currentRightEncoderTicks);
         //     System.out.println("Left Encoder Ticks: " + currentLeftEncoderTicks);
         // }
+        if ((++m_sysOutCounter % 10) == 0){
+            //System.out.println("Gyro: " + m_drivetrain.getGyro());
+            System.out.println("Distance to Target" + m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND));
+            System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.Ta());
+        }
     }
 
     /**
@@ -106,9 +111,12 @@ public class PilotController {
         /**
          * prints out our current right and left encoder ticks, prints only every 50 cycles 
          */
-        if ((++m_sysOutCounter % 25) == 0){
-            System.out.println("Gyro: " + m_drivetrain.getGyro());
+        if ((++m_sysOutCounter % 10) == 0){
+            //System.out.println("Gyro: " + m_drivetrain.getGyro());
+            System.out.println("Distance to Target" + m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND));
         }
+
+
     }
 
     /**
@@ -224,8 +232,15 @@ public class PilotController {
         if(m_controller.getAButton()){
             m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
         }
-        else if(m_controller.getBButton()){
+        else{
+            m_climber.climbCMD(0);
+        }
+        
+        if(m_controller.getBButton()){
             m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
+        }
+        else{
+            m_climber.winchCMD(0);
         }
     }
 }

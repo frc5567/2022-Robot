@@ -19,6 +19,7 @@ public class CopilotController {
     //for testing until we have a real gamepad
     private XboxController m_controller;
 
+    boolean m_carwashRunning = false;
 
 
     /**
@@ -130,12 +131,17 @@ public class CopilotController {
             m_launcher.expel();
         }
         else if (m_gamePad.getCarwash()){
+            m_carwashRunning = true;
             m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
         }
         else if(m_gamePad.getFeedCMD()){
             return;
         }
         else{
+            if(m_carwashRunning){
+                m_intake.setMagazineSpeed(0);
+                m_carwashRunning = false;
+            }
             m_launcher.setFlywheelSpeed(0);
             m_launcher.setFeederSpeed(0);
             m_launcher.setTurretSpeed(0);
