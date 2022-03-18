@@ -82,11 +82,15 @@ public class Launcher{
     double m_onTargetLeftTicks = m_leftDriveEncoderTicks;
     double m_onTargetRightTicks = m_rightDriveEncoderTicks;
     double m_onTargetTurretTicks = m_turretEncoderTicks;   
+
+    double m_angleToTarget = 0;
     
     //counts how many times we have cycled through targetAndLaunch while on target so we know when the ball has exited to robot
     double m_onTargetCounter = 0;
 
     double m_flywheelRevCounter = 0;
+
+    boolean m_flywheelMotorReady = false;
 
     /**
      * Constructor for Launcher objects
@@ -140,14 +144,61 @@ public class Launcher{
      * Prepares launch sequence by turning turret towards the target and revving the launcher flywheel to the required speed
      */
     public void targetAndLaunch(double speed, double targetRpm){
+        m_flywheelRevCounter++;
+
+        setFlywheelSpeed(speed);
+        System.out.println("Real Flywheel speed" + getRealSpeed());
+        if(m_flywheelRevCounter >= 50){
+
+            m_flywheelMotorReady = true;
+        }
+        else{
+            m_flywheelMotorReady = false;
+        }
+        //Checks if our flywheel is at the target speed
+        // if(getRealSpeed() > targetRpm){
+        //     flywheelMotorReady = true;
+        // }
+        // else{
+        //     flywheelMotorReady = false;
+        // }
+
+        target();
+
+        //Prints out a message telling the driver when our robot is ready to launch and moves game pieces into the flywheel
+        if(m_onTarget && m_flywheelMotorReady){
+            //setTrajectoryPosition(TrajectoryPosition.kUp);
+            System.out.println("Commencing Launch Sequence");
+            setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+            m_onTargetCounter++;
+            if(m_onTargetCounter >= RobotMap.LauncherConstants.MAX_ON_TARGET_CYCLES){
+                m_flywheelRevCounter = 0;
+                m_onTarget = false;
+            }
+        }
+        else{
+            setFeederSpeed(0);
+            m_onTargetCounter = 0;
+        }
+    }
+
+    public void launch(){
+        setFlywheelSpeed(m_currentFlywheelVelocity);
+        target();
+        System.out.println("Real Flywheel speed" + getRealSpeed());
+        //Checks if our flywheel is at the target speed
+        // if(getRealSpeed() > m_shuffleboard.getTargetFlywheelSpeed()){
+        //     System.out.println("Commencing Launch Sequence");
+        //     setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        // }
+    }
+
+    public void target(){
         m_leftDriveEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
         m_rightDriveEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
         m_turretEncoderTicks = getTurretPosition();
 
-        double angleToTarget = m_limelightVision.xAngleToTarget();
-
-        boolean flywheelMotorReady = false;
-
+        m_angleToTarget = m_limelightVision.xAngleToTarget();
 
         if (m_onTarget && !m_limelightVision.seeTarget()){
             if(m_leftDriveEncoderTicks != m_onTargetLeftTicks){
@@ -163,25 +214,6 @@ public class Launcher{
             }
         }
 
-        m_flywheelRevCounter++;
-
-        setFlywheelSpeed(speed);
-        System.out.println("Real Flywheel speed" + getRealSpeed());
-        if(m_flywheelRevCounter >= 50){
-
-            flywheelMotorReady = true;
-        }
-        else{
-            flywheelMotorReady = false;
-        }
-        //Checks if our flywheel is at the target speed
-        // if(getRealSpeed() > targetRpm){
-        //     flywheelMotorReady = true;
-        // }
-        // else{
-        //     flywheelMotorReady = false;
-        // }
-
         //this if statement makes it so if we don't see a target, don't run the method and instead print "No Target Detected"
         if(m_limelightVision.seeTarget()){
             System.out.println("Target Detected");
@@ -189,7 +221,7 @@ public class Launcher{
             //checks if the turret encoder is within the tolerated range, and if we're not print a message and adjust
             if(getTurretPosition() > -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT && getTurretPosition() < RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
                 //this if statements checks to see if we are within the tolerated error range, and if we are set turret bool to true
-                if(angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR && angleToTarget > -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                if(m_angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR && m_angleToTarget > -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
                     setTurretSpeed(0);
                     m_onTargetLeftTicks = m_leftDriveEncoderTicks;
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;
@@ -200,9 +232,9 @@ public class Launcher{
                 //if we are above the tolerated error range, turn the turret toward the tolerated error range
                 else{
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
-                    System.out.println("Not Ready to Launch 1:" + angleToTarget);
+                    System.out.println("Not Ready to Launch 1:" + m_angleToTarget);
                     m_onTarget = false;
-                    setTurretSpeed(calcTurretSpeed(angleToTarget));
+                    setTurretSpeed(calcTurretSpeed(m_angleToTarget));
                 }
                 //if we are below the tolerated error range, turn the turret toward the tolerated error range
                 // else if(angleToTarget < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
@@ -229,32 +261,6 @@ public class Launcher{
         else {
             System.out.println("No Target Detected");
         }
-
-        //Prints out a message telling the driver when our robot is ready to launch and moves game pieces into the flywheel
-        if(m_onTarget && flywheelMotorReady){
-            //setTrajectoryPosition(TrajectoryPosition.kUp);
-            System.out.println("Commencing Launch Sequence");
-            setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-            m_onTargetCounter++;
-            if(m_onTargetCounter >= RobotMap.LauncherConstants.MAX_ON_TARGET_CYCLES){
-                m_flywheelRevCounter = 0;
-                m_onTarget = false;
-            }
-        }
-        else{
-            setFeederSpeed(0);
-            m_onTargetCounter = 0;
-        }
-    }
-
-    public void launch(){
-        setFlywheelSpeed(m_currentFlywheelVelocity);
-        System.out.println("Real Flywheel speed" + getRealSpeed());
-        //Checks if our flywheel is at the target speed
-        // if(getRealSpeed() > m_shuffleboard.getTargetFlywheelSpeed()){
-        //     System.out.println("Commencing Launch Sequence");
-        //     setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-        // }
     }
 
     /**
