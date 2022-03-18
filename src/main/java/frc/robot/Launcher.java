@@ -163,7 +163,7 @@ public class Launcher{
         //     flywheelMotorReady = false;
         // }
 
-        target();
+        m_onTarget = target();
 
         //Prints out a message telling the driver when our robot is ready to launch and moves game pieces into the flywheel
         if(m_onTarget && m_flywheelMotorReady){
@@ -193,7 +193,9 @@ public class Launcher{
         // }
     }
 
-    public void target(){
+    public boolean target(){
+        boolean onTarget = false;
+
         m_leftDriveEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
         m_rightDriveEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
         m_turretEncoderTicks = getTurretPosition();
@@ -202,17 +204,20 @@ public class Launcher{
 
         if (m_onTarget && !m_limelightVision.seeTarget()){
             if(m_leftDriveEncoderTicks != m_onTargetLeftTicks){
+                onTarget = false;
+            }
+            else if(m_rightDriveEncoderTicks != m_onTargetRightTicks){
+                onTarget = false;
+            }
+            else if(m_turretEncoderTicks != m_onTargetTurretTicks){
                 m_onTarget = false;
             }
-
-            if(m_rightDriveEncoderTicks != m_onTargetRightTicks){
-                m_onTarget = false;
-            }
-
-            if(m_turretEncoderTicks != m_onTargetTurretTicks){
-                m_onTarget = false;
+            else{
+                onTarget = true;
+                return onTarget;
             }
         }
+        
 
         //this if statement makes it so if we don't see a target, don't run the method and instead print "No Target Detected"
         if(m_limelightVision.seeTarget()){
@@ -226,34 +231,27 @@ public class Launcher{
                     m_onTargetLeftTicks = m_leftDriveEncoderTicks;
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;
                     m_onTargetTurretTicks = m_turretEncoderTicks;
-                    m_onTarget = true;
+                    onTarget = true;
                     System.out.print("Ready to Launch ------------------");
                 }
                 //if we are above the tolerated error range, turn the turret toward the tolerated error range
                 else{
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
                     System.out.println("Not Ready to Launch 1:" + m_angleToTarget);
-                    m_onTarget = false;
+                    onTarget = false;
                     setTurretSpeed(calcTurretSpeed(m_angleToTarget));
                 }
-                //if we are below the tolerated error range, turn the turret toward the tolerated error range
-                // else if(angleToTarget < -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
-                //     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
-                //     System.out.println("Not Ready to Launch 2:" + angleToTarget);
-                //     m_onTarget = false;
-                //     setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
-                // }
             }
             //If we are to the left of our motor limit, print out a message and turn right
             else if(getTurretPosition() < -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
                 System.out.println("Not Ready to Launch 3");
-                m_onTarget = false;
+                onTarget = false;
                 setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }
             //If we are to the right of our motor limit, print out a message and turn left
             else if(getTurretPosition() > RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
                 System.out.println("Not Ready to Launch 4");
-                m_onTarget = false;
+                onTarget = false;
                 setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }
 
@@ -261,6 +259,8 @@ public class Launcher{
         else {
             System.out.println("No Target Detected");
         }
+
+        return onTarget;
     }
 
     /**

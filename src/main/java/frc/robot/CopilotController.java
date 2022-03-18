@@ -129,9 +129,9 @@ public class CopilotController {
         else if(m_gamePad.getExpell()){
             m_launcher.expel();
         }
-        // else if(m_gamePad.getFeedCMD()){
-        //     return;
-        // }
+        else if(m_gamePad.getFeedCMD()){
+            return;
+        }
         else{
             m_launcher.setFlywheelSpeed(0);
             m_launcher.setFeederSpeed(0);
@@ -164,17 +164,6 @@ public class CopilotController {
         else if (m_gamePad.getTrajectoryDownPressed()){
             m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
-
-        // if(m_gamePad.getExpell()){
-        //     m_launcher.expel();
-        // }
-        // else if(m_gamePad.getTargetAndLaunch() || m_gamePad.getManualLaunch() || m_gamePad.getFeedCMD()){
-        //     return;
-        // }
-        // else{
-        //     m_launcher.setFlywheelSpeed(0);
-        //     m_launcher.setFeederSpeed(0);
-        // }
     }
 
     /**

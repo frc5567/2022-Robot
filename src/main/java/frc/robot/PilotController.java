@@ -14,6 +14,7 @@ public class PilotController {
     private Drivetrain m_drivetrain;
     private RobotShuffleboard m_shuffleboard;
     private Launcher m_launcher; 
+    private Climber m_climber;
 
     //Declares velocity and turn scalars used to control input value for arcade drive and store shuffleboard values
     private double m_currentVelocityScalar = RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR;
@@ -32,11 +33,12 @@ public class PilotController {
     /**
      * Constuctor for the pilot controller
      */
-    public PilotController(Drivetrain drivetrain, LimelightVision limelightVision, RobotShuffleboard shuffleboard, Launcher launcher){
+    public PilotController(Drivetrain drivetrain, LimelightVision limelightVision, RobotShuffleboard shuffleboard, Launcher launcher, Climber climber){
         m_drivetrain = drivetrain;
         m_limelightVision = limelightVision;
         m_shuffleboard = shuffleboard;
         m_launcher = launcher;
+        m_climber = climber;
 
         m_controller = new XboxController(RobotMap.PilotControllerConstants.XBOX_CONTROLLER_PORT);
         //puts input scalar widgets on the shuffleboard
@@ -55,12 +57,16 @@ public class PilotController {
      * Calls turnToTarget, arcadeDriveCmd, and controlGear to set up the buttons needed for targeting, switching gears, and controlling the drive train on the xbox pilot controller
      */
     public void periodic() {
-        // When left bumper is pressed we turn to target
+        // When Start button is pressed we turn to target
         turnToTarget();
         // Calls the drivetrain to be utilized. Right trigger is forward, left trigger is backward, and left stick is turn
         arcadeDriveCmd();
         // Controls the gear with x button being high gear and y button being low gear 
         controlGear();
+        // when left or right bumper are pressed turn the turret
+        manualTurretCmd();
+
+        climberCmd();
      
         // Periodically updates encoder ticks to our actual current encoder position
         // double currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
@@ -176,8 +182,8 @@ public class PilotController {
      * TODO: Remove this method once we know turret autotargeting works because this method will be redundant 
      */
     private void turnToTarget(){
-        // checks if left bumper button is pressed and executes code if it is
-        if(m_controller.getAButton()){
+        // checks if Start button is pressed and executes code if it is
+        if(m_controller.getStartButton()){
             // change into low gear for defense and more accurate aim
             m_drivetrain.shiftGear(Gear.kLowGear);
             // checks if any part of the target is visible
@@ -199,6 +205,27 @@ public class PilotController {
             else if(m_limelightVision.seeTarget() == false){
                 m_drivetrain.periodic(0, RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED);
             }
+        }
+    }
+
+    private void manualTurretCmd(){
+        if(m_controller.getRightBumper()){
+            m_launcher.setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+        }
+        else if(m_controller.getLeftBumper()){
+            m_launcher.setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+        }
+        else{
+            m_launcher.setTurretSpeed(0);
+        }
+    }
+
+    private void climberCmd(){
+        if(m_controller.getAButton()){
+            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
+        }
+        else if(m_controller.getBButton()){
+            m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
         }
     }
 }
