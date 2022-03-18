@@ -63,7 +63,7 @@ public class CopilotController {
         controlLauncher();
         //controlClimber();
 
-        m_intake.indexing();
+
         
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
@@ -129,6 +129,9 @@ public class CopilotController {
         else if(m_gamePad.getExpell()){
             m_launcher.expel();
         }
+        else if (m_gamePad.getCarwash()){
+            m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+        }
         else if(m_gamePad.getFeedCMD()){
             return;
         }
@@ -151,12 +154,13 @@ public class CopilotController {
             m_launcher.setFeederSpeed(0);
         }
 
-        if (m_gamePad.getCarwash()){
-            m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
-        }
-        else{
-            m_intake.setMagazineSpeed(0);
-        }
+        // if (m_gamePad.getCarwash()){
+        //     m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+        // }
+        // else{
+
+        //     m_intake.setMagazineSpeed(0);
+        // }
 
         if (m_gamePad.getTrajectoryUpPressed()){
             m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);

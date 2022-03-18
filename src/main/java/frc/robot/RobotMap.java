@@ -217,7 +217,7 @@ public class RobotMap {
 
         public static final double INTAKE_WAITING_LOOPS = 30;
         //constant for number of loops after a ball is launched to move to the next step
-        public static final double LOOPS_AFTER_LAUNCH = 50;
+        public static final double LOOPS_AFTER_LAUNCH = 75;
 
         //constant for rotation error acceptance
         public static final double ROTATE_BOUND = 0.02;
@@ -238,7 +238,7 @@ public class RobotMap {
         public static final double RIGHT_WALL_STEP_THREE_TARGET_ANGLE = 179;
 
         //This value is passed into driveToTarget method in Auton to move the robot 35 inches
-        public static final double RIGHT_LINE_STEP_ONE_TARGET_DISTANCE = 35;
+        public static final double RIGHT_LINE_STEP_ONE_TARGET_DISTANCE = 41;
         //This value is passed into driveToTarget method in Auton to move the robot 14 inches
         public static final double RIGHT_LINE_STEP_SIX_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 180 degrees

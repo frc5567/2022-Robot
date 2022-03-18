@@ -144,6 +144,7 @@ public class Launcher{
      * Prepares launch sequence by turning turret towards the target and revving the launcher flywheel to the required speed
      */
     public void targetAndLaunch(double speed, double targetRpm){
+
         m_flywheelRevCounter++;
 
         setFlywheelSpeed(speed);
