@@ -167,6 +167,17 @@ public class PilotController {
     }
 
     /**
+     * Method for moving forward slowly with back button
+     */
+    private void crawlCMD(){
+        //button for implementation of slower speed setting
+        if (m_controller.getBackButtonPressed()){
+            m_drivetrain.shiftGear(Gear.kLowGear);
+            m_drivetrain.periodic(RobotMap.PilotControllerConstants.CRAWL_SPEED_FORWARD, 0);
+        }
+    }
+
+    /**
      * Method for changing the gear between high (X button) and low (Y button) (High for speed, low for torque)
      */
     private void controlGear(){

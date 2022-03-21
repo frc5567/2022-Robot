@@ -56,6 +56,9 @@ public class RobotMap {
         //Constants for filters on acceleration and turning in order to prevent brownouts
         public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 3.0;
         public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 3.0;
+
+        //Constant for crawl speed
+        public static final double CRAWL_SPEED_FORWARD = 0.2;
     }
 
     /**
@@ -180,6 +183,8 @@ public class RobotMap {
      */
     public static class ShuffleboardConstants {
         public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.5;
+        //drive slow scalar value is placeholder!!
+        public static final double DRIVE_SLOW_INPUT_SCALAR = 0.2;
         public static final double FLYWHEEL_DEFAULT_VELOCITY = 0.5;
         public static final double DEFAULT_AUTON_PATH = 0;
         public static final int DEFAULT_LAUNCH_PRESET = 0;
