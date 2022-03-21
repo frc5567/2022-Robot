@@ -234,7 +234,7 @@ public class Launcher{
             //checks if the turret encoder is within the tolerated range, and if we're not print a message and adjust
             if(getTurretPosition() > -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT && getTurretPosition() < RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
                 //this if statements checks to see if we are within the tolerated error range, and if we are set turret bool to true
-                if(m_angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR && m_angleToTarget > -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
+                if(m_angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_RIGHT && m_angleToTarget > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_LEFT){
                     setTurretSpeed(0);
                     m_onTargetLeftTicks = m_leftDriveEncoderTicks;
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;

@@ -107,8 +107,9 @@ public class RobotMap {
         public static final double MAX_FLYWHEEL_RPM = 6380;
 
         //Constant for distance from directly on center we allow the target to be 
-        //TODO Tune when limelight is set up
-        public static final double TOLERATED_TURRET_ERROR = 0.8;
+        //TODO Tune
+        public static final double TOLERATED_TURRET_ERROR_RIGHT = 2.0;
+        public static final double TOLERATED_TURRET_ERROR_LEFT = 0.4;
         //Constant for how much error we allow the flywheel speed before we launch
         //TODO: This value is a guess and needs to be tuned. Might need to use PID instead of this or adjust the logic
         public static final double TOLERATED_FLYWHEEL_SPEED_ERROR = 0.05;
