@@ -192,7 +192,6 @@ public class Launcher{
 
     public void launch(){
         setFlywheelSpeed(m_currentFlywheelVelocity);
-        target();
         System.out.println("Real Flywheel speed" + getRealSpeed());
         //Checks if our flywheel is at the target speed
         // if(getRealSpeed() > m_shuffleboard.getTargetFlywheelSpeed()){
