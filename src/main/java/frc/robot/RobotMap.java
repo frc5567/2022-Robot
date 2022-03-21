@@ -171,6 +171,9 @@ public class RobotMap {
         public static final double CAMERA_HEIGHT = 23.25; //in inches
         public static final double HUB_HEIGHT = 104.0; //in inches
         public static final double CAMERA_DEGREES_FROM_GROUND = 57;
+
+        //Constant for converting an angle into radians
+        public static final double ANGLE_TO_RADIAN_CONVERT = (2 * Math.PI) / 360; 
         // constant for the minimum speed for aiming at target
         //TODO tune the speed we move at
         public static final double MINIMUM_SEEKING_TARGET_SPEED = 0.15;
