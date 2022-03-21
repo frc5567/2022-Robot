@@ -27,8 +27,8 @@ public class GamePad extends GenericHID {
 	private enum GamePadControls {
 		//Port values for the different gamepad buttons
 		Trajectory_Down(1),
-		Manual_Feed(2),
-		Manual_Launch(3),
+		Manual_Feed(3),
+		Manual_Launch(2),
 		Trajectory_Up(4),
 		IntakeCMD(5),
 		Retract_Intake(6),

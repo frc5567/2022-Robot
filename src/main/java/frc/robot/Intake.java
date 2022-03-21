@@ -108,6 +108,9 @@ public class Intake {
         if(m_currentlyIndexing){
             setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
         }
+        else{
+            setMagazineSpeed(0);
+        }
     }
     
 

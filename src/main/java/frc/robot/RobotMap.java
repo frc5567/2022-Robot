@@ -54,8 +54,8 @@ public class RobotMap {
         public static final double STICK_DEADBAND = 0.09;
 
         //Constants for filters on acceleration and turning in order to prevent brownouts
-        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 0.6;
-        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 0.9;
+        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 3.0;
+        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 3.0;
     }
 
     /**
@@ -83,8 +83,8 @@ public class RobotMap {
         public static final int TURRET_MOTOR_ID = 3;
         
         //These are untested placesholder values until we know what speeds we actually need
-        public static final double FEEDING_SPEED = -0.8;
-        public static final double EXPEL_SPEED = 0.25;
+        public static final double FEEDING_SPEED = -0.95;
+        public static final double EXPEL_SPEED = 0.35;
         public static final double TURRET_ROTATION_SPEED = 0.15;
         public static final double FLYWHEEL_SPEED = 0.7;
 
@@ -101,7 +101,7 @@ public class RobotMap {
         //public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
         public static final double TURRET_ENCODER_LIMIT = 4400;
 
-        public static final int TURRET_ENCODER_BAND = 5;
+        public static final int TURRET_ENCODER_BAND = 25;
 
         // This is the max RPM value that the flywheel can be moving
         public static final double MAX_FLYWHEEL_RPM = 6380;
@@ -146,7 +146,7 @@ public class RobotMap {
         //These are untested placesholder values until we know what speed we actually need
         //TODO These values will need to be tuned
         public static final double ROLLER_SPEED = 0.7;
-        public static final double MAGAZINE_SPEED = 0.5;
+        public static final double MAGAZINE_SPEED = 0.8;
 
         //These are untested placesholder values until we know what speed we actually need but it is important that these are negative
         public static final double REVERSE_ROLLER_SPEED = -0.5;
@@ -217,7 +217,7 @@ public class RobotMap {
 
         public static final double INTAKE_WAITING_LOOPS = 30;
         //constant for number of loops after a ball is launched to move to the next step
-        public static final double LOOPS_AFTER_LAUNCH = 50;
+        public static final double LOOPS_AFTER_LAUNCH = 120;
 
         //constant for rotation error acceptance
         public static final double ROTATE_BOUND = 0.02;
@@ -237,12 +237,16 @@ public class RobotMap {
         //This value is passed into turnToTarget method in Auton to turn the robot 160 degrees
         public static final double RIGHT_WALL_STEP_THREE_TARGET_ANGLE = 179;
 
-        //This value is passed into driveToTarget method in Auton to move the robot 35 inches
-        public static final double RIGHT_LINE_STEP_ONE_TARGET_DISTANCE = 35;
+        //This value is passed into driveToTarget method in Auton to move the robot 45 inches
+        public static final double RIGHT_LINE_STEP_ONE_TARGET_DISTANCE = 45;
         //This value is passed into driveToTarget method in Auton to move the robot 14 inches
         public static final double RIGHT_LINE_STEP_SIX_TARGET_DISTANCE = 14;
         //This value is passed into turnToTarget method in Auton to turn the robot 180 degrees
         public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 179;
+
+        public static final double RIGHT_LINE_STEP_NINE_TARGET_ANGLE = 179;
+
+        public static final double AUTON_FLYWHEEL_POWER = 0.72;
     }
 
     /**
