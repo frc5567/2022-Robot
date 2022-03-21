@@ -10,7 +10,6 @@ public class CopilotController {
     private GamePad m_gamePad;
     private Launcher m_launcher;
     private Intake m_intake;
-    private Climber m_climber;
     private LimelightVision m_limelight;
     //declares shuffleboard to be used for flywheel velocity testing
     private RobotShuffleboard m_shuffleboard;
@@ -26,19 +25,18 @@ public class CopilotController {
      * constructor for copilot controller- passes in all of the systems that we interact with in this class.
      * @param intake we pass in intake so the copilot can control the intake system
      * @param launcher we pass in launcher so the copilot can control the launcher system
-     * @param climber we pass in climber so the copilot can control the climber system
+     * @param shuffleboard we pass in shuffleboard so we can use flywheel velocity to pass in to targetAndLaunch
+     * @param limelight we pass in limelight to enable and disable LEDs.
      */
-    public CopilotController(Intake intake, Launcher launcher, Climber climber, RobotShuffleboard shuffleboard, LimelightVision limelight){
+    public CopilotController(Intake intake, Launcher launcher, RobotShuffleboard shuffleboard, LimelightVision limelight){
         //instatiates objects for copilot class
         m_intake = intake;
         m_launcher = launcher;
-        m_climber = climber;
         m_shuffleboard = shuffleboard;
         m_limelight = limelight;
         
         m_gamePad = new GamePad(RobotMap.GamePadConstants.GAMEPAD_PORT);
         m_controller = new XboxController(RobotMap.CopilotControllerConstants.COPILOT_CONTROLLER_PORT);
-        //m_gamePad = new GamePad(RobotMap.CopilotControllerConstants.GAMEPAD_PORT);
 
     }
 
@@ -48,7 +46,6 @@ public class CopilotController {
     public void init(){
         m_intake.init();
         m_launcher.init();
-        m_climber.init();
         m_gamePad.init();
         //sets our flywheel velocity for testing to the value put into the shuffleboard
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
@@ -62,10 +59,7 @@ public class CopilotController {
     public void periodic(){
         controlIntake();
         controlLauncher();
-        //controlClimber();
 
-
-        
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
@@ -77,7 +71,6 @@ public class CopilotController {
     public void testPeriodic(){
         // manualLauncherCmd();
         // manualIntakeCmd();
-        //manualClimberCmd();
 
         // m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         // m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
@@ -124,19 +117,24 @@ public class CopilotController {
             m_launcher.targetAndLaunch(m_shuffleboard.getFlywheelVelocity());
             m_intake.setMagazineSpeed(0);
         }
+        //calls button in gamepad to spin flywheel up
         else if(m_gamePad.getManualLaunch()){
             m_launcher.launch();
         }
+        //calls button in gamepad to burp
         else if(m_gamePad.getExpell()){
             m_launcher.expel();
         }
+        //calls button in gamepad to to run carwash motor manually
         else if (m_gamePad.getCarwash()){
             m_carwashRunning = true;
             m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
         }
+        //checks for feed command button, if it is pressed then don't zero it
         else if(m_gamePad.getFeedCMD()){
             return;
         }
+        //zeros magazine only once
         else{
             if(m_carwashRunning){
                 m_intake.setMagazineSpeed(0);
@@ -150,23 +148,17 @@ public class CopilotController {
             m_launcher.zeroFlywheelRevCounter();
         }
 
+        //calls feeder command button to set feeder speed
         if(m_gamePad.getFeedCMD()){
             m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
+        //checks if target and launch is being pressed so we don't zero the feeder wheel
         else if(m_gamePad.getTargetAndLaunch() || m_gamePad.getManualLaunch()){
             return;
         }
         else{
             m_launcher.setFeederSpeed(0);
         }
-
-        // if (m_gamePad.getCarwash()){
-        //     m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
-        // }
-        // else{
-
-        //     m_intake.setMagazineSpeed(0);
-        // }
 
         if (m_gamePad.getTrajectoryUpPressed()){
             m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
@@ -177,42 +169,21 @@ public class CopilotController {
     }
 
     /**
-     * This method controls the climber using three buttons to pass in values of power to two motors; the climber motor and the winch motor.
-     */
-    // private void controlClimber(){
-    //     //controls Climber motor with two buttons, up or down
-    //     if(m_gamePad.getMoveClimberUp()){
-    //         m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
-    //     }
-    //     else if(m_gamePad.getMoveClimberDown()){
-    //         m_climber.climbCMD(-RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
-    //     }
-    //     else{
-    //         m_climber.climbCMD(0);
-    //     }
-    //     //controls Climber winch with one button, up
-    //     if(m_gamePad.getMoveRobotUp()){
-    //         m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
-    //     }
-    //     else{
-    //         m_climber.winchCMD(0);
-    //     }
-    // }
-
-    /**
      * Manually controls the launcher and the turret for testing
      */
     private void manualLauncherCmd(){
+        //revs flywheel when A button is pressed
         if(m_controller.getAButton()){
             m_launcher.setFlywheelSpeed(m_currentFlywheelVelocity);
         }
         else{
             m_launcher.setFlywheelSpeed(0);
         }
-
+        //sets trajectory position to up if start button is pressed
         if(m_controller.getStartButtonPressed()){
             m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
         }
+        //sets trajectory position to down if the back button is pressed
         else if(m_controller.getBackButtonPressed()){
             m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
@@ -235,6 +206,8 @@ public class CopilotController {
         //         return;
         //     }
         //}
+
+        //if B button is pressed turn on limelight, target, and launch
         if(m_controller.getBButton()){
             //Added for testing
             //m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
@@ -256,52 +229,33 @@ public class CopilotController {
      */
     private void manualIntakeCmd(){
         //two if statements to determine intake position
+        //if X button is pressed turn on the magazine
         if(m_controller.getXButton()){
             m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
             //Commented out for testing purposes
             //m_intake.setIntakeExtension(IntakeState.kExtended);
         }
         else {
-            //Added for Testing
             m_intake.setMagazineSpeed(0);
         }
         
+        //if Y button is pressed turn on the roller wheels
         if(m_controller.getYButton()){
             m_intake.setRollerSpeed(RobotMap.IntakeConstants.ROLLER_SPEED);
-            //Commented out for testing purposes
-            //m_intake.setIntakeExtension(IntakeState.kRetracted);
         }
         else {
-            //Added for testing
             m_intake.setRollerSpeed(0);
         }
 
+        //if left bumper is pressed extend the intake
         if(m_controller.getLeftBumperPressed()){
             m_intake.setIntakeExtension(IntakeState.kExtended);
         }
+        //if right bumper is pressed retract the intake
         else if(m_controller.getRightBumperPressed()) {
             m_intake.setIntakeExtension(IntakeState.kRetracted);
         }  
-              
-        //Commented out for testing purposes. Also review double triggerInput (may not need to subtract the two but instead get one triggerAxis)
-        //double triggerInput = (m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
-        //m_intake.setRollerSpeed(triggerInput);
-    }
 
-    private void manualClimberCmd(){
-        if(m_controller.getLeftStickButton()){
-            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
-        }
-        else {
-            m_climber.climbCMD(0);
-        }
-
-        if(m_controller.getRightStickButton()){
-            m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
-        }
-        else {
-            m_climber.winchCMD(0);
-        }
     }
 
     /**
@@ -316,12 +270,5 @@ public class CopilotController {
      */
     public Intake getIntake() {
         return m_intake;
-    }
-
-    /**
-     * @return the climber
-     */
-    public Climber getClimber() {
-        return m_climber;
     }
 }
