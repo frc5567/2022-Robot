@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.Intake.IntakeState;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public class Launcher{
@@ -41,6 +42,7 @@ public class Launcher{
     //Declares limelight object
     private LimelightVision m_limelightVision;
     private Drivetrain m_drivetrain;
+    private Intake m_intake;
     
     //Declares a Shuffleboard object
     private RobotShuffleboard m_shuffleboard;
@@ -95,12 +97,16 @@ public class Launcher{
     /**
      * Constructor for Launcher objects
      * @param limelightVision we pass in limelight to use in launch targeting
+     * @param drivetrain we pass in drivetrain to get encoder ticks/position
+     * @param shuffleboard we pass in shuffleboard for getTurretValues and getFlywheelVelocity
+     * @param intake we pass in intake to extend the intake in targetAndLaunch
      */
-    public Launcher(LimelightVision limelightVision, Drivetrain drivetrain, RobotShuffleboard shuffleboard){
+    public Launcher(LimelightVision limelightVision, Drivetrain drivetrain, RobotShuffleboard shuffleboard, Intake intake){
         //Instantiates objects for the Launcher class
         m_limelightVision = limelightVision;
         m_drivetrain = drivetrain;
         m_shuffleboard = shuffleboard;
+        m_intake = intake;
 
         //Instantiates the shuffleboard so the values for target flywheel speed on it can be used
         m_shuffleboard = shuffleboard;
@@ -144,7 +150,8 @@ public class Launcher{
      * Prepares launch sequence by turning turret towards the target and revving the launcher flywheel to the required speed
      */
     public void targetAndLaunch(double speed, double targetRpm){
-
+        //Sets the intake to extended so the game pieces don't get jammed
+        m_intake.setIntakeExtension(IntakeState.kExtended);
         m_flywheelRevCounter++;
 
         setFlywheelSpeed(speed);
