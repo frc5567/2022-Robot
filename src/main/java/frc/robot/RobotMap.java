@@ -244,6 +244,8 @@ public class RobotMap {
         //This value is passed into turnToTarget method in Auton to turn the robot 180 degrees
         public static final double RIGHT_LINE_STEP_FOUR_TARGET_ANGLE = 179;
 
+        public static final double RIGHT_LINE_STEP_NINE_TARGET_ANGLE = 179;
+
         public static final double AUTON_FLYWHEEL_POWER = 0.72;
     }
 

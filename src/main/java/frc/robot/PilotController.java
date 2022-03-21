@@ -80,7 +80,7 @@ public class PilotController {
         // }
         if ((++m_sysOutCounter % 10) == 0){
             //System.out.println("Gyro: " + m_drivetrain.getGyro());
-            System.out.println("Distance to Target" + m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND));
+            System.out.println("Distance to Target" + m_limelightVision.distToTarget());
             System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.Ta());
         }
     }
@@ -113,7 +113,7 @@ public class PilotController {
          */
         if ((++m_sysOutCounter % 10) == 0){
             //System.out.println("Gyro: " + m_drivetrain.getGyro());
-            System.out.println("Distance to Target" + m_limelightVision.distToTarget(RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND));
+            System.out.println("Distance to Target" + m_limelightVision.distToTarget());
         }
 
 
@@ -192,6 +192,7 @@ public class PilotController {
     private void turnToTarget(){
         // checks if Start button is pressed and executes code if it is
         if(m_controller.getStartButton()){
+            m_limelightVision.enableLEDs();
             // change into low gear for defense and more accurate aim
             m_drivetrain.shiftGear(Gear.kLowGear);
             // checks if any part of the target is visible
@@ -206,13 +207,16 @@ public class PilotController {
                 }
                 // if target is within acceptable offset range, the robot stops moving
                 else{
-                    m_drivetrain.periodic(m_limelightVision.distanceAdjustToTargetSpeed(),m_limelightVision.turnAngleAdjustToTargetSpeed());
+                    m_drivetrain.periodic(0, 0.5);
                 }
             } 
             // if any part of the target is not visible, spin right until target is visible
             else if(m_limelightVision.seeTarget() == false){
                 m_drivetrain.periodic(0, RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED);
             }
+        }
+        else {
+            m_limelightVision.disableLEDs();
         }
     }
 

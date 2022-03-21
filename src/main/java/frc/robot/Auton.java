@@ -477,22 +477,26 @@ public class Auton{
                 if(m_limelightVision.seeTarget()){
                     //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
                     if(m_xToTarget < RobotMap.TOLERATED_TARGET_ERROR && m_xToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
-                        System.out.println("On Target");
                         m_drivetrain.periodic(0,0);
                         m_drivetrain.zeroEncoders();
                         m_step = AutonStep.kStep5;
+                        if(m_doSysOut == true){
+                            System.out.println("On Target");
+                            System.out.println("Ta " + m_limelightVision.Ta() + "   Tx " + m_limelightVision.xAngleToTarget() + "   Ty " + m_limelightVision.yAngleToTarget());
+                        }
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
-                        if(m_doSysOut == true){
-                            System.out.println("Not On Target");    
-                        }
+                        // if(m_doSysOut == true){
+                        //     System.out.println("Not On Target");    
+                        // }
                         m_drivetrain.periodic(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");
+                            System.out.println("Ta " + m_limelightVision.Ta() + "   Tx " + m_limelightVision.xAngleToTarget() + "   Ty " + m_limelightVision.yAngleToTarget());
                         }
                         m_drivetrain.periodic(0, -RobotMap.AutonConstants.TARGETING_SPEED);
                     }
@@ -530,7 +534,7 @@ public class Auton{
                     m_step = AutonStep.kStep8;
                 }
             }
-            //step to move backwards, out of tarmac and zero everything other than drivetrain
+            //step to move backwards, out of tarmac and zero everything other than drivetrain. We also retract the intake
             else if (m_step == AutonStep.kStep8){
                 m_launcher.setFeederSpeed(0);
                 m_launcher.setTurretSpeed(0);
@@ -538,18 +542,29 @@ public class Auton{
                 m_intake.setRollerSpeed(0);
                 m_intake.setMagazineSpeed(0);
                 m_limelightVision.disableLEDs();
+                m_intake.setIntakeExtension(IntakeState.kRetracted);
                 if(driveToTarget(-RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_SIX_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
-                    m_step = AutonStep.kStop;
+                    m_step = AutonStep.kStep9;
                     m_drivetrain.zeroEncoders();
                 }
                 else{
                     return;
                 }
             }
+            // In this step we turn 179 degrees around to orient ourself for teleop
+            else if (m_step == AutonStep.kStep9){
+                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.RIGHT_LINE_STEP_NINE_TARGET_ANGLE)){
+                    m_drivetrain.periodic(0,0);
+                    m_step = AutonStep.kStop;
+                    m_drivetrain.zeroEncoders();
+                    m_drivetrain.zeroGyro();                }
+                else{
+                    return;
+                }
+            }
             //step to finish zeroing everything for the end of auton
             else if(m_step == AutonStep.kStop){
-                m_intake.setIntakeExtension(IntakeState.kRetracted);
                 if(m_doSysOut == true){
                     System.out.println("Auton Completed");
                 }

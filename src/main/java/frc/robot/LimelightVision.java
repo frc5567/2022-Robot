@@ -164,7 +164,7 @@ public class LimelightVision {
      * Finds the distance from the limelight to the top of the upper hub
      * @return The distance in inches
      */
-    public double distToTarget(double cameraDegreesFromGround){
+    public double distToTarget(){
         //member variables to use in calculations
         double m_distance;
         double m_sineOfAngle;
