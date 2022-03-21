@@ -161,20 +161,20 @@ public class LimelightVision {
     }
 
     /**
-     * Finds the distance from the limelight to the top of the upper hub
+     * Finds the distance from the limelight straight to the hub
      * @return The distance in inches
      */
     public double distToTarget(){
         //member variables to use in calculations
         double m_distance;
-        double m_sineOfAngle;
+        double m_tanOfAngle;
         double m_totalHeight;
         //math to find the height from the camera to the top of the hub
         m_totalHeight = RobotMap.LimelightConstants.HUB_HEIGHT - RobotMap.LimelightConstants.CAMERA_HEIGHT;
         //finds the sine of the sum of both angles and sets it to one member variable
-        m_sineOfAngle = Math.sin(RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND + yAngleToTarget());
-        //calculates the distance of the hypotenuse (distance from camera to upper hub)
-        m_distance = m_totalHeight/m_sineOfAngle;
+        m_tanOfAngle = Math.tan((RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND + yAngleToTarget()) * RobotMap.LimelightConstants.ANGLE_TO_RADIAN_CONVERT);
+        //calculates the distance that the robot is from the hub (parallel to the ground)
+        m_distance = m_totalHeight/m_tanOfAngle;
         //returns calculated distance in inches
         return m_distance;
     }

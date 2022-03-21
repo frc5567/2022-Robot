@@ -121,7 +121,7 @@ public class CopilotController {
         //uses one button to aim and launch
         if (m_gamePad.getTargetAndLaunch()){
             m_limelight.enableLEDs();
-            m_launcher.targetAndLaunch(m_shuffleboard.getFlywheelVelocity(), m_shuffleboard.getTargetFlywheelSpeed());
+            m_launcher.targetAndLaunch(m_shuffleboard.getFlywheelVelocity());
             m_intake.setMagazineSpeed(0);
         }
         else if(m_gamePad.getManualLaunch()){
@@ -239,7 +239,7 @@ public class CopilotController {
             //Added for testing
             //m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
             m_limelight.enableLEDs();
-            m_launcher.targetAndLaunch(m_shuffleboard.getTargetFlywheelSpeed(), m_shuffleboard.getTargetFlywheelSpeed());
+            m_launcher.targetAndLaunch(m_shuffleboard.getTargetFlywheelSpeed());
             m_intake.setMagazineSpeed(0);
         }
         else {
