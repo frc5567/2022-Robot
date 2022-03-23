@@ -20,31 +20,36 @@
 | Turn Control   | Left Stick X  |
 | High Gear      | X Button      |
 | Low Gear       | Y Button      |
-| Turn To Target | L. Bumper     |
+| Turn To Target | Start Button  |
+| Turret Left    | Left Bumper   |
+| Turret Right   | Right Bumper  |
+| Activate Lift  | A Button      |
+| Activate Winch | B Button      |
 
 ##### Copilot
 | System         | Control (ID)  |
 | -------------- | ------------- |
-| Extend Intake  |       0       |
-| Retract Intake |       1       |
-| Intake         |       2       |
-| Launch         |       3       |
+| Trajectory Down|       1       |
+| Manual Feed    |       2       |
+| Manual Launch  |       3       |
 | Trajectory Up  |       4       |
-| Trajectory Down|       5       |
-| Climber Down   |       6       |
-| Climber Down   |       7       |
-| Robot up       |       8       |
+| Activate Intake|       5       |
+| Retract Intake |       6       |
+| Extend Intake  |       7       |
+| Target & Launch|       8       |
+| Manual Carwash |       9       |
+| Expel          |      10       |
 
 ##### Copilot (Testing Xbox Controller)
 | System         | Control       |
 | -------------- | ------------- |
-| Turret Left    | Left Bumper   |
-| Turret Right   | Right Bumper  |
 | Launch         | A Button      |
 | Target+Launch  | B Button      |
-| Extend Intake  | X Button      |
-| Retract Intake | Y Button      |
-| Intake (In)    | R. Trigger    |
-| Intake (Out)   | L. Trigger    |
+| Manual Carwash | X Button      |
+| Manual Intake  | Y Button      |
+| Intake Out     | L. Bumper     |
+| Intake In      | R. Bumper     |
+| Trajectory Up  | Start         |
+| Trajectory Down| Back
 
 
