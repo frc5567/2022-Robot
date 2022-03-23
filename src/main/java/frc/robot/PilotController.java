@@ -65,6 +65,8 @@ public class PilotController {
         controlGear();
         // when left or right bumper are pressed turn the turret
         manualTurretCmd();
+        // Allows slow speed setting for when climbing to be utilized with back button controlling it
+        crawlCMD();
 
         climberCmd();
      
@@ -174,6 +176,8 @@ public class PilotController {
         if (m_controller.getBackButtonPressed()){
             m_drivetrain.shiftGear(Gear.kLowGear);
             m_drivetrain.periodic(RobotMap.PilotControllerConstants.CRAWL_SPEED_FORWARD, 0);
+        } else {
+            m_drivetrain.periodic(0 ,0);
         }
     }
 

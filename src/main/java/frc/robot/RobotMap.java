@@ -57,7 +57,7 @@ public class RobotMap {
         public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 3.0;
         public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 3.0;
 
-        //Constant for crawl speed
+        //Constant for crawl speed button
         public static final double CRAWL_SPEED_FORWARD = 0.2;
     }
 
