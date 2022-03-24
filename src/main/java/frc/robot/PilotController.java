@@ -66,7 +66,7 @@ public class PilotController {
         // when left or right bumper are pressed turn the turret
         manualTurretCmd();
 
-        climberCmd();
+        //climberCmd();
      
         // Periodically updates encoder ticks to our actual current encoder position
         // double currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
@@ -232,19 +232,20 @@ public class PilotController {
         }
     }
 
-    private void climberCmd(){
-        if(m_controller.getAButton()){
-            m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
-        }
-        else{
-            m_climber.climbCMD(0);
-        }
+    //Commented out because the climb controls were moved to the copilot controller, but we still have this here just in case
+    // private void climberCmd(){
+    //     if(m_controller.getAButton()){
+    //         m_climber.climbCMD(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
+    //     }
+    //     else{
+    //         m_climber.climbCMD(0);
+    //     }
         
-        if(m_controller.getBButton()){
-            m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
-        }
-        else{
-            m_climber.winchCMD(0);
-        }
-    }
+    //     if(m_controller.getBButton()){
+    //         m_climber.winchCMD(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
+    //     }
+    //     else{
+    //         m_climber.winchCMD(0);
+    //     }
+    // }
 }
