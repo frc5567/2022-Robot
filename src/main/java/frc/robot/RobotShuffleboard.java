@@ -3,12 +3,16 @@ package frc.robot;
 // Imports for our shuffleboard so we can make new tabs and entries for them
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
 public class RobotShuffleboard {
+    Launcher m_launcher;
     // Declares the member variable to later create the driver tab to control the scalars in the shuffleboard tab
     ShuffleboardTab m_driverTab;
+
+    ShuffleboardTab m_PidTab;
     // Declares the member variables for the scalars
     double m_highVelocityScalar;
     double m_lowVelocityScalar;
@@ -23,6 +27,13 @@ public class RobotShuffleboard {
     // Declares member variables for max turret speed and proportional constant
     double m_maxTurretSpeed;
     double m_proportionalConstant;
+
+    double m_launcherKP;
+    double m_launcherKI;
+    double m_launcherKD;
+    double m_launcherKF;
+
+    double m_currentRpm;
     // Declares member variables for the entries on the table
     private NetworkTableEntry m_highVelocityScalarEntry;
     private NetworkTableEntry m_lowVelocityScalarEntry;
@@ -34,14 +45,21 @@ public class RobotShuffleboard {
     private NetworkTableEntry m_targetFlywheelSpeedEntry;
     private NetworkTableEntry m_maxTurretSpeedEntry;
     private NetworkTableEntry m_proportionalConstantEntry;
+    private NetworkTableEntry m_launcherKPEntry;
+    private NetworkTableEntry m_launcherKIEntry;
+    private NetworkTableEntry m_launcherKDEntry;
+    private NetworkTableEntry m_launcherKFEntry;
+    private NetworkTableEntry m_currentRpmEntry;
 
     /**
      * Constructor for robot shuffleboard class
      * Ceeates a the Driver Tab on the shuffleboard
      */
-    public RobotShuffleboard(){
+    public RobotShuffleboard(Launcher launcher){
+        m_launcher = launcher;
         // Creates the new tab on the Shuffleboard for the driver
         m_driverTab = Shuffleboard.getTab("Driver Tab");
+        m_PidTab = Shuffleboard.getTab("PID Tab");
     }
 
     /**
@@ -51,12 +69,17 @@ public class RobotShuffleboard {
      */
     public void init(){
         drivetrainShuffleboardConfig();
+        PidShuffleboardConfig();
         setDrivetrainInputScalar();
         setFlywheelVelocity();
         setAutonPath();
         setLaunchPreset();
         setTargetFlywheelSpeed();
         setTurretValues();
+        setKP();
+        setKI();
+        setKD();
+        setKF();
     }
 
     /**
@@ -64,12 +87,20 @@ public class RobotShuffleboard {
      * This updates the values we are getting from the shuffleboard to be current
      */
     public void periodic(){
+        SmartDashboard.putNumber("Current RPM", m_launcher.getRealSpeed());
+        SmartDashboard.putNumber("Target RPM", getTargetFlywheelSpeed());
+        SmartDashboard.putNumber("Current Voltage", m_launcher.getCurrentPercent());
+        
         setDrivetrainInputScalar();
         setFlywheelVelocity();
         setAutonPath();
         setLaunchPreset();
         setTargetFlywheelSpeed();
         setTurretValues();
+        setKP();
+        setKI();
+        setKD();
+        setKF();
     }
 
     /**
@@ -101,15 +132,35 @@ public class RobotShuffleboard {
         m_launchPresetEntry = m_driverTab.addPersistent("Launch Preset", RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
-        m_targetFlywheelSpeedEntry = m_driverTab.addPersistent("Target Flywheel Speed", RobotMap.LauncherConstants.TARGET_FLYWHEEL_SPEED)
-                                    .withWidget(BuiltInWidgets.kTextView)
-                                    .getEntry();
         m_maxTurretSpeedEntry = m_driverTab.addPersistent("Max Turret Speed", RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
         m_proportionalConstantEntry = m_driverTab.addPersistent("Proportional Constant", RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
+    }
+
+    public void PidShuffleboardConfig(){
+        Shuffleboard.selectTab("PID Tab");
+
+        m_launcherKPEntry = m_PidTab.addPersistent(("kP"), RobotMap.LauncherConstants.FLYWHEEL_GAINS.kP)
+                            .withWidget(BuiltInWidgets.kTextView)
+                            .getEntry();
+        m_launcherKIEntry = m_PidTab.addPersistent(("kI"), RobotMap.LauncherConstants.FLYWHEEL_GAINS.kI)
+                            .withWidget(BuiltInWidgets.kTextView)
+                            .getEntry();
+        m_launcherKDEntry = m_PidTab.addPersistent(("kD"), RobotMap.LauncherConstants.FLYWHEEL_GAINS.kD)
+                            .withWidget(BuiltInWidgets.kTextView)
+                            .getEntry();
+        m_launcherKFEntry = m_PidTab.addPersistent(("kF"), RobotMap.LauncherConstants.FLYWHEEL_GAINS.kF)
+                            .withWidget(BuiltInWidgets.kTextView)
+                            .getEntry();
+        m_targetFlywheelSpeedEntry = m_PidTab.addPersistent("Target Flywheel Speed", RobotMap.LauncherConstants.TARGET_FLYWHEEL_SPEED)
+                            .withWidget(BuiltInWidgets.kTextView)
+                            .getEntry();
+        m_PidTab.addPersistent("current RPM PID", m_launcher.getRealSpeed())
+                            .withWidget(BuiltInWidgets.kTextView)
+                            .getEntry();
     }
 
     /**
@@ -150,6 +201,7 @@ public class RobotShuffleboard {
      */
     private void setTargetFlywheelSpeed(){
         m_targetFlywheelSpeed = m_targetFlywheelSpeedEntry.getDouble(RobotMap.LauncherConstants.TARGET_FLYWHEEL_SPEED);
+        m_launcher.setTargetFlywheelSpeed(m_targetFlywheelSpeed);
     }
 
     /**
@@ -167,6 +219,8 @@ public class RobotShuffleboard {
     private void setTurretValues(){
         m_maxTurretSpeed = m_maxTurretSpeedEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED);
         m_proportionalConstant = m_proportionalConstantEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT);
+        m_launcher.setMaxTurretSpeed(m_maxTurretSpeed);
+        m_launcher.setProportionalConstant(m_proportionalConstant);
     }
 
     public double getTurretValues(){
@@ -227,6 +281,46 @@ public class RobotShuffleboard {
     public double getLowTurnScalar(){
         setDrivetrainInputScalar();
         return m_lowTurnScalar;
+    }
+
+    private void setKP(){
+        m_launcherKP = m_launcherKPEntry.getDouble(RobotMap.LauncherConstants.FLYWHEEL_GAINS.kP);
+        m_launcher.setKP(m_launcherKP);
+    }
+
+    public double getKP(){
+        setKP();
+        return m_launcherKP;
+    }
+
+    private void setKI(){
+        m_launcherKI = m_launcherKIEntry.getDouble(RobotMap.LauncherConstants.FLYWHEEL_GAINS.kI);
+        m_launcher.setKI(m_launcherKI);
+    }
+    
+    public double getKI(){
+        setKI();
+        return m_launcherKI;
+    }
+
+    private void setKD(){
+        m_launcherKD = m_launcherKDEntry.getDouble(RobotMap.LauncherConstants.FLYWHEEL_GAINS.kD);
+        m_launcher.setKD(m_launcherKD);
+    }
+
+    public double getKD(){
+        setKD();
+        return m_launcherKD;
+    }
+
+    private void setKF(){
+        m_launcherKF = m_launcherKFEntry.getDouble(RobotMap.LauncherConstants.FLYWHEEL_GAINS.kF);
+        m_launcher.setKF(m_launcherKF);
+    }
+
+    public double getKF(){
+        setKF();
+        return m_launcherKF;
     }
 
 }

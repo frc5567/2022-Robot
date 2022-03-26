@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,7 +26,7 @@ public class Robot extends TimedRobot {
   private Intake m_intake;
   private LimelightVision m_limelightVision;
   private Drivetrain m_drivetrain;
-  private Launcher m_launcher;
+  public Launcher m_launcher;
   private Climber m_climber;
   private RobotShuffleboard m_shuffleboard;
 
@@ -37,14 +40,16 @@ public class Robot extends TimedRobot {
     m_intake = new Intake();
     m_limelightVision = new LimelightVision();
     m_drivetrain = new Drivetrain();
-    m_shuffleboard = new RobotShuffleboard();
-    m_launcher = new Launcher(m_limelightVision, m_drivetrain, m_shuffleboard, m_intake);
+    m_launcher = new Launcher(m_limelightVision, m_drivetrain, m_intake);
+    m_shuffleboard = new RobotShuffleboard(m_launcher);
+
     m_climber = new Climber();
-    m_shuffleboard.drivetrainShuffleboardConfig();
+    m_shuffleboard.init();
     
     m_pilotController = new PilotController(m_drivetrain, m_limelightVision, m_shuffleboard, m_launcher, m_climber);
     m_copilotController = new CopilotController(m_intake, m_launcher, m_shuffleboard, m_limelightVision, m_climber);
     m_auton = new Auton(m_drivetrain, m_launcher, m_intake, m_limelightVision, m_shuffleboard);
+    m_limelightVision.disableLEDs();
   }
 
   /**
@@ -93,6 +98,7 @@ public class Robot extends TimedRobot {
     m_pilotController.periodic();
     m_copilotController.periodic();
     m_limelightVision.periodic();
+
     //m_intake.periodic();
   }
 
@@ -113,15 +119,16 @@ public class Robot extends TimedRobot {
   public void testInit() {
     m_drivetrain.brakeMode();
     m_copilotController.init();
-    m_pilotController.init();
+    m_launcher.m_turretMotor.setNeutralMode(NeutralMode.Coast);
+    // m_pilotController.init();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
     m_copilotController.testPeriodic();
-    m_pilotController.testPeriodic();
-    m_limelightVision.periodic();
+    // m_pilotController.testPeriodic();
+    // m_limelightVision.periodic();
     //m_intake.periodic();
   }
 }
