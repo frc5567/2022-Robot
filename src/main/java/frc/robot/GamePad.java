@@ -26,10 +26,10 @@ public class GamePad extends GenericHID {
 	// this enum defines the buttons and what they do when active
 	private enum GamePadControls {
 		//Port values for the different gamepad buttons
-		Trajectory_Down(1),
+		Lift_Up(1),
 		Manual_Feed(3),
 		Manual_Launch(2),
-		Trajectory_Up(4),
+		Winch_Up(4),
 		IntakeCMD(5),
 		Retract_Intake(6),
 		Extend_Intake(7),
@@ -79,15 +79,15 @@ public class GamePad extends GenericHID {
 	/**
 	 * Method to check if the Trajectory Up button was pressed
 	 */
-	public boolean getTrajectoryUpPressed() {
-		return super.getRawButton(GamePadControls.Trajectory_Up.portNum);
+	public boolean getLiftButton() {
+		return super.getRawButton(GamePadControls.Lift_Up.portNum);
 	}
 
 	/**
 	 * Method to check if the Trajectory Down button was pressed
 	 */
-	public boolean getTrajectoryDownPressed() {
-		return super.getRawButton(GamePadControls.Trajectory_Down.portNum);
+	public boolean getWinchButton() {
+		return super.getRawButton(GamePadControls.Winch_Up.portNum);
 	}
 
 	/**
