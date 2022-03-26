@@ -267,7 +267,7 @@ public class Auton{
             }
             //step to aim with the turret and launch
             else if (m_step == AutonStep.kStep5){ 
-                m_launcher.targetAndLaunch(RobotMap.AutonConstants.AUTON_FLYWHEEL_POWER);
+                m_launcher.targetAndLaunch();
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -284,7 +284,7 @@ public class Auton{
                 }
             }
             else if (m_step == AutonStep.kStep7){
-                m_launcher.targetAndLaunch(RobotMap.AutonConstants.AUTON_FLYWHEEL_POWER);
+                m_launcher.targetAndLaunch();
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -411,7 +411,7 @@ public class Auton{
             }
             //step to aim with the turret and launch
             else if (m_step == AutonStep.kStep5){
-                m_launcher.targetAndLaunch(RobotMap.AutonConstants.AUTON_FLYWHEEL_POWER);
+                m_launcher.targetAndLaunch();
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -430,7 +430,7 @@ public class Auton{
             }
             //step to launch and launch the next ball
             else if (m_step == AutonStep.kStep7){
-                m_launcher.targetAndLaunch(RobotMap.AutonConstants.AUTON_FLYWHEEL_POWER);
+                m_launcher.targetAndLaunch();
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -541,7 +541,7 @@ public class Auton{
             }
             //step to aim with the turret and launch
             else if (m_step == AutonStep.kStep16){
-                m_launcher.targetAndLaunch(RobotMap.AutonConstants.AUTON_FLYWHEEL_POWER);
+                m_launcher.targetAndLaunch();
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -560,7 +560,7 @@ public class Auton{
             }
             //step to launch and launch the next ball
             else if (m_step == AutonStep.kStep18){
-                m_launcher.targetAndLaunch(RobotMap.AutonConstants.AUTON_FLYWHEEL_POWER);
+                m_launcher.targetAndLaunch();
                 m_loopCount ++;
                 if(m_loopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
