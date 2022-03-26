@@ -76,6 +76,8 @@ public class RobotMap {
      * Constants for Launcher 
      */
     public static class LauncherConstants{
+        // Ticks per revolution on the flywheel motors
+        public static final int TICKS_PER_ROTATION = 2048;
         //constants for drivetrain motor IDs (on the CAN (Continuous Area Network) bus)
         public static final int MASTER_FLYWHEEL_FALCON_ID = 1;
         public static final int SLAVE_FLYWHEEL_FALCON_ID = 2;
@@ -123,17 +125,26 @@ public class RobotMap {
         public static final int DOUBLESOLENOID_ANGLE_DOWN_PORT = 3;
 
         // Constant for storing the PID values for the turret
-        public static final Gains TURRET_GAINS = new Gains(0.01, 0, 0, 0, 100, 1.0);
+        public static final Gains FLYWHEEL_GAINS = new Gains(0, 0, 0, 0.05, 0, 0);
         //sets the feedback sensor to be using a primary closed loop (0 = primary closed-loop, 1 = auxilary closed-loop)
         public static final int PID_LOOP_IDX = 0;
+
+        public static final double NEUTRAL_DEADBAND = 0.001;
+
+        public static final int PID_SLOT = 2;
+        public static final int PID_MODE = 0;
+
+        public static final int FLYWHEEL_RPM_BOUND = 100;
         //Constant representing the default deadband percentage for the turret motor (currently at 4%)
         public static final double TURRET_MOTOR_DEADBAND = 0.04;
 
-        public static final double MAX_ON_TARGET_CYCLES = 30;
+        public static final double MAX_FEEDING_CYCLES = 30;
 
         public static final double MAX_TURRET_ROTATION = 22;
 
         public static final double MIN_TURRET_SPEED = 0.1;
+
+
     }
 
     /**
