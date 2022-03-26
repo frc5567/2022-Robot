@@ -11,6 +11,7 @@ public class CopilotController {
     private Launcher m_launcher;
     private Intake m_intake;
     private LimelightVision m_limelight;
+    private Climber m_climber;
     //declares shuffleboard to be used for flywheel velocity testing
     private RobotShuffleboard m_shuffleboard;
     private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
@@ -28,12 +29,13 @@ public class CopilotController {
      * @param shuffleboard we pass in shuffleboard so we can use flywheel velocity to pass in to targetAndLaunch
      * @param limelight we pass in limelight to enable and disable LEDs.
      */
-    public CopilotController(Intake intake, Launcher launcher, RobotShuffleboard shuffleboard, LimelightVision limelight){
+    public CopilotController(Intake intake, Launcher launcher, RobotShuffleboard shuffleboard, LimelightVision limelight, Climber climber){
         //instatiates objects for copilot class
         m_intake = intake;
         m_launcher = launcher;
         m_shuffleboard = shuffleboard;
         m_limelight = limelight;
+        m_climber = climber;
         
         m_gamePad = new GamePad(RobotMap.GamePadConstants.GAMEPAD_PORT);
         m_controller = new XboxController(RobotMap.CopilotControllerConstants.COPILOT_CONTROLLER_PORT);
@@ -59,6 +61,7 @@ public class CopilotController {
     public void periodic(){
         controlIntake();
         controlLauncher();
+        controlClimber();
 
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
         m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
@@ -159,12 +162,21 @@ public class CopilotController {
         else{
             m_launcher.setFeederSpeed(0);
         }
+    }
 
-        if (m_gamePad.getTrajectoryUpPressed()){
-            m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
+    private void controlClimber(){
+        if (m_gamePad.getLiftButton()){
+            m_climber.setLiftSpeed(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
         }
-        else if (m_gamePad.getTrajectoryDownPressed()){
-            m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
+        else{
+            m_climber.setLiftSpeed(0);
+        }
+        
+        if (m_gamePad.getWinchButton()){
+            m_climber.setWinchSpeed(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
+        }
+        else{
+            m_climber.setWinchSpeed(0);
         }
     }
 
