@@ -39,7 +39,7 @@ public class RobotMap {
         public static final double ROTATE_PID_INTEGRATOR_RANGE = 0.10;
         public static final double TOLERANCE_ROTATE_CONTROLLER = 2.00;
         //We divide rotational PID output by this number to scale it to match our percent values
-        public static final double DRIVE_PID_OUTPUT_SCALAR = 180;
+        public static final double DRIVE_PID_OUTPUT_SCALER = 180;
 
     }
 
@@ -191,10 +191,10 @@ public class RobotMap {
     }
 
     /**
-     * Constants used in RobotShuffleboard class (also used in Pilot controller when initial scalars are set)
+     * Constants used in RobotShuffleboard class (also used in Pilot controller when initial scalers are set)
      */
     public static class ShuffleboardConstants {
-        public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.5;
+        public static final double DRIVE_DEFAULT_INPUT_SCALER = 0.5;
         public static final double FLYWHEEL_DEFAULT_VELOCITY = 0.5;
         public static final double DEFAULT_AUTON_PATH = 0;
         public static final int DEFAULT_LAUNCH_PRESET = 0;

@@ -7,13 +7,13 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
 public class RobotShuffleboard {
-    // Declares the member variable to later create the driver tab to control the scalars in the shuffleboard tab
+    // Declares the member variable to later create the driver tab to control the scalers in the shuffleboard tab
     ShuffleboardTab m_driverTab;
-    // Declares the member variables for the scalars
-    double m_highVelocityScalar;
-    double m_lowVelocityScalar;
-    double m_highTurnScalar;
-    double m_lowTurnScalar;
+    // Declares the member variables for the scalers
+    double m_highVelocityscaler;
+    double m_lowVelocityscaler;
+    double m_highTurnscaler;
+    double m_lowTurnscaler;
     // Declares member variables for manual launcher testing
     double m_flywheelVelocity;
     double m_targetFlywheelSpeed;
@@ -24,10 +24,10 @@ public class RobotShuffleboard {
     double m_maxTurretSpeed;
     double m_proportionalConstant;
     // Declares member variables for the entries on the table
-    private NetworkTableEntry m_highVelocityScalarEntry;
-    private NetworkTableEntry m_lowVelocityScalarEntry;
-    private NetworkTableEntry m_highTurnScalarEntry;
-    private NetworkTableEntry m_lowTurnScalarEntry;
+    private NetworkTableEntry m_highVelocityscalerEntry;
+    private NetworkTableEntry m_lowVelocityscalerEntry;
+    private NetworkTableEntry m_highTurnscalerEntry;
+    private NetworkTableEntry m_lowTurnscalerEntry;
     private NetworkTableEntry m_flywheelVelocityEntry;
     private NetworkTableEntry m_autonPathEntry;
     private NetworkTableEntry m_launchPresetEntry;
@@ -46,12 +46,12 @@ public class RobotShuffleboard {
 
     /**
      * Initialization method for RobotShuffleBoard
-     * Calls drivetrainShuffleboardConfig, setDrivetrainInputScalar, and setFlywheelVelocity to create the shuffleboard and its inputs.
+     * Calls drivetrainShuffleboardConfig, setDrivetrainInputscaler, and setFlywheelVelocity to create the shuffleboard and its inputs.
      * Also sets the current values for inputs to the values from the shuffleboard.
      */
     public void init(){
         drivetrainShuffleboardConfig();
-        setDrivetrainInputScalar();
+        setDrivetrainInputscaler();
         setFlywheelVelocity();
         setAutonPath();
         setLaunchPreset();
@@ -64,7 +64,7 @@ public class RobotShuffleboard {
      * This updates the values we are getting from the shuffleboard to be current
      */
     public void periodic(){
-        setDrivetrainInputScalar();
+        setDrivetrainInputscaler();
         setFlywheelVelocity();
         setAutonPath();
         setLaunchPreset();
@@ -80,16 +80,16 @@ public class RobotShuffleboard {
         Shuffleboard.selectTab("Driver Tab");
 
         // Creates the entry for the driver tab and allows us to access it and set it equal our member variable we made fo each entry
-        m_highVelocityScalarEntry = m_driverTab.addPersistent("High Gear Speed Scalar", RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR)
+        m_highVelocityscalerEntry = m_driverTab.addPersistent("High Gear Speed scaler", RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALER)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
-        m_lowVelocityScalarEntry = m_driverTab.addPersistent("Low Gear Speed Scalar", RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR)
+        m_lowVelocityscalerEntry = m_driverTab.addPersistent("Low Gear Speed scaler", RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALER)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
-        m_highTurnScalarEntry = m_driverTab.addPersistent("High Gear Turn Scalar", RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR)
+        m_highTurnscalerEntry = m_driverTab.addPersistent("High Gear Turn scaler", RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALER)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
-        m_lowTurnScalarEntry = m_driverTab.addPersistent("Low Gear Turn Scalar", RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR)
+        m_lowTurnscalerEntry = m_driverTab.addPersistent("Low Gear Turn scaler", RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALER)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
         m_flywheelVelocityEntry = m_driverTab.addPersistent("Flywheel Velocity", RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY)
@@ -113,17 +113,17 @@ public class RobotShuffleboard {
     }
 
     /**
-     * Sets the input scalars for velocity and turning as the values found on the Shuffleboard
+     * Sets the input scalers for velocity and turning as the values found on the Shuffleboard
      */
-    private void setDrivetrainInputScalar(){
-        // Sets highVelocityScalar equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
-        m_highVelocityScalar = m_highVelocityScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
-        // Sets lowVelocityScalar equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
-        m_lowVelocityScalar = m_lowVelocityScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
-        // Sets highTurnScalar equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
-        m_highTurnScalar = m_highTurnScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
-        // Sets lowTurnScalar equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
-        m_lowTurnScalar = m_lowTurnScalarEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALAR);
+    private void setDrivetrainInputscaler(){
+        // Sets highVelocityscaler equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
+        m_highVelocityscaler = m_highVelocityscalerEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALER);
+        // Sets lowVelocityscaler equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
+        m_lowVelocityscaler = m_lowVelocityscalerEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALER);
+        // Sets highTurnscaler equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
+        m_highTurnscaler = m_highTurnscalerEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALER);
+        // Sets lowTurnscaler equal to the entry from the tab and if it returns with nothing sets it to default of 0.5
+        m_lowTurnscaler = m_lowTurnscalerEntry.getDouble(RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALER);
     }
 
     /**
@@ -194,39 +194,39 @@ public class RobotShuffleboard {
     
 
     /**
-     * Gets the value for HighVelocityScalar and returns it
-     * @return The value of HighVelocity Scalar
+     * Gets the value for HighVelocityscaler and returns it
+     * @return The value of HighVelocity scaler
      */
-    public double getHighVelocityScalar(){
-        setDrivetrainInputScalar();
-        return m_highVelocityScalar;
+    public double getHighVelocityscaler(){
+        setDrivetrainInputscaler();
+        return m_highVelocityscaler;
     }
 
     /**
-     * Gets the value for LowVelocityScalar and returns it
-     * @return The value for LowVelocityScalar
+     * Gets the value for LowVelocityscaler and returns it
+     * @return The value for LowVelocityscaler
      */
-    public double getLowVelocityScalar(){
-        setDrivetrainInputScalar();
-        return m_lowVelocityScalar;
+    public double getLowVelocityscaler(){
+        setDrivetrainInputscaler();
+        return m_lowVelocityscaler;
     }
 
     /**
-     * Gets the value for HighTurnScalar and returns it
-     * @return The value for HighTurnScalar
+     * Gets the value for HighTurnscaler and returns it
+     * @return The value for HighTurnscaler
      */
-    public double getHighTurnScalar(){
-        setDrivetrainInputScalar();
-        return m_highTurnScalar;
+    public double getHighTurnscaler(){
+        setDrivetrainInputscaler();
+        return m_highTurnscaler;
     }
 
     /**
-     * Gets the value for LowTurnScalar and returns it
-     * @return The value for LowTurnScalar
+     * Gets the value for LowTurnscaler and returns it
+     * @return The value for LowTurnscaler
      */
-    public double getLowTurnScalar(){
-        setDrivetrainInputScalar();
-        return m_lowTurnScalar;
+    public double getLowTurnscaler(){
+        setDrivetrainInputscaler();
+        return m_lowTurnscaler;
     }
 
 }
