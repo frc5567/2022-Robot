@@ -72,6 +72,8 @@ public class CopilotController {
      * Periodic method for copilot controller that includes manual testing controls
      */
     public void testPeriodic(){
+        //m_launcher.setFeederSpeed(0.2);
+        System.out.println("Turret Encoder Ticks: " + m_launcher.getTurretPosition());
         // manualLauncherCmd();
         // manualIntakeCmd();
 
@@ -117,8 +119,8 @@ public class CopilotController {
         //uses one button to aim and launch
         if (m_gamePad.getTargetAndLaunch()){
             m_limelight.enableLEDs();
-            m_launcher.targetAndLaunch(m_shuffleboard.getFlywheelVelocity());
-            m_intake.setMagazineSpeed(0);
+            m_launcher.targetAndLaunch();
+            //m_intake.setMagazineSpeed(0);
         }
         //calls button in gamepad to spin flywheel up
         else if(m_gamePad.getManualLaunch()){
@@ -130,22 +132,17 @@ public class CopilotController {
         }
         //calls button in gamepad to to run carwash motor manually
         else if (m_gamePad.getCarwash()){
-            m_carwashRunning = true;
-            m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+
         }
         //checks for feed command button, if it is pressed then don't zero it
         else if(m_gamePad.getFeedCMD()){
-            return;
+
         }
         //zeros magazine only once
         else{
-            if(m_carwashRunning){
-                m_intake.setMagazineSpeed(0);
-                m_carwashRunning = false;
-            }
             m_launcher.setFlywheelSpeed(0);
             m_launcher.setFeederSpeed(0);
-            m_launcher.setTurretSpeed(0);
+            m_launcher.zeroTurretPosition();
             m_limelight.disableLEDs();
             m_intake.indexing();
             m_launcher.zeroFlywheelRevCounter();
@@ -156,11 +153,20 @@ public class CopilotController {
             m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
         //checks if target and launch is being pressed so we don't zero the feeder wheel
-        else if(m_gamePad.getTargetAndLaunch() || m_gamePad.getManualLaunch()){
-            return;
+        else if(!m_gamePad.getTargetAndLaunch() && !m_gamePad.getManualLaunch()){
+            // m_launcher.setFeederSpeed(0);
         }
-        else{
-            m_launcher.setFeederSpeed(0);
+
+
+        if (m_gamePad.getCarwash()){
+            m_carwashRunning = true;
+            m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+        }
+        else if(!m_gamePad.getTargetAndLaunch() && !m_gamePad.getExpell()){
+            if(m_carwashRunning){
+                m_intake.setMagazineSpeed(0);
+                m_carwashRunning = false;
+            }
         }
     }
 
@@ -220,20 +226,20 @@ public class CopilotController {
         //}
 
         //if B button is pressed turn on limelight, target, and launch
-        if(m_controller.getBButton()){
-            //Added for testing
-            //m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-            m_limelight.enableLEDs();
-            m_launcher.targetAndLaunch(m_shuffleboard.getTargetFlywheelSpeed());
-            m_intake.setMagazineSpeed(0);
-        }
-        else {
-            m_launcher.setFeederSpeed(0);
-            m_launcher.setTurretSpeed(0);
-           // m_limelight.disableLEDs();
-            m_launcher.zeroTurretPosition();
+        // if(m_controller.getBButton()){
+        //     //Added for testing
+        //     //m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        //     m_limelight.enableLEDs();
+        //     m_launcher.targetAndLaunch();
+        //     m_intake.setMagazineSpeed(0);
+        // }
+        // else {
+        //     m_launcher.setFeederSpeed(0);
+        //     m_launcher.setTurretSpeed(0);
+        //    // m_limelight.disableLEDs();
+        //     m_launcher.zeroTurretPosition();
 
-        }
+        // }
     }
 
     /**
@@ -242,14 +248,14 @@ public class CopilotController {
     private void manualIntakeCmd(){
         //two if statements to determine intake position
         //if X button is pressed turn on the magazine
-        if(m_controller.getXButton()){
-            m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
-            //Commented out for testing purposes
-            //m_intake.setIntakeExtension(IntakeState.kExtended);
-        }
-        else {
-            m_intake.setMagazineSpeed(0);
-        }
+        // if(m_controller.getXButton()){
+        //     m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+        //     //Commented out for testing purposes
+        //     //m_intake.setIntakeExtension(IntakeState.kExtended);
+        // }
+        // else {
+        //     m_intake.setMagazineSpeed(0);
+        // }
         
         //if Y button is pressed turn on the roller wheels
         if(m_controller.getYButton()){
