@@ -240,25 +240,25 @@ public class Launcher{
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;
                     m_onTargetTurretTicks = m_turretEncoderTicks;
                     onTarget = true;
-                    //System.out.print("Ready to Launch ------------------");
+                    System.out.print("Ready to Launch ------------------");
                 }
                 //if we are above the tolerated error range, turn the turret toward the tolerated error range
                 else{
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
-                    //System.out.println("Not Ready to Launch 1:" + m_angleToTarget);
+                    System.out.println("Not Ready to Launch 1:" + m_angleToTarget);
                     onTarget = false;
                     setTurretSpeed(calcTurretSpeed(m_angleToTarget));
                 }
             }
             //If we are to the left of our motor limit, print out a message and turn right
             else if(getTurretPosition() < -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
-                //System.out.println("Not Ready to Launch 3");
+                System.out.println("Not Ready to Launch 3");
                 onTarget = false;
                 setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }
             //If we are to the right of our motor limit, print out a message and turn left
             else if(getTurretPosition() > RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
-                //System.out.println("Not Ready to Launch 4");
+                System.out.println("Not Ready to Launch 4");
                 onTarget = false;
                 setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }

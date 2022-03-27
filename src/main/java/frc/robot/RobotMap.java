@@ -107,9 +107,9 @@ public class RobotMap {
         public static final double MAX_FLYWHEEL_RPM = 6380;
 
         //Constant for distance from directly on center we allow the target to be 
-        //TODO Tune
-        public static final double TOLERATED_TURRET_ERROR_RIGHT = 2.0;
-        public static final double TOLERATED_TURRET_ERROR_LEFT = 0.4;
+        //TODO Tune (This was 0.4 and 2.0, change back later
+        public static final double TOLERATED_TURRET_ERROR_RIGHT = 3;
+        public static final double TOLERATED_TURRET_ERROR_LEFT = 0;
         //Constant for how much error we allow the flywheel speed before we launch
         //TODO: This value is a guess and needs to be tuned. Might need to use PID instead of this or adjust the logic
         public static final double TOLERATED_FLYWHEEL_SPEED_ERROR = 0.05;
@@ -168,12 +168,12 @@ public class RobotMap {
      */
     public static class LimelightConstants{
         //TODO change camera angle after camera is mounted
-        public static final double CAMERA_HEIGHT = 23.25; //in inches
-        public static final double HUB_HEIGHT = 104.0; //in inches
+        public static final double CAMERA_HEIGHT = 25; //in inches
+        public static final double HUB_HEIGHT = 107.0; //in inches
         public static final double CAMERA_DEGREES_FROM_GROUND = 57;
 
         //Constant for converting an angle into radians
-        public static final double ANGLE_TO_RADIAN_CONVERT = (2 * Math.PI) / 360; 
+        public static final double ANGLE_TO_RADIAN_CONVERT = (Math.PI) / 180; 
         // constant for the minimum speed for aiming at target
         //TODO tune the speed we move at
         public static final double MINIMUM_SEEKING_TARGET_SPEED = 0.15;

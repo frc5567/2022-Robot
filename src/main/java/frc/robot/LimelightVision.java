@@ -172,11 +172,11 @@ public class LimelightVision {
         //math to find the height from the camera to the top of the hub
         m_totalHeight = RobotMap.LimelightConstants.HUB_HEIGHT - RobotMap.LimelightConstants.CAMERA_HEIGHT;
         //finds the sine of the sum of both angles and sets it to one member variable
-        m_tanOfAngle = Math.tan((RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND + yAngleToTarget()) * RobotMap.LimelightConstants.ANGLE_TO_RADIAN_CONVERT);
+        m_tanOfAngle = Math.tan((RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND + m_yAngleOffset) * RobotMap.LimelightConstants.ANGLE_TO_RADIAN_CONVERT);
         //calculates the distance that the robot is from the hub (parallel to the ground)
         m_distance = m_totalHeight/m_tanOfAngle;
-        //returns calculated distance in inches
-        return m_distance;
+        //returns calculated distance in inches. Have to double the distance because what is returned is half of the actual distance.
+        return m_distance * 2;
     }
   
     //TODO: integrate PID into this method later
