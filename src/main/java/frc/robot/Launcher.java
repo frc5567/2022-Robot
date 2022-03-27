@@ -358,7 +358,7 @@ public class Launcher{
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;
                     m_onTargetTurretTicks = m_turretEncoderTicks;
                     onTarget = true;
-                    //System.out.print("Ready to Launch ------------------");
+                    System.out.print("Ready to Launch ------------------");
                 }
                 //if we are above the tolerated error range, turn the turret toward the tolerated error range
                 else{

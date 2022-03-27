@@ -112,6 +112,7 @@ public class RobotMap {
         //TODO Tune (This was 0.4 and 2.0, change back later
         public static final double TOLERATED_TURRET_ERROR_RIGHT = 16;
         public static final double TOLERATED_TURRET_ERROR_LEFT = 0;
+
         //Constant for how much error we allow the flywheel speed before we launch
         //TODO: This value is a guess and needs to be tuned. Might need to use PID instead of this or adjust the logic
         public static final double TOLERATED_FLYWHEEL_SPEED_ERROR = 0.05;
