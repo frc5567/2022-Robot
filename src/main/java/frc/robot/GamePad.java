@@ -15,13 +15,7 @@ public class GamePad extends GenericHID {
 	 * Initialization method for GamePad
 	 */
 	public void init(){
-
 	}
-
-	/**
-	 * Actions each button performs
-	 * TODO: Change numbers to correct port number
-	 */
 
 	// this enum defines the buttons and what they do when active
 	private enum GamePadControls {
@@ -37,8 +31,6 @@ public class GamePad extends GenericHID {
 		Carwash(9),
 		ExpelCMD(10);
         
-		
-
 		//Variable used to get port values 
 		public final int portNum;
 
@@ -111,6 +103,9 @@ public class GamePad extends GenericHID {
 		return super.getRawButton(GamePadControls.Manual_Feed.portNum);
 	}
 
+	/**
+	 * Method to check if the Manual Launch button was pressed
+	 */
 	public boolean getManualLaunch() {
 		return super.getRawButton(GamePadControls.Manual_Launch.portNum);
 	}
