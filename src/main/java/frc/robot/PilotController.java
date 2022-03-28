@@ -67,8 +67,8 @@ public class PilotController {
 
         if ((++m_sysOutCounter % 10) == 0){
             //System.out.println("Gyro: " + m_drivetrain.getGyro());
-            System.out.println("Distance to Target" + m_limelightVision.distToTarget());
-            System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.Ta());
+            // System.out.println("Distance to Target" + m_limelightVision.distToTarget());
+            // System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.Ta());
         }
     }
 
@@ -146,14 +146,14 @@ public class PilotController {
         if (m_controller.getXButtonPressed()){
             m_drivetrain.shiftGear(Gear.kHighGear);
             // Sets our the scalers on our drivetrain equal to the ones on the shuffleboard set for high gear
-            m_currentVelocityscaler = m_shuffleboard.getHighVelocityscaler();
-            m_currentTurnscaler = m_shuffleboard.getHighTurnscaler();
+            m_currentVelocityscaler = m_shuffleboard.getHighVelocityScaler();
+            m_currentTurnscaler = m_shuffleboard.getHighTurnScaler();
 
         } else if (m_controller.getYButtonPressed()){
             m_drivetrain.shiftGear(Gear.kLowGear);
             // Sets our the scalers on our drivetrain equal to the ones on the shuffleboard set for low gear
-            m_currentVelocityscaler = m_shuffleboard.getLowVelocityscaler();
-            m_currentTurnscaler = m_shuffleboard.getLowTurnscaler();
+            m_currentVelocityscaler = m_shuffleboard.getLowVelocityScaler();
+            m_currentTurnscaler = m_shuffleboard.getLowTurnScaler();
         }
     }
 
