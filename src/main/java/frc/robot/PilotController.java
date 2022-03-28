@@ -80,8 +80,8 @@ public class PilotController {
         // }
         if ((++m_sysOutCounter % 10) == 0){
             //System.out.println("Gyro: " + m_drivetrain.getGyro());
-            System.out.println("Distance to Target" + m_limelightVision.distToTarget());
-            System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.Ta());
+            // System.out.println("Distance to Target" + m_limelightVision.distToTarget());
+            // System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.Ta());
         }
     }
 
@@ -113,7 +113,7 @@ public class PilotController {
          */
         if ((++m_sysOutCounter % 10) == 0){
             //System.out.println("Gyro: " + m_drivetrain.getGyro());
-            System.out.println("Distance to Target" + m_limelightVision.distToTarget());
+            //System.out.println("Distance to Target" + m_limelightVision.distToTarget());
         }
 
 
@@ -216,7 +216,7 @@ public class PilotController {
             }
         }
         else {
-            m_limelightVision.disableLEDs();
+            //m_limelightVision.disableLEDs();
         }
     }
 
