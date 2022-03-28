@@ -160,11 +160,11 @@ public class CopilotController {
 
         if (m_gamePad.getCarwash()){
             m_carwashRunning = true;
-            m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+            //m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
         }
         else if(!m_gamePad.getTargetAndLaunch() && !m_gamePad.getExpell()){
             if(m_carwashRunning){
-                m_intake.setMagazineSpeed(0);
+                //m_intake.setMagazineSpeed(0);
                 m_carwashRunning = false;
             }
         }

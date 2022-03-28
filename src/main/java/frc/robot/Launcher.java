@@ -100,6 +100,8 @@ public class Launcher{
 
     boolean m_flywheelMotorReady = false;
 
+    boolean m_secondBall = false;
+
     TalonFXConfiguration m_masterConfig;
     TalonFXConfiguration m_slaveConfig;
 
@@ -230,10 +232,11 @@ public class Launcher{
         m_masterFlywheelMotor.selectProfileSlot(RobotMap.LauncherConstants.PID_SLOT, RobotMap.LauncherConstants.PID_MODE);
         System.out.println("launching "+ ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600.0) / 2048.0)+ " \tOutput: "+ m_masterFlywheelMotor.getMotorOutputPercent() + " Distance: " + m_limelightVision.distToTarget());
         double dist = m_limelightVision.distToTarget();
-        double desiredRpm = (3119.8 + (19.002 * dist) - (.1949171* Math.pow(dist, 2)) + (.000954319 * Math.pow(dist, 3)));
+        // double desiredRpm = (3119.8 + (19.002 * dist) - (.1949171* Math.pow(dist, 2)) + (.000954319 * Math.pow(dist, 3)));
+        double desiredRpm = (0.0047 * Math.pow(dist, 3) - 1.2642 * Math.pow(dist, 2) + 121.27 * (dist) - 127.68);
         //System.out.println("Desired RPM Calc: " + desiredRpm );
         // runPID(2000);
-        if(runPID(5500)){
+        if(runPID(desiredRpm)){
             m_launcherAtSpeedCount++;
         }
         else{
@@ -245,20 +248,32 @@ public class Launcher{
         // m_masterFlywheelMotor.selectProfileSlot(RobotMap.LauncherConstants.PID_SLOT, RobotMap.LauncherConstants.PID_MODE);
         // m_masterFlywheelMotor.set(TalonFXControlMode.Velocity, 2000, DemandType.ArbitraryFeedForward, 0.1);
         // System.out.println("launching "+m_masterFlywheelMotor.getSelectedSensorVelocity());
-        target();
+        // target();
         launchPID();
         
-        // if(m_launcherAtSpeedCount > 9){
-        //     feedLauncher();
-        // }
+        if(m_launcherAtSpeedCount > 30 && target()){
+            feedLauncher();
+        }
+
+        if(m_secondBall){
+            m_intake.indexing();
+        }
     }
 
     private void feedLauncher(){
         setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         m_feedingCounter++;
-        // if(m_feedingCounter > RobotMap.LauncherConstants.MAX_FEEDING_CYCLES){
-        //     m_launcherAtSpeedCount = 0;
-        // }
+        if(m_feedingCounter > RobotMap.LauncherConstants.MAX_FEEDING_CYCLES){
+            m_feedingCounter = 0;
+            m_launcherAtSpeedCount = 0;
+            if(m_secondBall){
+                m_secondBall = false;
+            }
+            else{
+                m_secondBall = true;
+            }
+
+        }
     }
 
 

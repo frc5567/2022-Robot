@@ -55,7 +55,7 @@ public class Intake {
     private double m_rollerCurrentSpeed;
     private double m_magazineCurrentSpeed;
 
-    private boolean m_currentlyIndexing = false;
+    
 
     /**
      * Constructor for intake and magazine mechanism
@@ -91,21 +91,14 @@ public class Intake {
      */
     public void indexing(){
         //If a game piece is in the first slot, and there is no game piece in the second slot, move the game piece to the second slot
+        boolean currentlyIndexing = false;
         if(getMagazineSensor1()){
-            if(getMagazineSensor2()){
-                m_currentlyIndexing = false;
-                return;
-            }
-            else{
-                m_currentlyIndexing = true;
+            if(!getMagazineSensor2()){
+                currentlyIndexing = true;
             }
         }
 
-        if(getMagazineSensor2()){
-            m_currentlyIndexing = false;
-        }
-
-        if(m_currentlyIndexing){
+        if(currentlyIndexing){
             setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
         }
         else{
@@ -155,7 +148,7 @@ public class Intake {
      */
     public void unJam(){
         setRollerSpeed(RobotMap.IntakeConstants.REVERSE_ROLLER_SPEED);
-        setMagazineSpeed(RobotMap.IntakeConstants.REVERSE_MAGAZINE_SPEED);
+        //setMagazineSpeed(RobotMap.IntakeConstants.REVERSE_MAGAZINE_SPEED);
     }
 
     /**
