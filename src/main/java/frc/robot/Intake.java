@@ -102,8 +102,8 @@ public class Intake {
         //If a game piece is in the first slot, and there is no game piece in the second slot, move the game piece to the second slot
 
         boolean currentlyIndexing = false;
-        if(getMagazineSensor1()){
-            if(!getMagazineSensor2()){
+        if(getMagazineSensor0()){
+            if(!getMagazineSensor1()){
                 currentlyIndexing = true;
             }
         }

@@ -29,6 +29,9 @@ public class PilotController {
     //Boolean for Sysout counter. When true we can print, when true we cannot
     boolean m_doSysOut = true;
 
+    //Boolean for determining if the back button is being pressed
+    boolean m_movingToClimb;
+
     /**
      * Constuctor for the pilot controller
      */
@@ -88,7 +91,7 @@ public class PilotController {
         if ((++m_sysOutCounter % 10) == 0){
             //System.out.println("Gyro: " + m_drivetrain.getGyro());
             System.out.println("Distance to Target" + m_limelightVision.distToTarget());
-            System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.Ta());
+            System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.tAreaOfScreen());
         }
     }
 
@@ -121,21 +124,27 @@ public class PilotController {
      * Method to set our drivetrain motors to arcade drive controls. (Right trigger is forwards, left trigger is backwards, left stick is turn)
      */
     private void arcadeDriveCmd(){
-        // Sets the triggerInput variable equal to a number between 0 and 1 based on inputs from bother triggers and scales those inputs to the scaler that we enter on the shuffleboard
-        double triggerInput = ((m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis()) * m_currentVelocityscaler);
-        // Sets the leftStickXInput variable equal to a number between 0 and 1 based on inputs from the x-axis of the left joystick and scales those inputs to the scaler we enter on the shuffleboard
-        double leftStickXInput = (m_controller.getLeftX() * m_currentTurnscaler);
+        // This if statement makes sure that the trigger and stick input is only used when the back button is not being pressed (this gets rid of any zeroing issues)
+        if(m_movingToClimb){
+            crawlCmd();
+        }
+        else{
+            // Sets the triggerInput variable equal to a number between 0 and 1 based on inputs from bother triggers and scales those inputs to the scaler that we enter on the shuffleboard
+            double triggerInput = ((m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis()) * m_currentVelocityscaler);
+            //Sets the leftStickXInput variable equal to a number between 0 and 1 based on inputs from the x-axis of the left joystick and scales those inputs to the scaler we enter on the shuffleboard
+            double leftStickXInput = (m_controller.getLeftX() * m_currentTurnscaler);
 
-        // applies deadband method to the input from the left stick
-        leftStickXInput = adjustForDeadband(leftStickXInput);
+            // applies deadband method to the input from the left stick
+            leftStickXInput = adjustForDeadband(leftStickXInput);
 
-        // limits the rate of change on the trigger input by 3 units per second to prevent excessive acceleration and brownouts
-        triggerInput = triggerFilter.calculate(triggerInput);
-        // limits the rate of change on the left stick input by 3 units per second to prevent excessive acceleration and brownouts
-        leftStickXInput = stickFilter.calculate(leftStickXInput);
+            // limits the rate of change on the trigger input by 3 units per second to prevent excessive acceleration and brownouts
+            triggerInput = triggerFilter.calculate(triggerInput);
+            // imits the rate of change on the left stick input by 3 units per second to prevent excessive acceleration and brownouts
+            leftStickXInput = stickFilter.calculate(leftStickXInput);
 
-        // passes our variables from this method's calculations into the drivetrain
-        m_drivetrain.periodic(triggerInput, leftStickXInput);
+            // passes our variables from this method's calculations into the drivetrain
+            m_drivetrain.periodic(triggerInput, leftStickXInput);            
+        }
     }
 
     /**
@@ -210,6 +219,21 @@ public class PilotController {
                 turretTurning = false;
             }
             
+        }
+    }
+
+    /**
+     * This method has the robot move slowly forward (0.2 speed in low gear) when the Back button on the pilot controller is being presssed.
+     * It also sets the boolean m_movingToClimb as true if we are pressing the Back Button so we know not to use the stick input until it isn't being pressed.
+     */
+    private void crawlCmd(){
+        if(m_controller.getBackButtonPressed()){
+            m_drivetrain.shiftGear(Gear.kLowGear);
+            m_drivetrain.periodic(RobotMap.PilotControllerConstants.CLIMB_CRAWL_SPEED, 0);
+            m_movingToClimb = true;
+        }
+        else {
+            m_movingToClimb = false;
         }
     }
 }

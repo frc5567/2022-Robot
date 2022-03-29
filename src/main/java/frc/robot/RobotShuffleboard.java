@@ -33,6 +33,8 @@ public class RobotShuffleboard {
     double m_launcherKD;
     double m_launcherKF;
 
+    boolean m_rpmBoolean;
+
     double m_currentRpm;
     // Declares member variables for the entries on the table
     private NetworkTableEntry m_highVelocityScalerEntry;
@@ -90,6 +92,7 @@ public class RobotShuffleboard {
         SmartDashboard.putNumber("Current RPM", m_launcher.getRealSpeed());
         SmartDashboard.putNumber("Target RPM", getTargetFlywheelSpeed());
         SmartDashboard.putNumber("Current Voltage", m_launcher.getCurrentPercent());
+        SmartDashboard.putBoolean("At RPM", m_launcher.m_atRPM);
         
         setDrivetrainInputScaler();
         setFlywheelVelocity();

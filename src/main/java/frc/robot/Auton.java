@@ -254,7 +254,7 @@ public class Auton{
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");
-                            System.out.println("Ta " + m_limelightVision.Ta() + "   Tx " + m_limelightVision.xAngleToTarget() + "   Ty " + m_limelightVision.yAngleToTarget());
+                            System.out.println("Ta " + m_limelightVision.tAreaOfScreen() + "   Tx " + m_limelightVision.xAngleToTarget() + "   Ty " + m_limelightVision.yAngleToTarget());
                         }
                         m_drivetrain.periodic(0, -RobotMap.AutonConstants.TARGETING_SPEED);
                     }
@@ -384,7 +384,7 @@ public class Auton{
                         m_step = AutonStep.kStep5;
                         if(m_doSysOut == true){
                             System.out.println("On Target");
-                            System.out.println("Ta " + m_limelightVision.Ta() + "   Tx " + m_limelightVision.xAngleToTarget() + "   Ty " + m_limelightVision.yAngleToTarget());
+                            System.out.println("Ta " + m_limelightVision.tAreaOfScreen() + "   Tx " + m_limelightVision.xAngleToTarget() + "   Ty " + m_limelightVision.yAngleToTarget());
                         }
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
@@ -398,7 +398,7 @@ public class Auton{
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");
-                            System.out.println("Ta " + m_limelightVision.Ta() + "   Tx " + m_limelightVision.xAngleToTarget() + "   Ty " + m_limelightVision.yAngleToTarget());
+                            System.out.println("Ta " + m_limelightVision.tAreaOfScreen() + "   Tx " + m_limelightVision.xAngleToTarget() + "   Ty " + m_limelightVision.yAngleToTarget());
                         }
                         m_drivetrain.periodic(0, -RobotMap.AutonConstants.TARGETING_SPEED);
                     }
