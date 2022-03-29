@@ -65,9 +65,6 @@ public class Intake {
     private double m_rollerCurrentSpeed;
     private double m_magazineCurrentSpeed;
 
-    //Boolean used to track the state of our indexing system
-    private boolean m_currentlyIndexing = false;
-
     /**
      * Constructor for intake and magazine mechanism
      */
@@ -103,22 +100,15 @@ public class Intake {
      */
     public void indexing(){
         //If a game piece is in the first slot, and there is no game piece in the second slot, move the game piece to the second slot
-        if(getMagazineSensor0()){
-            if(getMagazineSensor1()){
-                m_currentlyIndexing = false;
-                //return;
-            }
-            else{
-                m_currentlyIndexing = true;
-            }
-        }
 
-        //If there is a ball in the second slot, never index
+        boolean currentlyIndexing = false;
         if(getMagazineSensor1()){
-            m_currentlyIndexing = false;
+            if(!getMagazineSensor2()){
+                currentlyIndexing = true;
+            }
         }
 
-        if(m_currentlyIndexing){
+        if(currentlyIndexing){
             setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
         }
         else{
@@ -163,6 +153,14 @@ public class Intake {
             m_magazineCurrentSpeed = speed;
             m_magazineMotor.set(ControlMode.PercentOutput, speed);
         }
+    }
+
+    /**
+     * Reverses all intake and magazine motors to unjam the robot
+     */
+    public void unJam(){
+        setRollerSpeed(RobotMap.IntakeConstants.REVERSE_ROLLER_SPEED);
+        //setMagazineSpeed(RobotMap.IntakeConstants.REVERSE_MAGAZINE_SPEED);
     }
 
     /**
