@@ -117,6 +117,8 @@ public class Launcher{
     double m_currentKI;
     double m_currentKD;
     double m_currentKF;
+    
+    public boolean m_atRPM;
 
     /**
      * Constructor for Launcher objects
@@ -163,6 +165,7 @@ public class Launcher{
 
         m_feederMotor.setNeutralMode(NeutralMode.Brake);
         //m_turretMotor.setNeutralMode(NeutralMode.Brake);
+        m_atRPM = false;
 
         configTalonPID();
 
@@ -221,6 +224,10 @@ public class Launcher{
 
         if((actualRpm >= desiredRpm - RobotMap.LauncherConstants.FLYWHEEL_RPM_BOUND) || (actualRpm <= desiredRpm + RobotMap.LauncherConstants.FLYWHEEL_RPM_BOUND)){
             atSpeed = true;
+            m_atRPM = true;
+        }
+        else{
+            m_atRPM = false;
         }
         
         return atSpeed;

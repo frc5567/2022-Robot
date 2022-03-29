@@ -30,6 +30,9 @@ public class PilotController {
     //Boolean for Sysout counter
     boolean m_doSysOut = true;
 
+    //Boolean for determining if the back button is being pressed
+    boolean m_movingToClimb;
+
     /**
      * Constuctor for the pilot controller
      */
@@ -147,6 +150,10 @@ public class PilotController {
      * Method to set our drivetrain motors to arcade drive controls. (Right trigger is forwards, left trigger is backwards, left stick is turn)
      */
     private void arcadeDriveCmd(){
+        if(m_movingToClimb){
+            crawlCmd();
+        }
+        else{
         // triggerInput is for the velocity input forward and backwards
         double triggerInput = ((m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis()) * m_currentVelocityScalar);
         //double triggerInput = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
@@ -163,7 +170,8 @@ public class PilotController {
         leftStickXInput = stickFilter.calculate(leftStickXInput);
 
         // passes in our variables from this method (calculations) into our arcade drive in drivetrain
-        m_drivetrain.periodic(triggerInput, leftStickXInput);
+        m_drivetrain.periodic(triggerInput, leftStickXInput);            
+        }
     }
 
     /**
@@ -229,6 +237,21 @@ public class PilotController {
         }
         else{
             m_launcher.setTurretSpeed(0);
+        }
+    }
+
+    /**
+     * This method has the robot move slowly forward (0.2 speed in low gear) when the Back button on the pilot controller is being presssed.
+     * It also sets the boolean m_movingToClimb as true if we are pressing the Back Button so we know not to use the stick input until it isn't being pressed.
+     */
+    private void crawlCmd(){
+        if(m_controller.getBackButtonPressed()){
+            m_drivetrain.shiftGear(Gear.kLowGear);
+            m_drivetrain.periodic(RobotMap.PilotControllerConstants.CLIMB_CRAWL_SPEED, 0);
+            m_movingToClimb = true;
+        }
+        else {
+            m_movingToClimb = false;
         }
     }
 

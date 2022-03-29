@@ -60,7 +60,6 @@ public class LimelightVision {
         SmartDashboard.putNumber("LimelightX Offset", m_xAngleOffset);
         SmartDashboard.putNumber("LimelightY Offset", m_yAngleOffset);
         SmartDashboard.putNumber("LimelightArea Percentage", m_areaOfScreen);
-
     }
 
     /**
@@ -72,7 +71,8 @@ public class LimelightVision {
     }
 
     /**
-     * Periodically updates the x and y angle offsets and the area of the screen taken up by the target
+     * Periodically updates the x and y angle offsets and the area of the screen taken up by the target. 
+     * This is so we know we have the right values when we go to use them.
      */
     public void periodic(){
         // Updates the table entry for the x offset
@@ -88,8 +88,6 @@ public class LimelightVision {
         SmartDashboard.putNumber("LimelightY Offset", m_yAngleOffset);
         // Puts the percentage of the screen that the target takes up on the shuffleboard
         SmartDashboard.putNumber("LimelightArea Percentage", m_areaOfScreen);
-
-
     }
     
     /**
@@ -108,7 +106,7 @@ public class LimelightVision {
     }
 
     /**
-     * Force the LED to turn on
+     * Force the limelight's LEDs to turn on
      */
     public void enableLEDs() {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
@@ -119,19 +117,19 @@ public class LimelightVision {
      * @return 1 if LEDs are off, 3 if LEDs are on
      */
     public int currentLEDStatus(){
-        NetworkTableEntry ledMode = m_limelightTable.getEntry("ledMode");
-        double currentValue = ledMode.getDouble(0);
+        double currentValue = m_limelightTable.getEntry("ledMode").getDouble(0);
+        //This makes sure that only a whole number can ever be called since the values for the LEDS being on are whole numbers.
         int intValue = (int)Math.round(currentValue);
         return intValue;
     }
 
     /**
-     * Tells if the target is visible or not
+     * Returns if the target is visible or not
      * @return true if we can see the target, false if we cannot
      */
     public boolean seeTarget(){
         boolean returnVal = false;
-        // If tv (target visible) is a 1, target is visible. If tv is 0, target is not visible (if no value is found it returns 0)
+        // If tv (target visible) is a 1, target is visible. If tv is 0, the target is not visible (no value is found)
         double retFromTable = (double)m_limelightTable.getEntry("tv").getNumber(0);
         // Checks to see if the value from the Limelight is at the desired value of 1 or true, meaning the target is visible
         if (retFromTable == 1){
@@ -141,80 +139,45 @@ public class LimelightVision {
     }
 
     /**
-     * Tells how far off to the left or right the target
-     * @return It returns the angular value in the x direction from the target from -29.8 to 29.8
+     * Tells how far off to the left or right the target is
+     * @return It returns the angular value in the x direction from the target (-29.8 to 29.8)
      */
     public double xAngleToTarget(){
         return(m_xAngleOffset);
     }
 
     /**
-     * Tells how far off in the y direction we are from the target
+     * Tells how far off in the y direction the robotis is from the target
      * @return The angular value of the y direction offset from the target (-24.85 to 24.85)
      */
     public double yAngleToTarget(){
         return(m_yAngleOffset);
     }
 
-    public double Ta(){
+    /**
+     * This method is for determining the percent of the screen that the target takes up
+     * @return the area of the screen taken up by the target (0% to 100%)
+     */
+    public double tAreaOfScreen(){
         return(m_areaOfScreen);
     }
 
     /**
-     * Finds the distance from the limelight straight to the hub
-     * @return The distance in inches
+     * Finds the distance from the limelight straight to the hub (parallel to the ground)
+     * @return The distance in inches from the hub
      */
     public double distToTarget(){
-        //member variables to use in calculations
-        double m_distance;
-        double m_tanOfAngle;
-        double m_totalHeight;
-        //math to find the height from the camera to the top of the hub
-        m_totalHeight = RobotMap.LimelightConstants.HUB_HEIGHT - RobotMap.LimelightConstants.CAMERA_HEIGHT;
-        //finds the sine of the sum of both angles and sets it to one member variable
-        m_tanOfAngle = Math.tan((RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND + m_yAngleOffset) * RobotMap.LimelightConstants.ANGLE_TO_RADIAN_CONVERT);
+        //variables to use in calculations
+        double distance;
+        double tanOfAngle;
+        double totalHeight;
+        //Finds the height from the camera to the top of the hub
+        totalHeight = RobotMap.LimelightConstants.HUB_HEIGHT - RobotMap.LimelightConstants.CAMERA_HEIGHT;
+        //finds the sine of the sum of both angles and sets it to one variable (tanOfAngle) for simplicity of the final calculation
+        tanOfAngle = Math.tan((RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND + m_yAngleOffset) * RobotMap.LimelightConstants.ANGLE_TO_RADIAN_CONVERT);
         //calculates the distance that the robot is from the hub (parallel to the ground)
-        m_distance = m_totalHeight/m_tanOfAngle;
-        //returns calculated distance in inches. Have to double the distance because what is returned is half of the actual distance.
-        return m_distance * 2;
-    }
-  
-    //TODO: integrate PID into this method later
-    /**
-     * Figures out where in the x direction (right or left) to go in terms of speed 
-     * @return The speed for turning to the target
-     */
-    public double turnAngleAdjustToTargetSpeed(){
-        // Sets initial speed to 0
-        double m_xTurnSpeed = 0.0;
-        // Checks to see if we are at an acceptable offset from the target
-        if (xAngleToTarget() > 0.5){
-            // If our offset is greater than acceptable maximum we set speed to negative to turn left until in acceptable range
-            m_xTurnSpeed = -RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
-        }
-        else if (xAngleToTarget() < -0.5){
-            // If our offset is less than acceptable minimmum we set speed to positive to turn right until in acceptable range
-            m_xTurnSpeed = RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
-        }
-        return m_xTurnSpeed;
-    }
-  
-    /**
-     * Figures out where in the y direction to go (forward or backward) to go in terms of speed
-     * @return The speed for moving to the target
-     */
-    public double distanceAdjustToTargetSpeed(){
-        // Sets initial speed to 0
-        double m_distanceAdjustSpeed = 0.0;
-        // Checks to see if we are at an acceptable offset distance from the target
-        if (yAngleToTarget() > 0.5){
-            // If our distance offset is greater than the acceptable range we set the speed to move backwards
-            m_distanceAdjustSpeed = -RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
-        }
-        else if (yAngleToTarget() < -0.5){
-            // If our distance offset is less than than the acceptable range we set the speed to move forwards
-            m_distanceAdjustSpeed = RobotMap.LimelightConstants.MINIMUM_SEEKING_TARGET_SPEED;
-        }
-        return m_distanceAdjustSpeed;
+        distance = totalHeight/tanOfAngle;
+        //returns calculated distance in inches. Have to double the distance (multiply by 2) because what is returned is half of the actual distance if we don't.
+        return distance * 2;
     }
 }
