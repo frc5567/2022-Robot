@@ -240,6 +240,6 @@ public class Drivetrain {
      * @return the output of the drivetrain for turning, factoring in the PID scalar
      */
     public double scaledTurnPIDOutput (double currentAngle){
-        return m_PIDTurnController.calculate(currentAngle) / RobotMap.DrivetrainConstants.DRIVE_PID_OUTPUT_SCALAR;
+        return m_PIDTurnController.calculate(currentAngle) / RobotMap.DrivetrainConstants.DRIVE_PID_OUTPUT_SCALER;
     }
 }
