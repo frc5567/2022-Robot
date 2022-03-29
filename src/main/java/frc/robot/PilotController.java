@@ -129,11 +129,9 @@ public class PilotController {
             crawlCmd();
         }
         else{
-            // triggerInput is for the velocity input forward and backwards
+            // Sets the triggerInput variable equal to a number between 0 and 1 based on inputs from bother triggers and scales those inputs to the scaler that we enter on the shuffleboard
             double triggerInput = ((m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis()) * m_currentVelocityscaler);
-            //double triggerInput = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
-            // leftStickXInput is for our current turn input
-            //double leftStickXInput = stickFilter.calculate(m_controller.getLeftX());
+            //Sets the leftStickXInput variable equal to a number between 0 and 1 based on inputs from the x-axis of the left joystick and scales those inputs to the scaler we enter on the shuffleboard
             double leftStickXInput = (m_controller.getLeftX() * m_currentTurnscaler);
 
             // applies deadband method to the input from the left stick
@@ -141,10 +139,10 @@ public class PilotController {
 
             // limits the rate of change on the trigger input by 3 units per second to prevent excessive acceleration and brownouts
             triggerInput = triggerFilter.calculate(triggerInput);
-            // limits the rate of change on the left stick input by 3 units per second to prevent excessive acceleration and brownouts
+            // imits the rate of change on the left stick input by 3 units per second to prevent excessive acceleration and brownouts
             leftStickXInput = stickFilter.calculate(leftStickXInput);
 
-            // passes in our variables from this method (calculations) into our arcade drive in drivetrain
+            // passes our variables from this method's calculations into the drivetrain
             m_drivetrain.periodic(triggerInput, leftStickXInput);            
         }
     }
