@@ -39,7 +39,7 @@ public class RobotMap {
         public static final double ROTATE_PID_INTEGRATOR_RANGE = 0.10;
         public static final double TOLERANCE_ROTATE_CONTROLLER = 2.00;
         //We divide rotational PID output by this number to scale it to match our percent values
-        public static final double DRIVE_PID_OUTPUT_SCALAR = 180;
+        public static final double DRIVE_PID_OUTPUT_SCALER = 180;
 
     }
 
@@ -90,7 +90,7 @@ public class RobotMap {
         public static final int TURRET_MOTOR_ID = 3;
         
         //These are untested placesholder values until we know what speeds we actually need
-        public static final double FEEDING_SPEED = -0.4;
+        public static final double FEEDING_SPEED = -0.8;
         public static final double EXPEL_SPEED = 0.35;
         public static final double TURRET_ROTATION_SPEED = 0.1;
         public static final double FLYWHEEL_SPEED = 0.7;
@@ -140,11 +140,11 @@ public class RobotMap {
         public static final int PID_SLOT = 2;
         public static final int PID_MODE = 0;
 
-        public static final int FLYWHEEL_RPM_BOUND = 100;
+        public static final int FLYWHEEL_RPM_BOUND = 50;
         //Constant representing the default deadband percentage for the turret motor (currently at 4%)
         public static final double TURRET_MOTOR_DEADBAND = 0.04;
 
-        public static final double MAX_FEEDING_CYCLES = 30;
+        public static final double MAX_FEEDING_CYCLES = 15;
 
         public static final double MAX_TURRET_ROTATION = 22;
 
@@ -164,7 +164,7 @@ public class RobotMap {
         //These are untested placesholder values until we know what speed we actually need
         //TODO These values will need to be tuned
         public static final double ROLLER_SPEED = 0.7;
-        public static final double MAGAZINE_SPEED = 0.4;
+        public static final double MAGAZINE_SPEED = -0.6;
 
         //These are untested placesholder values until we know what speed we actually need but it is important that these are negative
         public static final double REVERSE_ROLLER_SPEED = -0.5;
@@ -197,10 +197,10 @@ public class RobotMap {
     }
 
     /**
-     * Constants used in RobotShuffleboard class (also used in Pilot controller when initial scalars are set)
+     * Constants used in RobotShuffleboard class (also used in Pilot controller when initial scalers are set)
      */
     public static class ShuffleboardConstants {
-        public static final double DRIVE_DEFAULT_INPUT_SCALAR = 0.5;
+        public static final double DRIVE_DEFAULT_INPUT_SCALER = 0.5;
         public static final double FLYWHEEL_DEFAULT_VELOCITY = 0.5;
         public static final double DEFAULT_AUTON_PATH = 0;
         public static final int DEFAULT_LAUNCH_PRESET = 0;

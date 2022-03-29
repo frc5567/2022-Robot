@@ -1,6 +1,4 @@
 package frc.robot;
-
-import edu.wpi.first.math.controller.PIDController;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 // This imports an enum that we will call later
@@ -20,9 +18,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.kauailabs.navx.frc.AHRS;
 
 public class Drivetrain {
-
     // Insert object motor controllers 2 left TalonFX and 2 right TalonFX
-    
     private TalonFX m_masterRightMotor;
     private TalonFX m_masterLeftMotor;
 
@@ -42,10 +38,6 @@ public class Drivetrain {
     // Declares the NavX gyro
     private AHRS m_gyro;
 
-    private PIDController m_PIDTurnController;
-
-    // Arcade Drive method 1 trigger to give gas, 1 thumbstick to turn
-
     // Create Enum for gears
     public enum Gear {
         kLowGear ("Low Gear"),
@@ -55,7 +47,6 @@ public class Drivetrain {
         kUnkown ("Unknown");
 
         private String GearName;
-
 
         Gear (String GearName){
             this.GearName = GearName; 
@@ -92,12 +83,7 @@ public class Drivetrain {
         m_gear = Gear.kUnkown; 
 
         //instantiating the gyro
-        m_gyro = new AHRS(SPI.Port.kMXP);   
-
-        // Instantiate PID Controller
-        m_PIDTurnController = new PIDController(RobotMap.DrivetrainConstants.TURN_GAINS.kP, RobotMap.DrivetrainConstants.TURN_GAINS.kI, RobotMap.DrivetrainConstants.TURN_GAINS.kD);
-        //Configures the turn PID so we can recieve continuous input
-        //turnPIDConfig();
+        m_gyro = new AHRS(SPI.Port.kMXP);
     }
 
     /**
@@ -119,8 +105,7 @@ public class Drivetrain {
         shiftGear(Gear.kLowGear);
         // inverts the right motor so we don't spin in a circle because the motor is flipped
         m_masterRightMotor.setInverted(true);
-        // sets the right slave motor to however the master motor it is following is inverted
-        // If the master is set to true for inverted, so is the slave. If it is false, the slave will be false
+        // matches inversion for slave motor
         m_slaveRightMotor.setInverted(InvertType.FollowMaster);
     }
 
@@ -131,6 +116,7 @@ public class Drivetrain {
      */
     public void periodic(double forward, double turn){
         m_masterLeftMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, turn);
+        //turn is reversed in order to have opposite power outputs
         m_masterRightMotor.set(ControlMode.PercentOutput, forward, DemandType.ArbitraryFeedForward, -turn);
         m_slaveLeftMotor.follow(m_masterLeftMotor);
         m_slaveRightMotor.follow(m_masterRightMotor);
@@ -175,14 +161,6 @@ public class Drivetrain {
     }
 
     /**
-     * setPiston is a method for changing the state between Value.kForward and Value.kReverse
-     * @param value what state state to set the pistons to (kForward, kReverse)
-     */
-    private void setPistons(DoubleSolenoid.Value value) {
-        m_solenoid.set(value);
-    }
-
-    /**
      * shiftGear is a method for changing between Gear.kLowGear and Gear.kHighGear
      * @param gear which gear to change to (Gear.kLowGear, Gear.kHighGear)
      */
@@ -193,10 +171,10 @@ public class Drivetrain {
         m_gear = gear;
         
         if (m_gear == Gear.kLowGear) {
-            setPistons(Value.kForward);
+            m_solenoid.set(Value.kForward);
         }
         else if (m_gear == Gear.kHighGear) {
-            setPistons(Value.kReverse);
+            m_solenoid.set(Value.kReverse);
         }
     }
 
@@ -219,27 +197,5 @@ public class Drivetrain {
      */
     public float getGyro(){
         return m_gyro.getYaw();
-    }
-    
-    /**
-     * This class configures the PID controller and allows it to recieve continuous input as well as setting the 
-     * integrator range to stop us from turning too far and it also sets the tolerance to determine in we need to stop or replan the input.
-     */
-    private void turnPIDConfig(){
-        //Calculates the shortest route to the setpoint by considering the min and max to be the same point
-        m_PIDTurnController.enableContinuousInput(-RobotMap.DrivetrainConstants.PID_INPUT_RANGE, RobotMap.DrivetrainConstants.PID_INPUT_RANGE);
-        //Sets the min and max values of error by adding the integrator value to the controller output
-        m_PIDTurnController.setIntegratorRange(-RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE, RobotMap.DrivetrainConstants.ROTATE_PID_INTEGRATOR_RANGE);
-        //Sets the error which is considered tolerable for use with the setpoint
-        m_PIDTurnController.setTolerance(RobotMap.DrivetrainConstants.TOLERANCE_ROTATE_CONTROLLER);
-    }
-
-    /**
-     * This method returns the output of the PID controller scaled back to match our expected drivetrain input range percentage
-     * @param currentAngle the angle the drivetrain is currently at
-     * @return the output of the drivetrain for turning, factoring in the PID scalar
-     */
-    public double scaledTurnPIDOutput (double currentAngle){
-        return m_PIDTurnController.calculate(currentAngle) / RobotMap.DrivetrainConstants.DRIVE_PID_OUTPUT_SCALAR;
     }
 }

@@ -168,8 +168,8 @@ public class Auton{
             m_doSysOut = false;
         }
 
-        boolean sensor1 = m_intake.getMagazineSensor1();
-        boolean sensor2 = m_intake.getMagazineSensor2();
+        boolean sensor1 = m_intake.getMagazineSensor0();
+        boolean sensor2 = m_intake.getMagazineSensor1();
 
 
 
@@ -276,7 +276,7 @@ public class Auton{
                 }
             }
             else if (m_step == AutonStep.kStep6){
-                if(m_intake.getMagazineSensor2()){
+                if(m_intake.getMagazineSensor1()){
                     m_step = AutonStep.kStep7;
                 }
                 else{
@@ -421,7 +421,7 @@ public class Auton{
             }
             //step to index the next ball for launch
             else if (m_step == AutonStep.kStep6){
-                if(m_intake.getMagazineSensor2()){
+                if(m_intake.getMagazineSensor1()){
                     m_step = AutonStep.kStep7;
                 }
                 else{
@@ -551,7 +551,7 @@ public class Auton{
             }
             //step to index the next ball for launch
             else if (m_step == AutonStep.kStep17){
-                if(m_intake.getMagazineSensor2()){
+                if(m_intake.getMagazineSensor1()){
                     m_step = AutonStep.kStep18;
                 }
                 else{
