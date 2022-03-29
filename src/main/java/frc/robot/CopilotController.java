@@ -73,7 +73,7 @@ public class CopilotController {
      */
     public void testPeriodic(){
         //m_launcher.setFeederSpeed(0.2);
-        System.out.println("Turret Encoder Ticks: " + m_launcher.getTurretPosition());
+        //System.out.println("Turret Encoder Ticks: " + m_launcher.getTurretPosition());
         // manualLauncherCmd();
         // manualIntakeCmd();
 

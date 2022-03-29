@@ -54,7 +54,7 @@ public class RobotMap {
         public static final double STICK_DEADBAND = 0.09;
 
         //Constants for filters on acceleration and turning in order to prevent brownouts
-        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 3.0;
+        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 2.5;
         public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 3.0;
 
         /**
@@ -96,8 +96,7 @@ public class RobotMap {
         public static final double FLYWHEEL_SPEED = 0.7;
 
         // This is the target speed we want the flywheel to be moving (in RPM) before launching
-        // This value should be tested. Currently the 5104 is 80% of the power
-        public static final double TARGET_FLYWHEEL_SPEED = 1900;
+        public static final double TARGET_FLYWHEEL_RPM = 4000;
 
         //Constant for converting inches to encoder ticks for the turret to be used to determine the limit for how far left or right the turret can rotate
         // the 4096 is the number of encoder ticks for the motor, 44.019 is the the circumference of the turret in inches, 70 is the gear ratio for the turret
@@ -115,8 +114,8 @@ public class RobotMap {
 
         //Constant for distance from directly on center we allow the target to be 
         //TODO Tune (This was 0.4 and 2.0, change back later
-        public static final double TOLERATED_TURRET_ERROR_RIGHT = 16;
-        public static final double TOLERATED_TURRET_ERROR_LEFT = 0;
+        public static final double TOLERATED_TURRET_ERROR_RIGHT = 0.8;
+        public static final double TOLERATED_TURRET_ERROR_LEFT = -0.8;
 
         //Constant for how much error we allow the flywheel speed before we launch
         //TODO: This value is a guess and needs to be tuned. Might need to use PID instead of this or adjust the logic
@@ -140,7 +139,7 @@ public class RobotMap {
         public static final int PID_SLOT = 2;
         public static final int PID_MODE = 0;
 
-        public static final int FLYWHEEL_RPM_BOUND = 50;
+        public static final int FLYWHEEL_RPM_BOUND = 30;
         //Constant representing the default deadband percentage for the turret motor (currently at 4%)
         public static final double TURRET_MOTOR_DEADBAND = 0.04;
 

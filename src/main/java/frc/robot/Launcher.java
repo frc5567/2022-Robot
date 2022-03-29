@@ -21,6 +21,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 // Import pneumatic double solenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Intake.IntakeState;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -60,6 +61,7 @@ public class Launcher{
     private LimelightVision m_limelightVision;
     private Drivetrain m_drivetrain;
     private Intake m_intake;
+    private RobotShuffleboard m_shuffleboard;
 
     //Declares variables for the motors that move the launcher flywheel, the feeder wheel, and the turret angle
     //Not all of these motors will be TalonFXs, those are placeholders until we know what kinds of motors we'll be using
@@ -111,7 +113,7 @@ public class Launcher{
     private double m_turretCurrentSpeed;
     private double m_flywheelCurrentSpeed;
 
-    private double m_currentTargetFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
+    private double m_currentTargetFlywheelRpm = RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM;
     private double m_currentMaxTurretSpeed = RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED;
     private double m_proportionalConstant = RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT;
 
@@ -121,6 +123,8 @@ public class Launcher{
     double m_currentKF;
     
     public boolean m_atRPM;
+
+    public double m_dist;
 
     /**
      * Constructor for Launcher objects
@@ -156,6 +160,7 @@ public class Launcher{
      */
     public void init(){
         setTrajectoryPosition(TrajectoryPosition.kDown);
+        m_feederMotor.setNeutralMode(NeutralMode.Brake);
         m_slaveFlywheelMotor.setInverted(true);
         m_feederCurrentSpeed = 0;
         m_feederMotor.set(ControlMode.PercentOutput, 0);
@@ -223,8 +228,8 @@ public class Launcher{
 		m_slaveFlywheelMotor.follow(m_masterFlywheelMotor);
 
         double actualRpm = ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600.0) / 2048.0);//(m_masterFlywheelMotor.getSelectedSensorVelocity() / (double)RobotMap.LauncherConstants.TICKS_PER_ROTATION * 600f);
-
-        if((actualRpm >= desiredRpm - RobotMap.LauncherConstants.FLYWHEEL_RPM_BOUND) || (actualRpm <= desiredRpm + RobotMap.LauncherConstants.FLYWHEEL_RPM_BOUND)){
+        
+        if((actualRpm >= desiredRpm - RobotMap.LauncherConstants.FLYWHEEL_RPM_BOUND) && (actualRpm <= desiredRpm + RobotMap.LauncherConstants.FLYWHEEL_RPM_BOUND)){
             atSpeed = true;
             m_atRPM = true;
         }
@@ -237,14 +242,23 @@ public class Launcher{
 
     private void launchPID(){
         m_masterFlywheelMotor.selectProfileSlot(RobotMap.LauncherConstants.PID_SLOT, RobotMap.LauncherConstants.PID_MODE);
-        System.out.println("launching "+ ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600.0) / 2048.0)+ " \tOutput: "+ m_masterFlywheelMotor.getMotorOutputPercent() + " Distance: " + m_limelightVision.distToTarget());
-        double dist = m_limelightVision.distToTarget();
-        // double desiredRpm = (3119.8 + (19.002 * dist) - (.1949171* Math.pow(dist, 2)) + (.000954319 * Math.pow(dist, 3)));
-        double desiredRpm = (0.0047 * Math.pow(dist, 3) - 1.2642 * Math.pow(dist, 2) + 121.27 * (dist) - 127.68);
-        //System.out.println("Desired RPM Calc: " + desiredRpm );
+        //System.out.println("launching "+ ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600.0) / 2048.0)+ " \tOutput: "+ m_masterFlywheelMotor.getMotorOutputPercent() + " Distance: " + m_limelightVision.distToTarget());
+        m_dist = m_limelightVision.distToTarget();
+        System.out.println("Distance: " + m_dist);
+        //double desiredRpm = (3119.8 + (19.002 * m_dist) - (.1949171* Math.pow(m_dist, 2)) + (.000954319 * Math.pow(m_dist, 3)));
+        double desiredRpm = (0.0047 * Math.pow(m_dist, 3) - 1.2642 * Math.pow(m_dist, 2) + 121.27 * (m_dist) - 127.68);
+        //double desiredRpm = (0.0047 * Math.pow(m_dist, 3) - 1.2642 * Math.pow(m_dist, 2) + 121.27 * (m_dist) - 127.68);
+        
+
         // runPID(2000);
-        if(runPID(desiredRpm)){
+        //runPID(desiredRpm)
+        if(runPID( m_currentTargetFlywheelRpm )){
             m_launcherAtSpeedCount++;
+
+            double ticks = m_masterFlywheelMotor.getSelectedSensorVelocity();
+            double dticks = desiredRpm * (double)RobotMap.LauncherConstants.TICKS_PER_ROTATION / 600.0;
+            System.out.println("Desired RPM:    [" + desiredRpm + "]   Actual RPM:    [" + ((ticks * 600.0) / 2048.0) + "]");
+            System.out.println("Desired ticks:  [" + dticks +     "]   Actual ticks:  [" + ticks + "]");
         }
         else{
             m_launcherAtSpeedCount = 0;
@@ -258,7 +272,8 @@ public class Launcher{
         // target();
         launchPID();
         
-        if(m_launcherAtSpeedCount > 30 && target()){
+        if(m_launcherAtSpeedCount > 10 && target()){
+            System.out.println("launching (count:" + m_launcherAtSpeedCount + ")");
             feedLauncher();
         }
 
@@ -273,6 +288,7 @@ public class Launcher{
         if(m_feedingCounter > RobotMap.LauncherConstants.MAX_FEEDING_CYCLES){
             m_feedingCounter = 0;
             m_launcherAtSpeedCount = 0;
+            System.out.println("completed feed");
             if(m_secondBall){
                 m_secondBall = false;
             }
@@ -332,8 +348,8 @@ public class Launcher{
     // }
 
     public void launch(){
-        setFlywheelSpeed(m_currentTargetFlywheelVelocity);
-        System.out.println("Real Flywheel speed" + getRealSpeed() + "\tOutput: "+m_masterFlywheelMotor.getMotorOutputPercent());
+        //setFlywheelSpeed(m_currentTargetFlywheelVelocity);
+        //System.out.println("Real Flywheel speed" + getRealSpeed() + "\tOutput: "+m_masterFlywheelMotor.getMotorOutputPercent());
         //Checks if our flywheel is at the target speed
         // if(getRealSpeed() > m_shuffleboard.getTargetFlywheelSpeed()){
         //     System.out.println("Commencing Launch Sequence");
@@ -380,32 +396,32 @@ public class Launcher{
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;
                     m_onTargetTurretTicks = m_turretEncoderTicks;
                     onTarget = true;
-                    System.out.print("Ready to Launch ------------------");
+                    //System.out.print("Ready to Launch ------------------");
                 }
                 //if we are above the tolerated error range, turn the turret toward the tolerated error range
                 else{
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
-                    System.out.println("Not Ready to Launch 1:" + m_angleToTarget);
+                    //System.out.println("Not Ready to Launch 1:" + m_angleToTarget);
                     onTarget = false;
                     setTurretSpeed(turretSpeed(m_angleToTarget));
                 }
             }
             //If we are to the left of our motor limit, print out a message and turn right
             else if(getTurretPosition() < -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
-                System.out.println("Not Ready to Launch 3");
+                //System.out.println("Not Ready to Launch 3");
                 onTarget = false;
                 setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }
             //If we are to the right of our motor limit, print out a message and turn left
             else if(getTurretPosition() > RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
-                System.out.println("Not Ready to Launch 4");
+                //System.out.println("Not Ready to Launch 4");
                 onTarget = false;
                 setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
             }
 
         }
         else {
-            System.out.println("No Target Detected");
+            //System.out.println("No Target Detected");
         }
 
         return onTarget;
@@ -442,7 +458,7 @@ public class Launcher{
      * @return current speed of flywheel motor in RPM
      */
     public double getRealSpeed(){
-        // System.out.println("RPM: " + m_masterFlywheelMotor.getSelectedSensorVelocity(1));
+        // System.out.println("RPM: " + m_masterFlywheelMotor.getSelectedSensorVelocity());
         // System.out.println("RPM master0: "+ m_masterFlywheelMotor.getSelectedSensorVelocity() + "\tPct Output: " + m_masterFlywheelMotor.getMotorOutputPercent());
         return ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600) / 2048);
     }
@@ -545,8 +561,8 @@ public class Launcher{
     private double turretSpeed(double angleOffset){
         double turretSpeed;
         double sign = Math.signum(angleOffset);
-        System.out.println(angleOffset);
-        System.out.println("hi\n\nhi\n\nhi***********************************************\n**********************************************");
+        //System.out.println(angleOffset);
+        //System.out.println("hi\n\nhi\n\nhi***********************************************\n**********************************************");
         if(Math.abs(angleOffset) > 15){
             turretSpeed = sign*m_currentMaxTurretSpeed;
         }
@@ -578,8 +594,8 @@ public class Launcher{
         m_proportionalConstant = constant;
     }
 
-    public void setTargetFlywheelSpeed(double speed){
-        m_currentTargetFlywheelVelocity = speed;
+    public void setTargetFlywheelRpm(double speed){
+        m_currentTargetFlywheelRpm = speed;
     }
 
     public void setKP(double P){
@@ -604,8 +620,8 @@ public class Launcher{
         m_masterFlywheelMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 30);
         m_masterConfig.slot2.kP = 0.57;//m_currentKP;
         m_masterConfig.slot2.kI = 0;//m_currentKI;
-        m_masterConfig.slot2.kD = 22;//m_currentKD;
-        m_masterConfig.slot2.kF = 0;//m_currentKF;
+        m_masterConfig.slot2.kD = 16;//m_currentKD;
+        m_masterConfig.slot2.kF = 0.05;//m_currentKF;
         m_masterConfig.slot2.integralZone = RobotMap.LauncherConstants.FLYWHEEL_GAINS.kIzone;
 		m_masterConfig.slot2.closedLoopPeakOutput = RobotMap.LauncherConstants.FLYWHEEL_GAINS.kPeakOutput;
         m_masterConfig.slot2.closedLoopPeriod = 1;

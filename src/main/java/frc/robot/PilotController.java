@@ -88,10 +88,12 @@ public class PilotController {
         // when left or right bumper are pressed, turn the turret those directions respectively
         manualTurretCmd();
 
+        crawlCmd();
+
         if ((++m_sysOutCounter % 10) == 0){
             //System.out.println("Gyro: " + m_drivetrain.getGyro());
-            System.out.println("Distance to Target" + m_limelightVision.distToTarget());
-            System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.tAreaOfScreen());
+            //System.out.println("Distance to Target" + m_limelightVision.distToTarget());
+            //System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.tAreaOfScreen());
         }
     }
 
@@ -126,7 +128,8 @@ public class PilotController {
     private void arcadeDriveCmd(){
         // This if statement makes sure that the trigger and stick input is only used when the back button is not being pressed (this gets rid of any zeroing issues)
         if(m_movingToClimb){
-            crawlCmd();
+            m_drivetrain.shiftGear(Gear.kLowGear);
+            m_drivetrain.periodic(RobotMap.PilotControllerConstants.CLIMB_CRAWL_SPEED, 0);
         }
         else{
             // Sets the triggerInput variable equal to a number between 0 and 1 based on inputs from bother triggers and scales those inputs to the scaler that we enter on the shuffleboard
@@ -227,9 +230,9 @@ public class PilotController {
      * It also sets the boolean m_movingToClimb as true if we are pressing the Back Button so we know not to use the stick input until it isn't being pressed.
      */
     private void crawlCmd(){
-        if(m_controller.getBackButtonPressed()){
-            m_drivetrain.shiftGear(Gear.kLowGear);
-            m_drivetrain.periodic(RobotMap.PilotControllerConstants.CLIMB_CRAWL_SPEED, 0);
+        if(m_controller.getBackButton()){
+            // m_drivetrain.shiftGear(Gear.kLowGear);
+            //m_drivetrain.periodic(RobotMap.PilotControllerConstants.CLIMB_CRAWL_SPEED, 0);
             m_movingToClimb = true;
         }
         else {
