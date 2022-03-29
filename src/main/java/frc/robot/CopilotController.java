@@ -16,7 +16,7 @@ public class CopilotController {
     private RobotShuffleboard m_shuffleboard;
     private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
     private double m_currentLaunchPreset = RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET;
-    //for testing until we have a real gamepad
+    //for manual commands
     private XboxController m_controller;
 
     boolean m_carwashRunning = false;
@@ -113,14 +113,14 @@ public class CopilotController {
     }
 
     /**
-     * This method controls the launcher (and turret) with three buttons, one for automatically targeting and launching, and two for setting the position of the trajectory controller
+     * This method controls the launcher (and turret) with three buttons, one for automatically targeting and launching, 
+     * and two for setting the position of the trajectory controller
      */
     private void controlLauncher(){
         //uses one button to aim and launch
         if (m_gamePad.getTargetAndLaunch()){
             m_limelight.enableLEDs();
             m_launcher.targetAndLaunch();
-            //m_intake.setMagazineSpeed(0);
         }
         //calls button in gamepad to spin flywheel up
         else if(m_gamePad.getManualLaunch()){
@@ -132,11 +132,11 @@ public class CopilotController {
         }
         //calls button in gamepad to to run carwash motor manually
         else if (m_gamePad.getCarwash()){
-
+            //This is here in order to allow us to use carwash and other buttons at the same time. look to line 156 for carwashCMD control
         }
         //checks for feed command button, if it is pressed then don't zero it
         else if(m_gamePad.getFeedCMD()){
-
+            //This is here in order to allow us to use feeder and other buttons at the same time. look to line 152 for feedCMD control
         }
         //zeros magazine only once
         else{
@@ -152,11 +152,6 @@ public class CopilotController {
         if(m_gamePad.getFeedCMD()){
             m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
-        //checks if target and launch is being pressed so we don't zero the feeder wheel
-        else if(!m_gamePad.getTargetAndLaunch() && !m_gamePad.getManualLaunch()){
-            // m_launcher.setFeederSpeed(0);
-        }
-
 
         if (m_gamePad.getCarwash()){
             m_carwashRunning = true;
@@ -169,15 +164,18 @@ public class CopilotController {
             }
         }
     }
-
+    /**
+     * This method controls the climber with two buttons, one for lifting the climbing mechanism up, and another for retracting the winch
+     */
     private void controlClimber(){
+        //uses one button to lift the climbing mechanism up
         if (m_gamePad.getLiftButton()){
             m_climber.setLiftSpeed(RobotMap.ClimberConstants.CLIMBER_MOTOR_SPEED);
         }
         else{
             m_climber.setLiftSpeed(0);
         }
-        
+        //uses one button to retract the winch
         if (m_gamePad.getWinchButton()){
             m_climber.setWinchSpeed(RobotMap.ClimberConstants.WINCH_MOTOR_SPEED);
         }
@@ -205,58 +203,12 @@ public class CopilotController {
         else if(m_controller.getBackButtonPressed()){
             m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
-
-        // if(m_controller.getBButton()){
-        //     if(m_currentLaunchPreset == 0){
-        //         m_launcher.lowPreset10();
-        //     }
-        //     if(m_currentLaunchPreset == 1){
-        //         m_launcher.lowPreset20();
-        //     }
-        //     if(m_currentLaunchPreset == 2){
-        //         m_launcher.highPreset10();
-        //     }
-        //     if(m_currentLaunchPreset == 3){
-        //         m_launcher.highPreset20();
-        //     }
-        //     else{
-        //         System.out.println(m_currentLaunchPreset + "is not a vald preset");
-        //         return;
-        //     }
-        //}
-
-        //if B button is pressed turn on limelight, target, and launch
-        // if(m_controller.getBButton()){
-        //     //Added for testing
-        //     //m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-        //     m_limelight.enableLEDs();
-        //     m_launcher.targetAndLaunch();
-        //     m_intake.setMagazineSpeed(0);
-        // }
-        // else {
-        //     m_launcher.setFeederSpeed(0);
-        //     m_launcher.setTurretSpeed(0);
-        //    // m_limelight.disableLEDs();
-        //     m_launcher.zeroTurretPosition();
-
-        // }
     }
 
     /**
      * Manually controls the intake for testing
      */
     private void manualIntakeCmd(){
-        //two if statements to determine intake position
-        //if X button is pressed turn on the magazine
-        // if(m_controller.getXButton()){
-        //     m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
-        //     //Commented out for testing purposes
-        //     //m_intake.setIntakeExtension(IntakeState.kExtended);
-        // }
-        // else {
-        //     m_intake.setMagazineSpeed(0);
-        // }
-        
         //if Y button is pressed turn on the roller wheels
         if(m_controller.getYButton()){
             m_intake.setRollerSpeed(RobotMap.IntakeConstants.ROLLER_SPEED);

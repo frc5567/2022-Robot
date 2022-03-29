@@ -5,47 +5,52 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class Climber {
-    private VictorSPX m_climbMotor;
+    //Declares lift motor to move the climb arm up, and declares winch motor to pull the robot up to the bar with the rope 
+    private VictorSPX m_liftMotor;
     private VictorSPX m_winchMotor; 
 
-    private double m_climberCurrentSpeed;
+    //Member variables used to make sure we aren't calling on the CAN bus constantly by repetedly setting the motors to zero 
+    private double m_liftCurrentSpeed;
     private double m_winchCurrentSpeed;
 
 
     /**
-     * Initialization method for Climber
+     * This method is called once as soon as the robot is enabled. 
+     * Configures our motors by setting them to zero and recording that value
      */
     public void init(){
-        m_climbMotor.set(ControlMode.PercentOutput, 0);
-        m_climberCurrentSpeed = 0;
+        m_liftMotor.set(ControlMode.PercentOutput, 0);
+        m_liftCurrentSpeed = 0;
         m_winchMotor.set(ControlMode.PercentOutput, 0);
         m_winchCurrentSpeed = 0;
     }
 
     /**
-     * constructor for climber objects
+     * constructor to instantiate climber objects
      */
     public Climber() {
-        m_climbMotor = new VictorSPX(RobotMap.ClimberConstants.CLIMBER_MOTOR_ID);
+        m_liftMotor = new VictorSPX(RobotMap.ClimberConstants.CLIMBER_MOTOR_ID);
         m_winchMotor = new VictorSPX(RobotMap.ClimberConstants.CLIMBER_WINCH_ID);
     }
 
      /**
-      * sets speed of climber to passed in variable
-      * @param climb  velocity input (valid values: -1 to 1)
+      * sets speed of lift motor to passed in variable
+      * @param speed desired percent power for the lift motor (valid values: -1 to 1)
       */
     public void setLiftSpeed(double speed){
-        if(m_climberCurrentSpeed != speed){
-            m_climberCurrentSpeed = speed;
-            m_climbMotor.set(ControlMode.PercentOutput, speed);
+        //only sets the power of the motor once any time we change the power to cut down on CAN usage
+        if(m_liftCurrentSpeed != speed){
+            m_liftCurrentSpeed = speed;
+            m_liftMotor.set(ControlMode.PercentOutput, speed);
         }
     }
 
     /**
      * sets the speed of winch to passed in variable
-     * @param winch velocity input (valid values 0 to 1)
+     * @param winch desired percent power for the winch motor(valid values 0 to 1)
      */
     public void setWinchSpeed(double speed){
+        //only sets the power of the motor once any time we change the power to cut down on CAN usage
         if(m_winchCurrentSpeed != speed){
             m_winchCurrentSpeed = speed;
             m_winchMotor.set(ControlMode.PercentOutput, speed);
