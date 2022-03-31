@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Intake.IntakeState;
-import frc.robot.Launcher.TrajectoryPosition;
 
 public class Auton{
     //enum for storing what path we are going to take in auton
@@ -124,7 +123,6 @@ public class Auton{
         m_step = AutonStep.kStep1;   
         m_currentAutonPath = m_shuffleboard.getAutonPath();
         selectPath();
-        m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
     }
 
     /**

@@ -30,7 +30,7 @@ public class PilotController {
     boolean m_doSysOut = true;
 
     //Boolean for determining if the back button is being pressed
-    boolean m_movingToClimb;
+    //boolean m_movingToClimb;
 
     /**
      * Constuctor for the pilot controller
@@ -88,10 +88,12 @@ public class PilotController {
         // when left or right bumper are pressed, turn the turret those directions respectively
         manualTurretCmd();
 
+        crawlCmd();
+
         if ((++m_sysOutCounter % 10) == 0){
             //System.out.println("Gyro: " + m_drivetrain.getGyro());
-            System.out.println("Distance to Target" + m_limelightVision.distToTarget());
-            System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.tAreaOfScreen());
+            //System.out.println("Distance to Target" + m_limelightVision.distToTarget());
+            //System.out.println("Ty " + m_limelightVision.yAngleToTarget() + "  Tx " + m_limelightVision.xAngleToTarget() + "  Ta " + m_limelightVision.tAreaOfScreen());
         }
     }
 
@@ -125,7 +127,8 @@ public class PilotController {
      */
     private void arcadeDriveCmd(){
         // This if statement makes sure that the trigger and stick input is only used when the back button is not being pressed (this gets rid of any zeroing issues)
-        if(m_movingToClimb){
+
+        if(m_controller.getBackButtonPressed()){
             crawlCmd();
         }
         else{
@@ -183,7 +186,7 @@ public class PilotController {
                 if (angleToTarget < RobotMap.TOLERATED_TARGET_ERROR && angleToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
                     m_drivetrain.periodic(0, 0);
                     // prints to let drivers know we are On Target
-                    System.out.print("On Target");
+                    //System.out.print("On Target");
                     return;  
                 }
 
@@ -227,13 +230,7 @@ public class PilotController {
      * It also sets the boolean m_movingToClimb as true if we are pressing the Back Button so we know not to use the stick input until it isn't being pressed.
      */
     private void crawlCmd(){
-        if(m_controller.getBackButtonPressed()){
-            m_drivetrain.shiftGear(Gear.kLowGear);
-            m_drivetrain.periodic(RobotMap.PilotControllerConstants.CLIMB_CRAWL_SPEED, 0);
-            m_movingToClimb = true;
-        }
-        else {
-            m_movingToClimb = false;
-        }
+        m_drivetrain.shiftGear(Gear.kLowGear);
+        m_drivetrain.periodic(RobotMap.PilotControllerConstants.CLIMB_CRAWL_SPEED, 0);        
     }
 }
