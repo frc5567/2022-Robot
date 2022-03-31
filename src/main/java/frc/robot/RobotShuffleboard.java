@@ -20,7 +20,7 @@ public class RobotShuffleboard {
     double m_highTurnScaler;
     double m_lowTurnScaler;
     // Declares member variables for manual launcher testing
-    double m_flywheelVelocity;
+    double m_flywheelPercentPower;
     double m_targetFlywheelRpm;
     // Declares member variable for choosing an auton path
     double m_autonPath;
@@ -42,7 +42,7 @@ public class RobotShuffleboard {
     private NetworkTableEntry m_lowVelocityScalerEntry;
     private NetworkTableEntry m_highTurnScalerEntry;
     private NetworkTableEntry m_lowTurnScalerEntry;
-    private NetworkTableEntry m_flywheelVelocityEntry;
+    private NetworkTableEntry m_flywheelPercentPowerEntry;
     private NetworkTableEntry m_autonPathEntry;
     private NetworkTableEntry m_launchPresetEntry;
     private NetworkTableEntry m_targetFlywheelRpmEntry;
@@ -128,26 +128,19 @@ public class RobotShuffleboard {
         m_lowTurnScalerEntry = m_driverTab.addPersistent("Low Gear Turn Scaler", RobotMap.ShuffleboardConstants.DRIVE_DEFAULT_INPUT_SCALER)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
-        m_flywheelVelocityEntry = m_driverTab.addPersistent("Flywheel Velocity", RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY)
+        m_flywheelPercentPowerEntry = m_driverTab.addPersistent("Flywheel Percent Power", RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_PERCENT_POWER)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
         m_autonPathEntry = m_driverTab.addPersistent("Auton Path", RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
-        m_launchPresetEntry = m_driverTab.addPersistent("Launch Preset", RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET)
-                                    .withWidget(BuiltInWidgets.kTextView)
-                                    .getEntry();
         m_maxTurretSpeedEntry = m_driverTab.addPersistent("Max Turret Speed", RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED)
-                                    .withWidget(BuiltInWidgets.kTextView)
-                                    .getEntry();
-        m_proportionalConstantEntry = m_driverTab.addPersistent("Proportional Constant", RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT)
                                     .withWidget(BuiltInWidgets.kTextView)
                                     .getEntry();
     }
 
     public void PidShuffleboardConfig(){
         Shuffleboard.selectTab("PID Tab");
-        SmartDashboard.putNumber("Hub Distance", m_launcher.m_dist);
 
         m_launcherKPEntry = m_PidTab.addPersistent(("kP"), RobotMap.LauncherConstants.FLYWHEEL_GAINS.kP)
                             .withWidget(BuiltInWidgets.kTextView)
@@ -188,7 +181,8 @@ public class RobotShuffleboard {
      * If no value is found on the shuffleboard for flywheelVelocity, returns with nothing, the value will be set to 0.5 from RobotMap
      */
     private void setFlywheelVelocity(){
-        m_flywheelVelocity = m_flywheelVelocityEntry.getDouble(RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY);
+        m_flywheelPercentPower = m_flywheelPercentPowerEntry.getDouble(RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_PERCENT_POWER);
+        m_launcher.setFlywheelPercentPower(m_flywheelPercentPower);
     }
 
     /**
@@ -198,7 +192,7 @@ public class RobotShuffleboard {
     public double getFlywheelVelocity(){
         // Gets the updated value from the shuffleboard
         setFlywheelVelocity();
-        return m_flywheelVelocity;
+        return m_flywheelPercentPower;
     }
 
     /**
@@ -225,7 +219,6 @@ public class RobotShuffleboard {
         m_maxTurretSpeed = m_maxTurretSpeedEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED);
         m_proportionalConstant = m_proportionalConstantEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT);
         m_launcher.setMaxTurretSpeed(m_maxTurretSpeed);
-        m_launcher.setProportionalConstant(m_proportionalConstant);
     }
 
     public double getTurretValues(){

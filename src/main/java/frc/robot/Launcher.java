@@ -6,105 +6,84 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 //Import Encoders
 import com.ctre.phoenix.motorcontrol.SensorCollection;
-import com.ctre.phoenix.motorcontrol.StatusFrame;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-
-// Import pneumatic double solenoid
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import frc.robot.Intake.IntakeState;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 
 public class Launcher{
-    //Enum that stores the current state of our flywheel during launch. Preparing: The flywheel is not yet up to speed. Recovery: The flwyheel is returning to speed. Ready: The flywheel is ready to launch
-    private enum LauncherState{
-        kPreparing,
-
-        kRecovery,
-
-        kReady;
-    }
-
-    //Declares limelight object
+    //Declares limelight object for targeting
     private LimelightVision m_limelightVision;
+    //Declares drivetrain object to check encoder ticks
     private Drivetrain m_drivetrain;
+    //Declares intake to manipulate magazine wheels while automatically launching
     private Intake m_intake;
-    private RobotShuffleboard m_shuffleboard;
 
-    //Declares variables for the motors that move the launcher flywheel, the feeder wheel, and the turret angle
-    //Not all of these motors will be TalonFXs, those are placeholders until we know what kinds of motors we'll be using
+    //Declares variables for the motors that move the launcher flywheel motors, the feeder wheel, and the turret angle
     private WPI_TalonFX m_masterFlywheelMotor;
     private WPI_TalonFX m_slaveFlywheelMotor;
     private VictorSPX m_feederMotor;
     public TalonSRX m_turretMotor;
 
-    //Declares variables for the encoders
+    //Declares the encoders to calculate rpm and track the current position of the turret
     private SensorCollection m_flywheelEncoder;
     private SensorCollection m_turretEncoder;
 
     //Boolean to store whether or not we are currently on target
     boolean m_onTarget = false;
 
-    //variables for updating and storing the encoder ticks of the drivetrain and th turret every cycle
+    //variables for updating and storing the encoder ticks of the drivetrain and the turret every cycle
     double m_leftDriveEncoderTicks;
     double m_rightDriveEncoderTicks;
     double m_turretEncoderTicks;
 
+    //Stores the ticks of the drivetrain/turret when we are on target to check if we have moved since we were on target
     double m_onTargetLeftTicks = m_leftDriveEncoderTicks;
     double m_onTargetRightTicks = m_rightDriveEncoderTicks;
     double m_onTargetTurretTicks = m_turretEncoderTicks;   
 
-    double m_angleToTarget = 0;
-    
-    //counts how many times we have cycled through targetAndLaunch while on target so we know when the ball has exited to robot
-    double m_feedingCounter = 0;
-
-    double m_flywheelRevCounter = 0;
-
-    boolean m_flywheelMotorReady = false;
-
+    //Boolean to track whether or not we're launching the second ball in our robot
     boolean m_secondBall = false;
 
+    //Tracks the cycles the flywheel has been at speed so we know if we overshoot
+    int m_launcherAtSpeedCount = 0;
+
+    //Member variables used to make sure we aren't calling on the CAN bus constantly by repetedly setting the motors to zero 
+    private double m_feederCurrentSpeed;
+    private double m_turretCurrentSpeed;
+
+    //Stores target flywheel RPM value from the shuffleboard for testing 
+    private double m_currentTargetFlywheelRpm = RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM;
+    //Stores max turret speed value from the shuffleboard to change how fast the turret moves
+    private double m_currentMaxTurretSpeed = RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED;
+    //Stores target flywheel percent power from the shuffleboard for manual launching
+    private double m_currentFlywheelPercentPower = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_PERCENT_POWER;
+
+    //PID configuration objects for the master and slave flywheel motors
     TalonFXConfiguration m_masterConfig;
     TalonFXConfiguration m_slaveConfig;
 
-    int m_launcherAtSpeedCount = 0;
-
-    private double m_feederCurrentSpeed;
-    private double m_turretCurrentSpeed;
-    private double m_flywheelCurrentSpeed;
-
-    private double m_currentTargetFlywheelRpm = RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM;
-    private double m_currentMaxTurretSpeed = RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED;
-    private double m_proportionalConstant = RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT;
-
+    //Variables to store our gains from the shuffleboard
     double m_currentKP;
     double m_currentKI;
     double m_currentKD;
     double m_currentKF;
     
+    //Variable for storing whether or not we're at our target RPM for the boolean box on the shuffleboard
     public boolean m_atRPM;
-
-    public double m_dist;
 
     /**
      * Constructor for Launcher objects
      * @param limelightVision we pass in limelight to use in launch targeting
      * @param drivetrain we pass in drivetrain to get encoder ticks/position
-     * @param shuffleboard we pass in shuffleboard for getTurretValues and getFlywheelVelocity
-     * @param intake we pass in intake to extend the intake in targetAndLaunch
+     * @param shuffleboard we pass in shuffleboard for PID tuning and quickly editing launcher constants
+     * @param intake we pass in intake to minipulate intake extension and magazine motors
      */
     public Launcher(LimelightVision limelightVision, Drivetrain drivetrain, Intake intake){
         //Instantiates objects for the Launcher class
@@ -117,15 +96,18 @@ public class Launcher{
         m_feederMotor = new VictorSPX(RobotMap.LauncherConstants.FEEDER_MOTOR_ID);
         m_turretMotor = new TalonSRX(RobotMap.LauncherConstants.TURRET_MOTOR_ID);
 
+        //Assigns encoders to their respective motors
         m_flywheelEncoder = new SensorCollection (m_masterFlywheelMotor);
         m_turretEncoder = new SensorCollection (m_turretMotor);
 
+        //Instantiates configuration objects for the flywheel motors
         m_masterConfig = new TalonFXConfiguration();
 	    m_slaveConfig = new TalonFXConfiguration();
     }
 
     /**
-     * Initialization method for Launcher. Currently only zeros encoders and sets our default trajectory position to up
+     * This method is called once as soon as the robot is enabled. 
+     * Configures all launcher motors and flywheel PID
      */
     public void init(){
         m_feederMotor.setNeutralMode(NeutralMode.Brake);
@@ -134,25 +116,30 @@ public class Launcher{
         m_feederMotor.set(ControlMode.PercentOutput, 0);
         m_turretCurrentSpeed = 0;
         m_turretMotor.set(ControlMode.PercentOutput, 0);
-        m_flywheelCurrentSpeed = 0;
-        //m_masterFlywheelMotor.set(ControlMode.PercentOutput, 0);
         m_limelightVision.disableLEDs();
 
         m_feederMotor.setNeutralMode(NeutralMode.Brake);
-        //m_turretMotor.setNeutralMode(NeutralMode.Brake);
+        m_turretMotor.setNeutralMode(NeutralMode.Brake);
         m_atRPM = false;
 
         configTalonPID();
 
         zeroEncoders();
-
-        // m_masterFlywheelMotor.selectProfileSlot(RobotMap.LauncherConstants.PID_SLOT, RobotMap.LauncherConstants.PID_MODE);
     }
 
+    /**
+     * Called many times a second while the robot is enabled
+     */
     public void periodic(){
+        //Updates gains in the code to the gains in the shuffleboard
         setGains();
     }
 
+    /**
+     * Applies PID to our flywheel motors and checks if we have revved up to our desired RPM
+     * @param desiredRpm the RPM we want the flywheel motors at
+     * @return True if we are at our desired rpm, false if we are not
+     */
     public boolean runPID(double desiredRpm){
         boolean atSpeed = false;
 
@@ -162,8 +149,10 @@ public class Launcher{
         m_masterFlywheelMotor.set(TalonFXControlMode.Velocity, target_unitsPer100ms, DemandType.ArbitraryFeedForward, 0.0);
 		m_slaveFlywheelMotor.follow(m_masterFlywheelMotor);
 
+        //Calculates our current actual RPM from raw encoder ticks per 100ms
         double actualRpm = ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600.0) / 2048.0);//(m_masterFlywheelMotor.getSelectedSensorVelocity() / (double)RobotMap.LauncherConstants.TICKS_PER_ROTATION * 600f);
         
+        //If we are within our RPM bounds, return true
         if((actualRpm >= desiredRpm - RobotMap.LauncherConstants.FLYWHEEL_RPM_BOUND) && (actualRpm <= desiredRpm + RobotMap.LauncherConstants.FLYWHEEL_RPM_BOUND)){
             atSpeed = true;
             m_atRPM = true;
@@ -175,19 +164,24 @@ public class Launcher{
         return atSpeed;
     }
 
+    /**
+     * Calculates our desired RPM based on distance and runs our PID
+     */
     private void launchPID(){
+        //tracks the current distance from the limelight to the hub in inches
+        double dist = m_limelightVision.distToTarget();
+        //Applies PID configurations to the master flywheel motor
         m_masterFlywheelMotor.selectProfileSlot(RobotMap.LauncherConstants.PID_SLOT, RobotMap.LauncherConstants.PID_MODE);
-        //System.out.println("launching "+ ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600.0) / 2048.0)+ " \tOutput: "+ m_masterFlywheelMotor.getMotorOutputPercent() + " Distance: " + m_limelightVision.distToTarget());
-        m_dist = m_limelightVision.distToTarget();
-        System.out.println("Distance: " + m_dist);
-        double desiredRpm = (0.0078 * Math.pow(m_dist, 3) - 2.3105 * Math.pow(m_dist, 2) + 236.44 * (m_dist) - 4384.4);
-       
+        //Prints out our current distance
+        System.out.println("Distance: " + dist);
+        //Calculates desired RPM based on our distance from the hub
+        double desiredRpm = (0.0078 * Math.pow(dist, 3) - 2.3105 * Math.pow(dist, 2) + 236.44 * (dist) - 4384.4);
 
-        // runPID(2000);
-        //runPID(desiredRpm)
         if(runPID(desiredRpm)){
+            //Adds to our at speed count every cycle we're at speed
             m_launcherAtSpeedCount++;
 
+            //Sysouts for testing
             double ticks = m_masterFlywheelMotor.getSelectedSensorVelocity();
             double dticks = desiredRpm * (double)RobotMap.LauncherConstants.TICKS_PER_ROTATION / 600.0;
             System.out.println("Desired RPM:    [" + desiredRpm + "]   Actual RPM:    [" + ((ticks * 600.0) / 2048.0) + "]");
@@ -198,11 +192,11 @@ public class Launcher{
         }
     }
 
+    /**
+     * Method that is run when the target and launch button on the gamepad is pressed. 
+     * Spins up the flywheel and targets, and when the flywheel is up to speed and the turret is on target activate the feeder
+     */
     public void targetAndLaunch(){
-        // m_masterFlywheelMotor.selectProfileSlot(RobotMap.LauncherConstants.PID_SLOT, RobotMap.LauncherConstants.PID_MODE);
-        // m_masterFlywheelMotor.set(TalonFXControlMode.Velocity, 2000, DemandType.ArbitraryFeedForward, 0.1);
-        // System.out.println("launching "+m_masterFlywheelMotor.getSelectedSensorVelocity());
-        // target();
         launchPID();
 
         boolean onTarget = target();
@@ -212,20 +206,26 @@ public class Launcher{
             feedLauncher();
         }
 
+        //If we are launching our second ball, move it into the second position on the robot
         if(m_secondBall){
             m_intake.indexing();
         }
     }
 
+    /**
+     * Feeds the ball in the second position into the flywheel
+     */
     private void feedLauncher(){
+        int feedingCounter = 0;
         System.out.println("FEEDING -----------------------------------");
         setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-        m_feedingCounter++;
-        if(m_feedingCounter > RobotMap.LauncherConstants.MAX_FEEDING_CYCLES){
+        feedingCounter++;
+        if(feedingCounter > RobotMap.LauncherConstants.MAX_FEEDING_CYCLES){
             setFeederSpeed(0);
-            m_feedingCounter = 0;
+            feedingCounter = 0;
             m_launcherAtSpeedCount = 0;
             //System.out.println("completed feed");
+            //If we just fed our first ball, track that we are on our second ball. 
             if(m_secondBall){
                 m_secondBall = false;
             }
@@ -236,18 +236,22 @@ public class Launcher{
         }
     }
     
+    /**
+     * Powers the flywheel motor to the speed set on the shuffleboard for manual launching
+     */
     public void launch(){
-        //setFlywheelSpeed(m_currentTargetFlywheelVelocity);
+        setFlywheelSpeed(m_currentFlywheelPercentPower);
     }
 
     public boolean target(){
+        double angleToTarget = 0;
         boolean onTarget = false;
 
         m_leftDriveEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
         m_rightDriveEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
         m_turretEncoderTicks = getTurretPosition();
 
-        m_angleToTarget = m_limelightVision.xAngleToTarget();
+        angleToTarget = m_limelightVision.xAngleToTarget();
 
         if (m_onTarget && !m_limelightVision.seeTarget()){
             if(m_leftDriveEncoderTicks != m_onTargetLeftTicks){
@@ -267,7 +271,7 @@ public class Launcher{
 
         if(m_limelightVision.seeTarget()){
             if(turretInBounds()){
-                if(m_angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_RIGHT && m_angleToTarget > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_LEFT){
+                if(angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_RIGHT && angleToTarget > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_LEFT){
                     setTurretSpeed(0);
                     m_onTargetLeftTicks = m_leftDriveEncoderTicks;
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;
@@ -280,7 +284,7 @@ public class Launcher{
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
                     //System.out.println("Not Ready to Launch 1:" + m_angleToTarget);
                     onTarget = false;
-                    setTurretSpeed(calcTurretSpeedToAngle(m_angleToTarget));
+                    setTurretSpeed(calcTurretSpeedToAngle(angleToTarget));
                 }
             }
             else{
@@ -457,10 +461,6 @@ public class Launcher{
         //System.out.println("Turret Speed: " + turretSpeed);
         return turretSpeed;
     }
-    
-    public void zeroFlywheelRevCounter(){
-        m_flywheelRevCounter = 0;
-    }
 
     public double getCurrentPercent(){
         return m_masterFlywheelMotor.getMotorOutputPercent();
@@ -470,8 +470,8 @@ public class Launcher{
         m_currentMaxTurretSpeed = speed;
     }
 
-    public void setProportionalConstant(double constant){
-        m_proportionalConstant = constant;
+    public void setFlywheelPercentPower(double speed){
+        m_currentFlywheelPercentPower = speed;
     }
 
     public void setTargetFlywheelRpm(double speed){
@@ -496,6 +496,11 @@ public class Launcher{
 
     public void resetSecondBallTracker(){
         m_secondBall = false;
+    }
+
+    public void coastMode(){
+        m_turretMotor.setNeutralMode(NeutralMode.Coast);
+        m_feederMotor.setNeutralMode(NeutralMode.Coast);
     }
 
     /**
