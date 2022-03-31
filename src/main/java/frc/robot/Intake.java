@@ -73,7 +73,7 @@ public class Intake {
         m_rollerMotor = new VictorSPX(RobotMap.IntakeConstants.ROLLER_MOTOR_ID);
         m_magazineMotor = new VictorSPX(RobotMap.IntakeConstants.MAGAZINE_MOTOR_ID);
 
-        m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.DOUBLESOLENOID_EXTENDED_PORT);
+        m_solenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.IntakeConstants.DOUBLESOLENOID_RETRACTED_PORT, RobotMap.IntakeConstants.DOUBLESOLENOID_EXTENDED_PORT);
 
         m_state = IntakeState.kUnkown;
 
