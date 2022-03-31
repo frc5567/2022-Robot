@@ -186,7 +186,7 @@ public class PilotController {
                 if (angleToTarget < RobotMap.TOLERATED_TARGET_ERROR && angleToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
                     m_drivetrain.periodic(0, 0);
                     // prints to let drivers know we are On Target
-                    System.out.print("On Target");
+                    //System.out.print("On Target");
                     return;  
                 }
 

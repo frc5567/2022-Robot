@@ -105,9 +105,9 @@ public class RobotMap {
         //Constant for our turret encoder limit so we don't overturn and damage wiring.
         //2.69 (inches) is the maximum distance we want the turret to be able to turn
         //public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
-        public static final double TURRET_ENCODER_LIMIT = 5000;
+        public static final double TURRET_ENCODER_LIMIT = 3900;
 
-        public static final int TURRET_ENCODER_BAND = 25;
+        public static final int TURRET_ENCODER_BAND = 50;
 
         // This is the max RPM value that the flywheel can be moving
         public static final double MAX_FLYWHEEL_RPM = 6380;
@@ -130,7 +130,7 @@ public class RobotMap {
         public static final int DOUBLESOLENOID_ANGLE_DOWN_PORT = 3;
 
         // Constant for storing the PID values for the turret
-        public static final Gains FLYWHEEL_GAINS = new Gains(0, 0, 0, 0.05, 0, 1);
+        public static final Gains FLYWHEEL_GAINS = new Gains(0.57, 0, 16, 0.05, 0, 1);
         //sets the feedback sensor to be using a primary closed loop (0 = primary closed-loop, 1 = auxilary closed-loop)
         public static final int PID_LOOP_IDX = 0;
 
