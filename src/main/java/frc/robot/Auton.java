@@ -110,7 +110,6 @@ public class Auton{
 
         //Sets the current step to step 1 and the path to whatever path we are currently running
         m_step = AutonStep.kStep1;
-        //m_path = AutonPath.kTwoBall;  This is commented out for the time being as we want to use the shuffleboard instead
     }
 
     /**
@@ -133,8 +132,6 @@ public class Auton{
         
         //calls the limelight periodic method in order to update the network tables every cycle
         m_limelightVision.periodic();
-        //calls the intake periodic method for automatic indexing
-        //Commented out for safety and testing purposes
 
         m_currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
         m_currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
@@ -172,17 +169,12 @@ public class Auton{
 
 
         if(m_doSysOut == true){
-            // System.out.println("Right Encoder Ticks: " + m_currentRightEncoderTicks);
-            // System.out.println("Left Encoder Ticks: " + m_currentLeftEncoderTicks); 
             System.out.println("Current Angle: " + m_drivetrain.getGyro());
             System.out.println("Current Step:" + m_step + " Current Path:" + m_path);
-            //System.out.println("Sensor 1: " + sensor1);
-            //System.out.println("Sensor 2: " + sensor2);
         }
         
 
         //Starts auton pathing in our path: Two ball and Four ball
-        //TODO: add more paths as we code them
         if (m_path == AutonPath.kTwoBall){ 
             //Activates intake and drives forward to a target in order to pick up a game piece
             if(m_step == AutonStep.kStep1){
@@ -206,8 +198,6 @@ public class Auton{
                     m_loopCount = 0;
                     m_step = AutonStep.kStep3;
                 }
-                // m_intake.setIntakeExtension(IntakeState.kRetracted);
-                // System.out.println("Intake Retracted");
             }
             //step to Turn the robot a full 180 degrees in order to face the hub. Also brings ball up to the feeder.
             else if(m_step == AutonStep.kStep3){
@@ -217,7 +207,6 @@ public class Auton{
                     m_step = AutonStep.kStep4;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
-                    //m_launcher.setFlywheelSpeed(RobotMap.LauncherConstants.FLYWHEEL_SPEED);
                 }
                 else{
                     return;
@@ -238,14 +227,10 @@ public class Auton{
                         m_step = AutonStep.kStep5;
                         if(m_doSysOut == true){
                             System.out.println("On Target");
-                            //System.out.println("Ta " + m_limelightVision.Ta() + "   Tx " + m_limelightVision.xAngleToTarget() + "   Ty " + m_limelightVision.yAngleToTarget());
                         }
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
-                        // if(m_doSysOut == true){
-                        //     System.out.println("Not On Target");    
-                        // }
                         m_drivetrain.periodic(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
@@ -350,8 +335,6 @@ public class Auton{
                     m_loopCount = 0;
                     m_step = AutonStep.kStep3;
                 }
-                // m_intake.setIntakeExtension(IntakeState.kRetracted);
-                // System.out.println("Intake Retracted");
             }
             //step to Turn the robot a full 180 degrees in order to face the hub. Also brings ball up to the feeder.
             else if(m_step == AutonStep.kStep3){
@@ -361,7 +344,6 @@ public class Auton{
                     m_step = AutonStep.kStep4;
                     m_drivetrain.zeroEncoders();
                     m_drivetrain.zeroGyro();
-                    //m_launcher.setFlywheelSpeed(RobotMap.LauncherConstants.FLYWHEEL_SPEED);
                 }
                 else{
                     return;
@@ -387,9 +369,6 @@ public class Auton{
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
-                        // if(m_doSysOut == true){
-                        //     System.out.println("Not On Target");    
-                        // }
                         m_drivetrain.periodic(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
                     //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
@@ -486,8 +465,6 @@ public class Auton{
                     m_loopCount = 0;
                     m_step = AutonStep.kStep12;
                 }
-                // m_intake.setIntakeExtension(IntakeState.kRetracted);
-                // System.out.println("Intake Retracted");
             }
             //step to move backwards after intaking the terminal ball in order to not hit the wall  
             else if (m_step == AutonStep.kStep12){
@@ -534,8 +511,6 @@ public class Auton{
                     m_loopCount = 0;
                     m_step = AutonStep.kStep16;
                 }
-                // m_intake.setIntakeExtension(IntakeState.kRetracted);
-                // System.out.println("Intake Retracted");
             }
             //step to aim with the turret and launch
             else if (m_step == AutonStep.kStep16){
