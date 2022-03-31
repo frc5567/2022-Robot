@@ -30,7 +30,7 @@ public class PilotController {
     boolean m_doSysOut = true;
 
     //Boolean for determining if the back button is being pressed
-    boolean m_movingToClimb;
+    //boolean m_movingToClimb;
 
     /**
      * Constuctor for the pilot controller
@@ -127,9 +127,9 @@ public class PilotController {
      */
     private void arcadeDriveCmd(){
         // This if statement makes sure that the trigger and stick input is only used when the back button is not being pressed (this gets rid of any zeroing issues)
-        if(m_movingToClimb){
-            m_drivetrain.shiftGear(Gear.kLowGear);
-            m_drivetrain.periodic(RobotMap.PilotControllerConstants.CLIMB_CRAWL_SPEED, 0);
+
+        if(m_controller.getBackButtonPressed()){
+            crawlCmd();
         }
         else{
             // Sets the triggerInput variable equal to a number between 0 and 1 based on inputs from bother triggers and scales those inputs to the scaler that we enter on the shuffleboard
@@ -230,13 +230,7 @@ public class PilotController {
      * It also sets the boolean m_movingToClimb as true if we are pressing the Back Button so we know not to use the stick input until it isn't being pressed.
      */
     private void crawlCmd(){
-        if(m_controller.getBackButton()){
-            // m_drivetrain.shiftGear(Gear.kLowGear);
-            //m_drivetrain.periodic(RobotMap.PilotControllerConstants.CLIMB_CRAWL_SPEED, 0);
-            m_movingToClimb = true;
-        }
-        else {
-            m_movingToClimb = false;
-        }
+        m_drivetrain.shiftGear(Gear.kLowGear);
+        m_drivetrain.periodic(RobotMap.PilotControllerConstants.CLIMB_CRAWL_SPEED, 0);        
     }
 }
