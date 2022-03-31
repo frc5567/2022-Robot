@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 
 public class RobotShuffleboard {
     Launcher m_launcher;
+    LimelightVision m_limelight;
     // Declares the member variable to later create the driver tab to control the scalers in the shuffleboard tab
     ShuffleboardTab m_driverTab;
 
@@ -20,7 +21,7 @@ public class RobotShuffleboard {
     double m_lowTurnScaler;
     // Declares member variables for manual launcher testing
     double m_flywheelVelocity;
-    double m_targetFlywheelSpeed;
+    double m_targetFlywheelRpm;
     // Declares member variable for choosing an auton path
     double m_autonPath;
     double m_launchPreset;
@@ -44,7 +45,7 @@ public class RobotShuffleboard {
     private NetworkTableEntry m_flywheelVelocityEntry;
     private NetworkTableEntry m_autonPathEntry;
     private NetworkTableEntry m_launchPresetEntry;
-    private NetworkTableEntry m_targetFlywheelSpeedEntry;
+    private NetworkTableEntry m_targetFlywheelRpmEntry;
     private NetworkTableEntry m_maxTurretSpeedEntry;
     private NetworkTableEntry m_proportionalConstantEntry;
     private NetworkTableEntry m_launcherKPEntry;
@@ -57,8 +58,9 @@ public class RobotShuffleboard {
      * Constructor for robot shuffleboard class
      * Ceeates a the Driver Tab on the shuffleboard
      */
-    public RobotShuffleboard(Launcher launcher){
+    public RobotShuffleboard(Launcher launcher, LimelightVision limelight){
         m_launcher = launcher;
+        m_limelight = limelight;
         // Creates the new tab on the Shuffleboard for the driver
         m_driverTab = Shuffleboard.getTab("Driver Tab");
         m_PidTab = Shuffleboard.getTab("PID Tab");
@@ -76,7 +78,7 @@ public class RobotShuffleboard {
         setFlywheelVelocity();
         setAutonPath();
         setLaunchPreset();
-        setTargetFlywheelSpeed();
+        setTargetFlywheelRpm();
         setTurretValues();
         setKP();
         setKI();
@@ -98,7 +100,7 @@ public class RobotShuffleboard {
         setFlywheelVelocity();
         setAutonPath();
         setLaunchPreset();
-        setTargetFlywheelSpeed();
+        setTargetFlywheelRpm();
         setTurretValues();
         setKP();
         setKI();
@@ -145,6 +147,7 @@ public class RobotShuffleboard {
 
     public void PidShuffleboardConfig(){
         Shuffleboard.selectTab("PID Tab");
+        SmartDashboard.putNumber("Hub Distance", m_launcher.m_dist);
 
         m_launcherKPEntry = m_PidTab.addPersistent(("kP"), RobotMap.LauncherConstants.FLYWHEEL_GAINS.kP)
                             .withWidget(BuiltInWidgets.kTextView)
@@ -158,7 +161,7 @@ public class RobotShuffleboard {
         m_launcherKFEntry = m_PidTab.addPersistent(("kF"), RobotMap.LauncherConstants.FLYWHEEL_GAINS.kF)
                             .withWidget(BuiltInWidgets.kTextView)
                             .getEntry();
-        m_targetFlywheelSpeedEntry = m_PidTab.addPersistent("Target Flywheel Speed", RobotMap.LauncherConstants.TARGET_FLYWHEEL_SPEED)
+        m_targetFlywheelRpmEntry = m_PidTab.addPersistent("Target Flywheel Rpm", RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM)
                             .withWidget(BuiltInWidgets.kTextView)
                             .getEntry();
         m_PidTab.addPersistent("current RPM PID", m_launcher.getRealSpeed())
@@ -200,11 +203,10 @@ public class RobotShuffleboard {
 
     /**
      * Sets the targetFlywheelSpeed to be equal to the value on the shuffleboard
-     * If no valued is found on the shuffleboard for targetFlywheelSpeed, meaning returns with nothing, the value will be set to 2,124 RPM
      */
-    private void setTargetFlywheelSpeed(){
-        m_targetFlywheelSpeed = m_targetFlywheelSpeedEntry.getDouble(RobotMap.LauncherConstants.TARGET_FLYWHEEL_SPEED);
-        m_launcher.setTargetFlywheelSpeed(m_targetFlywheelSpeed);
+    private void setTargetFlywheelRpm(){
+        m_targetFlywheelRpm = m_targetFlywheelRpmEntry.getDouble(RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM);
+        m_launcher.setTargetFlywheelRpm(m_targetFlywheelRpm);
     }
 
     /**
@@ -212,8 +214,8 @@ public class RobotShuffleboard {
      * @return the speed in RPM that we want the flywheels to be going before launching
      */
     public double getTargetFlywheelSpeed(){
-        setTargetFlywheelSpeed();
-        return m_targetFlywheelSpeed;
+        setTargetFlywheelRpm();
+        return m_targetFlywheelRpm;
     }
 
     /**
