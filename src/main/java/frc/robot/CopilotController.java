@@ -1,8 +1,6 @@
 package frc.robot;
 
 import frc.robot.Intake.IntakeState;
-import frc.robot.RobotMap.CopilotControllerConstants;
-import edu.wpi.first.wpilibj.XboxController;
 
 public class CopilotController {
     //declare objects for the different systems controlled by the coppilot controller
@@ -13,9 +11,6 @@ public class CopilotController {
     private Climber m_climber;
     //declares shuffleboard to be used for flywheel velocity testing
     private RobotShuffleboard m_shuffleboard;
-    private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
-    //for manual commands
-    private XboxController m_controller;
 
     boolean m_carwashRunning = false;
 
@@ -36,8 +31,6 @@ public class CopilotController {
         m_climber = climber;
         
         m_gamePad = new GamePad(RobotMap.GamePadConstants.GAMEPAD_PORT);
-        m_controller = new XboxController(RobotMap.CopilotControllerConstants.COPILOT_CONTROLLER_PORT);
-
     }
 
     /**
@@ -47,8 +40,6 @@ public class CopilotController {
         m_intake.init();
         m_launcher.init();
         m_gamePad.init();
-        //sets our flywheel velocity for testing to the value put into the shuffleboard
-        m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
     }
 
     /**
@@ -60,8 +51,6 @@ public class CopilotController {
         controlIntake();
         controlLauncher();
         controlClimber();
-
-        m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
     }
 
     /**
@@ -179,42 +168,6 @@ public class CopilotController {
         else{
             m_climber.setWinchSpeed(0);
         }
-    }
-
-    /**
-     * Manually controls the launcher and the turret for testing
-     */
-    private void manualLauncherCmd(){
-        //revs flywheel when A button is pressed
-        if(m_controller.getAButton()){
-            m_launcher.setFlywheelSpeed(m_currentFlywheelVelocity);
-        }
-        else{
-            m_launcher.setFlywheelSpeed(0);
-        }
-    }
-
-    /**
-     * Manually controls the intake for testing
-     */
-    private void manualIntakeCmd(){
-        //if Y button is pressed turn on the roller wheels
-        if(m_controller.getYButton()){
-            m_intake.setRollerSpeed(RobotMap.IntakeConstants.ROLLER_SPEED);
-        }
-        else {
-            m_intake.setRollerSpeed(0);
-        }
-
-        //if left bumper is pressed extend the intake
-        if(m_controller.getLeftBumperPressed()){
-            m_intake.setIntakeExtension(IntakeState.kExtended);
-        }
-        //if right bumper is pressed retract the intake
-        else if(m_controller.getRightBumperPressed()) {
-            m_intake.setIntakeExtension(IntakeState.kRetracted);
-        }  
-
     }
 
     /**

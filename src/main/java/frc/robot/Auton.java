@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Intake.IntakeState;
 
 public class Auton{
@@ -162,11 +161,6 @@ public class Auton{
         else{
             m_doSysOut = false;
         }
-
-        boolean sensor1 = m_intake.getMagazineSensor0();
-        boolean sensor2 = m_intake.getMagazineSensor1();
-
-
 
         if(m_doSysOut == true){
             System.out.println("Current Angle: " + m_drivetrain.getGyro());
