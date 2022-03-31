@@ -164,12 +164,12 @@ public class RobotMap {
          * Constant for our turret encoder limit so we don't overturn and damage wiring. 2.69 (inches) is the maximum distance we want the turret to be able to turn
          */
         //public static final double TURRET_ENCODER_LIMIT = 2.69 * INCHES_TO_ENCODER_TICKS_TURRET;
-        public static final double TURRET_ENCODER_LIMIT = 5000;
+        public static final double TURRET_ENCODER_LIMIT = 3900;
 
         /**
          * Constant for our turret encoder band. Similar to a deadband.
          */
-        public static final int TURRET_ENCODER_BAND = 25;
+        public static final int TURRET_ENCODER_BAND = 50;
 
         /**
          * Constant for the maximum RPM value that the flywheel can be moving
@@ -179,12 +179,12 @@ public class RobotMap {
         /**
          * Constant for distance from directly on center we allow the target to be to the right
          */
-        public static final double TOLERATED_TURRET_ERROR_RIGHT = 16;
+        public static final double TOLERATED_TURRET_ERROR_RIGHT = 0.8;
 
         /**
          * Constant for distance from directly on center we allow the target to be to the left
          */
-        public static final double TOLERATED_TURRET_ERROR_LEFT = 0;
+        public static final double TOLERATED_TURRET_ERROR_LEFT = -0.8;
 
         /**
          * Constant for how much error we allow the flywheel speed before we launch
@@ -194,7 +194,7 @@ public class RobotMap {
         /**
          * Constant for storing the PIDF values for the turret
          */ 
-        public static final Gains FLYWHEEL_GAINS = new Gains(0, 0, 0, 0.05, 0, 1);
+        public static final Gains FLYWHEEL_GAINS = new Gains(0.57, 0, 16, 0.05, 0, 1);
 
         /**
          * Constant for the PID slot which allows us to have multiple configurations used in launcher.launchPID

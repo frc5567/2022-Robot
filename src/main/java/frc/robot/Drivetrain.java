@@ -136,7 +136,7 @@ public class Drivetrain {
      * zeroGyro is a method to set the gyro to 0
      */
     public void zeroGyro(){
-        System.out.println("zero gyro");
+        //System.out.println("zero gyro");
         m_gyro.zeroYaw();
     }
 
