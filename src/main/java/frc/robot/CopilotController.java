@@ -59,13 +59,14 @@ public class CopilotController {
      * This method should be called periodically in Teleop in order to control all systems
      */
     public void periodic(){
+        m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
+        m_shuffleboard.periodic();
+        m_launcher.periodic();
         controlIntake();
         controlLauncher();
         controlClimber();
 
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
-        m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
-        m_shuffleboard.periodic();
     }
 
     /**
@@ -146,6 +147,7 @@ public class CopilotController {
             m_limelight.disableLEDs();
             m_intake.indexing();
             m_launcher.zeroFlywheelRevCounter();
+            m_launcher.resetSecondBallTracker();
         }
 
         //calls feeder command button to set feeder speed

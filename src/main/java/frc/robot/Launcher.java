@@ -76,7 +76,7 @@ public class Launcher{
 
 
     //declares our double solenoid to be used on our trajectory control system
-    private DoubleSolenoid m_solenoid;
+    // private DoubleSolenoid m_solenoid;
 
     //declares state enum to track our current trajectory control state
     private TrajectoryPosition m_state;
@@ -147,7 +147,7 @@ public class Launcher{
         m_flywheelEncoder = new SensorCollection (m_masterFlywheelMotor);
         m_turretEncoder = new SensorCollection (m_turretMotor);
 
-        m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_DOWN_PORT, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_UP_PORT);
+        // m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_DOWN_PORT, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_UP_PORT);
     
         m_state = TrajectoryPosition.kUnkown;
 
@@ -159,7 +159,7 @@ public class Launcher{
      * Initialization method for Launcher. Currently only zeros encoders and sets our default trajectory position to up
      */
     public void init(){
-        setTrajectoryPosition(TrajectoryPosition.kDown);
+        // setTrajectoryPosition(TrajectoryPosition.kDown);
         m_feederMotor.setNeutralMode(NeutralMode.Brake);
         m_slaveFlywheelMotor.setInverted(true);
         m_feederCurrentSpeed = 0;
@@ -218,6 +218,10 @@ public class Launcher{
         // m_masterFlywheelMotor.selectProfileSlot(RobotMap.LauncherConstants.PID_SLOT, RobotMap.LauncherConstants.PID_MODE);
     }
 
+    public void periodic(){
+        setGains();
+    }
+
     public boolean runPID(double desiredRpm){
         boolean atSpeed = false;
 
@@ -247,12 +251,11 @@ public class Launcher{
         System.out.println("Distance: " + m_dist);
         //double desiredRpm = (3119.8 + (19.002 * m_dist) - (.1949171* Math.pow(m_dist, 2)) + (.000954319 * Math.pow(m_dist, 3)));
         double desiredRpm = (0.0047 * Math.pow(m_dist, 3) - 1.2642 * Math.pow(m_dist, 2) + 121.27 * (m_dist) - 127.68);
-        //double desiredRpm = (0.0047 * Math.pow(m_dist, 3) - 1.2642 * Math.pow(m_dist, 2) + 121.27 * (m_dist) - 127.68);
-        
+       
 
         // runPID(2000);
         //runPID(desiredRpm)
-        if(runPID( m_currentTargetFlywheelRpm )){
+        if(runPID(desiredRpm)){
             m_launcherAtSpeedCount++;
 
             double ticks = m_masterFlywheelMotor.getSelectedSensorVelocity();
@@ -271,8 +274,10 @@ public class Launcher{
         // System.out.println("launching "+m_masterFlywheelMotor.getSelectedSensorVelocity());
         // target();
         launchPID();
+
+        boolean onTarget = target();
         
-        if(m_launcherAtSpeedCount > 10 && target()){
+        if(m_launcherAtSpeedCount > 10 && onTarget){
             System.out.println("launching (count:" + m_launcherAtSpeedCount + ")");
             feedLauncher();
         }
@@ -286,6 +291,7 @@ public class Launcher{
         setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         m_feedingCounter++;
         if(m_feedingCounter > RobotMap.LauncherConstants.MAX_FEEDING_CYCLES){
+            setFeederSpeed(0);
             m_feedingCounter = 0;
             m_launcherAtSpeedCount = 0;
             System.out.println("completed feed");
@@ -504,7 +510,7 @@ public class Launcher{
      * @param value Value.kForward, Value.kReverse
      */
     private void setPiston(DoubleSolenoid.Value value) {
-        m_solenoid.set(value);
+        // m_solenoid.set(value);
     }
 
     /**
@@ -527,10 +533,10 @@ public class Launcher{
      */
     public void zeroTurretPosition(){
         if(getTurretPosition() >= RobotMap.LauncherConstants.TURRET_ENCODER_BAND){
-            m_turretMotor.set(ControlMode.PercentOutput, RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+            m_turretMotor.set(ControlMode.PercentOutput, turretSpeed(getTurretPosition()));
         }
         else if(getTurretPosition() <= -RobotMap.LauncherConstants.TURRET_ENCODER_BAND){
-            m_turretMotor.set(ControlMode.PercentOutput, -RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
+            m_turretMotor.set(ControlMode.PercentOutput, turretSpeed(getTurretPosition()));
         }
         else {
             m_turretMotor.set(ControlMode.PercentOutput, 0);
@@ -541,6 +547,7 @@ public class Launcher{
 
     /**
      * Calculates the speed to set the turret to based on how close we are to our taget. The closer we are, the slower we go.
+     * Do not use for centering the turret because for some reason it doesn't work
      * @param currentAngle the current x angle to the target from the limelight
      * @return calculated speed of the turret
      */
@@ -564,13 +571,13 @@ public class Launcher{
         //System.out.println(angleOffset);
         //System.out.println("hi\n\nhi\n\nhi***********************************************\n**********************************************");
         if(Math.abs(angleOffset) > 15){
-            turretSpeed = sign*m_currentMaxTurretSpeed;
+            turretSpeed = sign*m_currentMaxTurretSpeed/10;
         }
         else if (Math.abs(angleOffset) > 10){
-            turretSpeed = sign*m_currentMaxTurretSpeed/3;
+            turretSpeed = sign*m_currentMaxTurretSpeed/30;
         }
         else if (Math.abs(angleOffset) > 6.5){
-            turretSpeed = sign*m_currentMaxTurretSpeed/4;
+            turretSpeed = sign*m_currentMaxTurretSpeed/40;
         }
         else{
             turretSpeed = sign*RobotMap.LauncherConstants.MIN_TURRET_SPEED;
@@ -616,12 +623,35 @@ public class Launcher{
         m_currentKF = F;
     }
 
+    public void resetSecondBallTracker(){
+        m_secondBall = false;
+    }
+
+    private void setGains(){
+        if(m_masterConfig.slot2.kP != m_currentKP){
+            m_masterConfig.slot2.kP = m_currentKP; //0.57
+        }
+        
+        if(m_masterConfig.slot2.kI != m_currentKI){
+            m_masterConfig.slot2.kI = m_currentKI; //0
+        }
+        
+        if(m_masterConfig.slot2.kD != m_currentKD){
+            m_masterConfig.slot2.kD = m_currentKD; //16
+        }
+
+        if(m_masterConfig.slot2.kF != m_currentKF){
+            m_masterConfig.slot2.kF = m_currentKF; //0.05
+        }
+        
+    }
+
     private void configTalonPID(){
         m_masterFlywheelMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 30);
-        m_masterConfig.slot2.kP = 0.57;//m_currentKP;
-        m_masterConfig.slot2.kI = 0;//m_currentKI;
-        m_masterConfig.slot2.kD = 16;//m_currentKD;
-        m_masterConfig.slot2.kF = 0.05;//m_currentKF;
+        m_masterConfig.slot2.kP = m_currentKP; //0.57
+        m_masterConfig.slot2.kI = m_currentKI; //0
+        m_masterConfig.slot2.kD = m_currentKD; //16
+        m_masterConfig.slot2.kF = m_currentKF; //0.05
         m_masterConfig.slot2.integralZone = RobotMap.LauncherConstants.FLYWHEEL_GAINS.kIzone;
 		m_masterConfig.slot2.closedLoopPeakOutput = RobotMap.LauncherConstants.FLYWHEEL_GAINS.kPeakOutput;
         m_masterConfig.slot2.closedLoopPeriod = 1;

@@ -92,7 +92,7 @@ public class RobotMap {
         //These are untested placesholder values until we know what speeds we actually need
         public static final double FEEDING_SPEED = -0.8;
         public static final double EXPEL_SPEED = 0.35;
-        public static final double TURRET_ROTATION_SPEED = 0.1;
+        public static final double TURRET_ROTATION_SPEED = 0.075;
         public static final double FLYWHEEL_SPEED = 0.7;
 
         // This is the target speed we want the flywheel to be moving (in RPM) before launching
@@ -139,7 +139,7 @@ public class RobotMap {
         public static final int PID_SLOT = 2;
         public static final int PID_MODE = 0;
 
-        public static final int FLYWHEEL_RPM_BOUND = 30;
+        public static final int FLYWHEEL_RPM_BOUND = 50;
         //Constant representing the default deadband percentage for the turret motor (currently at 4%)
         public static final double TURRET_MOTOR_DEADBAND = 0.04;
 
