@@ -327,11 +327,12 @@ public class RobotMap {
         /**
          * Default flywheel velocity value. Returns if the value is not found from the shuffleboard
          */
-        public static final double FLYWHEEL_DEFAULT_VELOCITY = 0.5;
+        public static final double FLYWHEEL_DEFAULT_PERCENT_POWER = 0.72;
 
         /**
          * Default auton path. Returns if the value is not found from the shuffleboard
          */
+
         public static final double DEFAULT_AUTON_PATH = 0;
 
         /**

@@ -12,6 +12,11 @@ public class CopilotController {
     //declares shuffleboard to be used for flywheel velocity testing
     private RobotShuffleboard m_shuffleboard;
 
+    private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_PERCENT_POWER;
+    //for manual commands
+    private XboxController m_controller;
+
+
     boolean m_carwashRunning = false;
 
 
@@ -130,7 +135,6 @@ public class CopilotController {
             m_launcher.zeroTurretPosition();
             m_limelight.disableLEDs();
             m_intake.indexing();
-            m_launcher.zeroFlywheelRevCounter();
             m_launcher.resetSecondBallTracker();
         }
 

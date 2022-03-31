@@ -102,6 +102,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_drivetrain.coastMode();
+    m_launcher.coastMode();
     m_intake.setIntakeExtension(IntakeState.kRetracted);
     m_limelightVision.disableLEDs();
   }
