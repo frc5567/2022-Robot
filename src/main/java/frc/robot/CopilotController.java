@@ -1,7 +1,6 @@
 package frc.robot;
 
 import frc.robot.Intake.IntakeState;
-import frc.robot.Launcher.TrajectoryPosition;
 import frc.robot.RobotMap.CopilotControllerConstants;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -15,7 +14,6 @@ public class CopilotController {
     //declares shuffleboard to be used for flywheel velocity testing
     private RobotShuffleboard m_shuffleboard;
     private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_VELOCITY;
-    private double m_currentLaunchPreset = RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET;
     //for manual commands
     private XboxController m_controller;
 
@@ -51,15 +49,12 @@ public class CopilotController {
         m_gamePad.init();
         //sets our flywheel velocity for testing to the value put into the shuffleboard
         m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
-        m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
-        
     }
 
     /**
      * This method should be called periodically in Teleop in order to control all systems
      */
     public void periodic(){
-        m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         m_shuffleboard.periodic();
         m_launcher.periodic();
         controlIntake();
@@ -74,7 +69,7 @@ public class CopilotController {
      */
     public void testPeriodic(){
         //m_launcher.setFeederSpeed(0.2);
-        //System.out.println("Turret Encoder Ticks: " + m_launcher.getTurretPosition());
+        System.out.println("Turret Encoder Ticks: " + m_launcher.getTurretPosition());
         // manualLauncherCmd();
         // manualIntakeCmd();
 
@@ -196,14 +191,6 @@ public class CopilotController {
         }
         else{
             m_launcher.setFlywheelSpeed(0);
-        }
-        //sets trajectory position to up if start button is pressed
-        if(m_controller.getStartButtonPressed()){
-            m_launcher.setTrajectoryPosition(TrajectoryPosition.kUp);
-        }
-        //sets trajectory position to down if the back button is pressed
-        else if(m_controller.getBackButtonPressed()){
-            m_launcher.setTrajectoryPosition(TrajectoryPosition.kDown);
         }
     }
 
