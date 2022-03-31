@@ -143,7 +143,6 @@ public class Launcher{
         m_flywheelEncoder = new SensorCollection (m_masterFlywheelMotor);
         m_turretEncoder = new SensorCollection (m_turretMotor);
 
-        m_solenoid = new DoubleSolenoid(RobotMap.CANConstants.PCM_CAN_ID, PneumaticsModuleType.CTREPCM, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_DOWN_PORT, RobotMap.LauncherConstants.DOUBLESOLENOID_ANGLE_UP_PORT);
     
         m_state = TrajectoryPosition.kUnkown;
 

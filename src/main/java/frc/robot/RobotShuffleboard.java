@@ -158,7 +158,7 @@ public class RobotShuffleboard {
         m_launcherKFEntry = m_PidTab.addPersistent(("kF"), RobotMap.LauncherConstants.FLYWHEEL_GAINS.kF)
                             .withWidget(BuiltInWidgets.kTextView)
                             .getEntry();
-        m_targetFlywheelSpeedEntry = m_PidTab.addPersistent("Target Flywheel Speed", RobotMap.LauncherConstants.TARGET_FLYWHEEL_SPEED)
+        m_targetFlywheelSpeedEntry = m_PidTab.addPersistent("Target Flywheel Speed", RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM)
                             .withWidget(BuiltInWidgets.kTextView)
                             .getEntry();
         m_PidTab.addPersistent("current RPM PID", m_launcher.getRealSpeed())
@@ -203,7 +203,7 @@ public class RobotShuffleboard {
      * If no valued is found on the shuffleboard for targetFlywheelSpeed, meaning returns with nothing, the value will be set to 2,124 RPM
      */
     private void setTargetFlywheelSpeed(){
-        m_targetFlywheelSpeed = m_targetFlywheelSpeedEntry.getDouble(RobotMap.LauncherConstants.TARGET_FLYWHEEL_SPEED);
+        m_targetFlywheelSpeed = m_targetFlywheelSpeedEntry.getDouble(RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM);
         m_launcher.setTargetFlywheelSpeed(m_targetFlywheelSpeed);
     }
 
