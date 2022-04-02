@@ -194,7 +194,7 @@ public class RobotMap {
         /**
          * Constant for storing the PIDF values for the turret
          */ 
-        public static final Gains FLYWHEEL_GAINS = new Gains(0.57, 0, 16, 0.05, 0, 1);
+        public static final Gains FLYWHEEL_GAINS = new Gains(0.55, 0.005, 13, 0.045, 100, 1);//Gains(0.57, 0, 16, 0.05, 0, 1);
 
         /**
          * Constant for the PID slot which allows us to have multiple configurations used in launcher.launchPID
@@ -332,7 +332,6 @@ public class RobotMap {
         /**
          * Default auton path. Returns if the value is not found from the shuffleboard
          */
-
         public static final double DEFAULT_AUTON_PATH = 0;
 
         /**

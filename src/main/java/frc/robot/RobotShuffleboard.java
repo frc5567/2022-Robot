@@ -160,6 +160,16 @@ public class RobotShuffleboard {
         m_PidTab.addPersistent("current RPM PID", m_launcher.getRealSpeed())
                             .withWidget(BuiltInWidgets.kTextView)
                             .getEntry();
+
+        m_launchPresetEntry = m_PidTab.addPersistent(("Launch Preset"), RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET)
+                            .withWidget(BuiltInWidgets.kTextView)
+                            .getEntry();
+        m_maxTurretSpeedEntry = m_PidTab.addPersistent(("Max Turret Speed"), RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED)
+                            .withWidget(BuiltInWidgets.kTextView)
+                            .getEntry();
+        m_proportionalConstantEntry = m_PidTab.addPersistent(("Proportional Constant"), RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT)
+                            .withWidget(BuiltInWidgets.kTextView)
+                            .getEntry();
     }
 
     /**

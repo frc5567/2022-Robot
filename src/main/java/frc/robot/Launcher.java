@@ -173,10 +173,10 @@ public class Launcher{
         //Applies PID configurations to the master flywheel motor
         m_masterFlywheelMotor.selectProfileSlot(RobotMap.LauncherConstants.PID_SLOT, RobotMap.LauncherConstants.PID_MODE);
         //Prints out our current distance
-        System.out.println("Distance: " + dist);
         //Calculates desired RPM based on our distance from the hub
         double desiredRpm = (0.0078 * Math.pow(dist, 3) - 2.3105 * Math.pow(dist, 2) + 236.44 * (dist) - 4384.4);
-
+        System.out.println("Distance: " + dist + "\tDesRPM: "+ desiredRpm);
+        
         if(runPID(desiredRpm)){
             //Adds to our at speed count every cycle we're at speed
             m_launcherAtSpeedCount++;
