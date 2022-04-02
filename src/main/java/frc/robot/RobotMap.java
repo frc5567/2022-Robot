@@ -130,7 +130,7 @@ public class RobotMap {
         public static final int DOUBLESOLENOID_ANGLE_DOWN_PORT = 3;
 
         // Constant for storing the PID values for the turret
-        public static final Gains FLYWHEEL_GAINS = new Gains(0.57, 0, 16, 0.05, 0, 1);
+        public static final Gains FLYWHEEL_GAINS = new Gains(0.55, 0.005, 13, 0.045, 100, 1);//Gains(0.57, 0, 16, 0.05, 0, 1);
         //sets the feedback sensor to be using a primary closed loop (0 = primary closed-loop, 1 = auxilary closed-loop)
         public static final int PID_LOOP_IDX = 0;
 
@@ -202,7 +202,7 @@ public class RobotMap {
         public static final double DRIVE_DEFAULT_INPUT_SCALER = 0.5;
         public static final double FLYWHEEL_DEFAULT_PERCENT_POWER = 0.72;
         public static final double DEFAULT_AUTON_PATH = 0;
-        public static final int DEFAULT_LAUNCH_PRESET = 0;
+        public static final double DEFAULT_LAUNCH_PRESET = 0;
         public static final double DEFAULT_MAX_TURRET_SPEED = 0.75;
         public static final double DEFAULT_PROPORTIONAL_CONSTANT = 0.1;
     }
