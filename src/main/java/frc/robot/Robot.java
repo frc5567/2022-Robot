@@ -58,8 +58,7 @@ public class Robot extends TimedRobot {
 
     try {
       m_camera = CameraServer.startAutomaticCapture();
-      // m_cvSink = CameraServer.getVideo();
-      // m_outputStream = CameraServer.putVideo("Driving Cam", 160, 120);
+
       m_camera.setResolution(160, 120);
       m_camera.setFPS(10);
 
