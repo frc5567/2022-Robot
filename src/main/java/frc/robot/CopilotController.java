@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.Intake.IntakeState;
 
+
 public class CopilotController {
     //declare objects for the different systems controlled by the coppilot controller
     private GamePad m_gamePad;
@@ -11,11 +12,6 @@ public class CopilotController {
     private Climber m_climber;
     //declares shuffleboard to be used for flywheel velocity testing
     private RobotShuffleboard m_shuffleboard;
-
-    private double m_currentFlywheelVelocity = RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_PERCENT_POWER;
-    //for manual commands
-    private XboxController m_controller;
-
 
     boolean m_carwashRunning = false;
 
@@ -34,7 +30,7 @@ public class CopilotController {
         m_shuffleboard = shuffleboard;
         m_limelight = limelight;
         m_climber = climber;
-        
+
         m_gamePad = new GamePad(RobotMap.GamePadConstants.GAMEPAD_PORT);
     }
 
@@ -62,8 +58,9 @@ public class CopilotController {
      * Periodic method for copilot controller that includes manual testing controls
      */
     public void testPeriodic(){
+        System.out.println("First Sensor   [" + m_intake.getMagazineSensor0() + "] --- " + "Second Sensor    [" + m_intake.getMagazineSensor1() + "]");
         //m_launcher.setFeederSpeed(0.2);
-        System.out.println("Turret Encoder Ticks: " + m_launcher.getTurretPosition());
+        //System.out.println("Turret Encoder Ticks: " + m_launcher.getTurretPosition());
         // manualLauncherCmd();
         // manualIntakeCmd();
 
@@ -103,7 +100,7 @@ public class CopilotController {
     }
 
     /**
-     * This method controls the launcher (and turret) with three buttons, one for automatically targeting and launching, 
+     * This method controls the launcher (and turret) with three buttons, one for automatically targeting and launching,
      * and two for setting the position of the trajectory controller
      */
     private void controlLauncher(){
@@ -143,13 +140,13 @@ public class CopilotController {
             m_launcher.setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
         }
 
-        if (m_gamePad.getCarwash()){
+        if (m_gamePad.getCarwash() && !m_gamePad.getTargetAndLaunch()){
             m_carwashRunning = true;
-            //m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
+            m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
         }
         else if(!m_gamePad.getTargetAndLaunch() && !m_gamePad.getExpell()){
             if(m_carwashRunning){
-                //m_intake.setMagazineSpeed(0);
+                // m_intake.setMagazineSpeed(0);
                 m_carwashRunning = false;
             }
         }
