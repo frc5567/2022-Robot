@@ -185,16 +185,16 @@ public class Intake {
     }
 
     /**
-     * @return whether or not the first magazine sensor is being activated
+     * @return whether or not the first magazine sensor is being activated: True if beam is broken, False if not
      */
     public boolean getMagazineSensor0() {
-        return m_sensor0.get();
+        return !m_sensor0.get();
     }
 
     /**
-     * @return whether or not the second magazine sensor is being activated
+     * @return whether or not the second magazine sensor is being activated: True if beam is broken, False if not
      */
     public boolean getMagazineSensor1() {
-        return m_sensor1.get();
+        return !m_sensor1.get();
     }
 }

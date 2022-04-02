@@ -7,6 +7,10 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.Intake.IntakeState;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.CvSource;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -25,6 +29,11 @@ public class Robot extends TimedRobot {
   public Launcher m_launcher;
   private Climber m_climber;
   private RobotShuffleboard m_shuffleboard;
+  private UsbCamera m_camera;
+  private CvSink m_cvSink;
+  private CvSource m_outputStream;
+
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -46,6 +55,16 @@ public class Robot extends TimedRobot {
     m_copilotController = new CopilotController(m_intake, m_launcher, m_shuffleboard, m_limelightVision, m_climber);
     m_auton = new Auton(m_drivetrain, m_launcher, m_intake, m_limelightVision, m_shuffleboard);
     m_limelightVision.disableLEDs();
+
+    try {
+      m_camera = CameraServer.startAutomaticCapture();
+
+      m_camera.setResolution(160, 120);
+      m_camera.setFPS(10);
+
+    } catch (Exception e){
+      System.out.println("Camera failed to instantiate");
+    }
   }
 
   /**

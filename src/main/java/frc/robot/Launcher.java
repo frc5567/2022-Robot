@@ -78,6 +78,8 @@ public class Launcher{
     //Variable for storing whether or not we're at our target RPM for the boolean box on the shuffleboard
     public boolean m_atRPM;
 
+    int m_feedingCounter = 0;
+
     /**
      * Constructor for Launcher objects
      * @param limelightVision we pass in limelight to use in launch targeting
@@ -175,20 +177,21 @@ public class Launcher{
         //Prints out our current distance
         //Calculates desired RPM based on our distance from the hub
         double desiredRpm = (0.0078 * Math.pow(dist, 3) - 2.3105 * Math.pow(dist, 2) + 236.44 * (dist) - 4384.4);
-        System.out.println("Distance: " + dist + "\tDesRPM: "+ desiredRpm);
+        // System.out.println("Distance: " + dist + "\tDesRPM: "+ desiredRpm);
         
         if(runPID(desiredRpm)){
             //Adds to our at speed count every cycle we're at speed
             m_launcherAtSpeedCount++;
+            // System.out.println("Launcher at speed count: " + m_launcherAtSpeedCount );
 
             //Sysouts for testing
             double ticks = m_masterFlywheelMotor.getSelectedSensorVelocity();
             double dticks = desiredRpm * (double)RobotMap.LauncherConstants.TICKS_PER_ROTATION / 600.0;
-            System.out.println("Desired RPM:    [" + desiredRpm + "]   Actual RPM:    [" + ((ticks * 600.0) / 2048.0) + "]");
+            // System.out.println("Desired RPM:    [" + desiredRpm + "]   Actual RPM:    [" + ((ticks * 600.0) / 2048.0) + "]");
             // System.out.println("Desired ticks:  [" + dticks +     "]   Actual ticks:  [" + ticks + "]");
         }
         else{
-            m_launcherAtSpeedCount = 0;
+            //m_launcherAtSpeedCount = 0;
         }
     }
 
@@ -197,41 +200,42 @@ public class Launcher{
      * Spins up the flywheel and targets, and when the flywheel is up to speed and the turret is on target activate the feeder
      */
     public void targetAndLaunch(){
+        m_intake.indexing();
         launchPID();
 
         boolean onTarget = target();
         
         if(m_launcherAtSpeedCount > 10 && onTarget){
-            System.out.println("launching (count:" + m_launcherAtSpeedCount + ")");
+            // System.out.println("launching (count:" + m_launcherAtSpeedCount + ")");
             feedLauncher();
         }
 
         //If we are launching our second ball, move it into the second position on the robot
-        if(m_secondBall){
-            m_intake.indexing();
-        }
+        // if(m_secondBall){
+        //     // System.out.println("Second Ball");
+        //     m_intake.indexing();
+        // }
     }
 
     /**
      * Feeds the ball in the second position into the flywheel
      */
     private void feedLauncher(){
-        int feedingCounter = 0;
-        System.out.println("FEEDING -----------------------------------");
+        // System.out.println("FEEDING -----------------------------------");
         setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
-        feedingCounter++;
-        if(feedingCounter > RobotMap.LauncherConstants.MAX_FEEDING_CYCLES){
+        m_feedingCounter++;
+        if(m_feedingCounter > RobotMap.LauncherConstants.MAX_FEEDING_CYCLES){
             setFeederSpeed(0);
-            feedingCounter = 0;
+            m_feedingCounter = 0;
             m_launcherAtSpeedCount = 0;
             //System.out.println("completed feed");
             //If we just fed our first ball, track that we are on our second ball. 
-            if(m_secondBall){
-                m_secondBall = false;
-            }
-            else{
-                m_secondBall = true;
-            }
+            // if(m_secondBall){
+            //     m_secondBall = false;
+            // }
+            // else{
+            //     m_secondBall = true;
+            // }
 
         }
     }
@@ -252,6 +256,7 @@ public class Launcher{
         m_turretEncoderTicks = getTurretPosition();
 
         angleToTarget = m_limelightVision.xAngleToTarget();
+        System.out.println("Angle to Target: " + angleToTarget);
 
         if (m_onTarget && !m_limelightVision.seeTarget()){
             if(m_leftDriveEncoderTicks != m_onTargetLeftTicks){
@@ -424,14 +429,14 @@ public class Launcher{
         // System.out.println("angle offset: " + angleOffset);
         //System.out.println("hi\n\nhi\n\nhi***********************************************\n**********************************************");
         //Danny's funny sysout ^
-        if(Math.abs(angleOffset) > 15){
-            turretSpeed = sign*m_currentMaxTurretSpeed;
+        if(Math.abs(angleOffset) > 12){
+            turretSpeed = sign*m_currentMaxTurretSpeed/1.5;     
         }
-        else if (Math.abs(angleOffset) > 10){
+        else if (Math.abs(angleOffset) > 8){
             turretSpeed = sign*m_currentMaxTurretSpeed/2;
         }
-        else if (Math.abs(angleOffset) > 6.5){
-            turretSpeed = sign*m_currentMaxTurretSpeed/4;
+        else if (Math.abs(angleOffset) > 3){
+            turretSpeed = sign*0.3;//m_currentMaxTurretSpeed/4;
         }
         else{
             turretSpeed = sign*RobotMap.LauncherConstants.MIN_TURRET_SPEED;

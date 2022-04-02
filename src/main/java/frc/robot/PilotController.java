@@ -128,7 +128,7 @@ public class PilotController {
     private void arcadeDriveCmd(){
         // This if statement makes sure that the trigger and stick input is only used when the back button is not being pressed (this gets rid of any zeroing issues)
 
-        if(m_controller.getBackButtonPressed()){
+        if(m_controller.getBackButton()){
             crawlCmd();
         }
         else{
