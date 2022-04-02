@@ -544,10 +544,10 @@ public class Launcher{
 
     private void configTalonPID(){
         m_masterFlywheelMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 30);
-        m_masterConfig.slot2.kP = m_currentKP; //0.57
-        m_masterConfig.slot2.kI = m_currentKI; //0
-        m_masterConfig.slot2.kD = m_currentKD; //16
-        m_masterConfig.slot2.kF = m_currentKF; //0.05
+        m_masterConfig.slot2.kP = m_currentKP; //0.57 //Danny's: 55
+        m_masterConfig.slot2.kI = m_currentKI; //0 //Danny's: 0.005
+        m_masterConfig.slot2.kD = m_currentKD; //16 //Danny's: 13
+        m_masterConfig.slot2.kF = m_currentKF; //0.05 //Danny's: 0.045
         m_masterConfig.slot2.integralZone = RobotMap.LauncherConstants.FLYWHEEL_GAINS.kIzone;
 		m_masterConfig.slot2.closedLoopPeakOutput = RobotMap.LauncherConstants.FLYWHEEL_GAINS.kPeakOutput;
         m_masterConfig.slot2.closedLoopPeriod = 1;

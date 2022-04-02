@@ -76,12 +76,12 @@ public class RobotMap {
         /**
          * Constant for filters on acceleration in order to prevent brownouts
          */
-        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 3.0;
+        public static final double SLEW_SIGNAL_RATE_OF_CHANGE = 2.25;
 
         /**
          * Constant for filters on turning in order to prevent brownouts
          */
-        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 3.0;
+        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 2.25;
 
         /**
          * The speed that the robot will move forward when the back button on the pilot controller is pressed for climbing
