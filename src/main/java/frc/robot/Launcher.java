@@ -190,9 +190,6 @@ public class Launcher{
             // System.out.println("Desired RPM:    [" + desiredRpm + "]   Actual RPM:    [" + ((ticks * 600.0) / 2048.0) + "]");
             // System.out.println("Desired ticks:  [" + dticks +     "]   Actual ticks:  [" + ticks + "]");
         }
-        else{
-            //m_launcherAtSpeedCount = 0;
-        }
     }
 
     /**
@@ -209,12 +206,6 @@ public class Launcher{
             // System.out.println("launching (count:" + m_launcherAtSpeedCount + ")");
             feedLauncher();
         }
-
-        //If we are launching our second ball, move it into the second position on the robot
-        // if(m_secondBall){
-        //     // System.out.println("Second Ball");
-        //     m_intake.indexing();
-        // }
     }
 
     /**
@@ -223,20 +214,13 @@ public class Launcher{
     private void feedLauncher(){
         // System.out.println("FEEDING -----------------------------------");
         setFeederSpeed(RobotMap.LauncherConstants.FEEDING_SPEED);
+        //Tracks how many loops we activate the feeder wheel
         m_feedingCounter++;
         if(m_feedingCounter > RobotMap.LauncherConstants.MAX_FEEDING_CYCLES){
             setFeederSpeed(0);
+            //Once we feed the ball into the launcher, reset the launch cycle
             m_feedingCounter = 0;
             m_launcherAtSpeedCount = 0;
-            //System.out.println("completed feed");
-            //If we just fed our first ball, track that we are on our second ball. 
-            // if(m_secondBall){
-            //     m_secondBall = false;
-            // }
-            // else{
-            //     m_secondBall = true;
-            // }
-
         }
     }
     
@@ -247,17 +231,25 @@ public class Launcher{
         setFlywheelSpeed(m_currentFlywheelPercentPower);
     }
 
+    /**
+     * Uses the limelight to find a target and turn the turret toward it
+     * @return True if our turret is on target, False if the turret is not on target
+     */
     public boolean target(){
-        double angleToTarget = 0;
+        //Updates the angle from the center of limelight every loop
+        double angleToTarget = m_limelightVision.xAngleToTarget();
+        //We are never on target by default
         boolean onTarget = false;
 
+        //Updates encoder ticks every loop to check if we have moved 
         m_leftDriveEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
         m_rightDriveEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
         m_turretEncoderTicks = getTurretPosition();
 
-        angleToTarget = m_limelightVision.xAngleToTarget();
         System.out.println("Angle to Target: " + angleToTarget);
 
+        //Checks if we have moved since we were on target last; if we have, record that we are no longer on target.
+        //This is to make sure if we lose vision of the target we can record that we are on target until either the robot or the turret moves
         if (m_onTarget && !m_limelightVision.seeTarget()){
             if(m_leftDriveEncoderTicks != m_onTargetLeftTicks){
                 onTarget = false;
@@ -274,9 +266,13 @@ public class Launcher{
             }
         }
 
+        //Checks if we can see the target
         if(m_limelightVision.seeTarget()){
+            //Checks if the turret is within the bounds we set in the code
             if(turretInBounds()){
+                //Checks if the turret is currently on target. If not, set the speed of the turret based on how far the turret is from the target
                 if(angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_RIGHT && angleToTarget > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_LEFT){
+                    //When we are on target zero the turret motor and record the encoder ticks of our turret and drivetrain
                     setTurretSpeed(0);
                     m_onTargetLeftTicks = m_leftDriveEncoderTicks;
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;
@@ -284,7 +280,7 @@ public class Launcher{
                     onTarget = true;
                     // System.out.print("ON TARGET");
                 }
-                //if we are above the tolerated error range, turn the turret toward the tolerated error range
+                //if we are outside of the tolerated error range, turn the turret toward the tolerated error range
                 else{
                     //Prints out a message telling the driver that our robot is not yet ready to launch and adjusts
                     //System.out.println("Not Ready to Launch 1:" + m_angleToTarget);
@@ -292,6 +288,7 @@ public class Launcher{
                     setTurretSpeed(calcTurretSpeedToAngle(angleToTarget));
                 }
             }
+            //If the turret is outside of its bounds, return false because we cannot be on target if we are outside of the bands
             else{
                 onTarget = false;
             }
@@ -311,15 +308,12 @@ public class Launcher{
      * @return current speed of flywheel motor in RPM
      */
     public double getRealSpeed(){
-        // System.out.println("RPM: " + m_masterFlywheelMotor.getSelectedSensorVelocity());
-        // System.out.println("RPM master0: "+ m_masterFlywheelMotor.getSelectedSensorVelocity() + "\tPct Output: " + m_masterFlywheelMotor.getMotorOutputPercent());
         return ((m_masterFlywheelMotor.getSelectedSensorVelocity() * 600) / 2048);
     }
 
     /**
-     * Sets the speed of the launcher flywheel motor
-     * This method is public for manual turret testing zeroing motors in CopilotController
-     * @param speed desired speed 
+     * Sets the speed of the launcher flywheel motors
+     * @param speed desired speed of the master and slave flywheel motors
      */
     public void setFlywheelSpeed(double speed){
         m_masterFlywheelMotor.set(speed);
