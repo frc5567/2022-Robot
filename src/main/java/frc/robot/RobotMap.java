@@ -81,7 +81,7 @@ public class RobotMap {
         /**
          * Constant for filters on turning in order to prevent brownouts
          */
-        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 2.25;
+        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 2.0;
 
         /**
          * The speed that the robot will move forward when the back button on the pilot controller is pressed for climbing
@@ -132,7 +132,7 @@ public class RobotMap {
         /**
          * Constant for feeding speed
          */
-        public static final double FEEDING_SPEED = -0.8;
+        public static final double FEEDING_SPEED = -0.85;
 
         /**
          * Constant for expel speed
@@ -219,7 +219,7 @@ public class RobotMap {
         /**
          * Constant for the maximum amount of feeding cycles
          */
-        public static final double MAX_FEEDING_CYCLES = 9;
+        public static final double MAX_FEEDING_CYCLES = 8;
 
         /**
          * Constant for the maximum amount of turret rotation
