@@ -287,7 +287,7 @@ public class RobotMap {
         /**
          * Default auton path. Returns if the value is not found from the shuffleboard
          */
-        public static final double DEFAULT_AUTON_PATH = 0;
+        public static final double DEFAULT_AUTON_PATH = 2;
 
         /**
          * Default launch preset. Returns if the value is not found from the shuffleboard
