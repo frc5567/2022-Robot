@@ -3,7 +3,10 @@ package frc.robot;
 import frc.robot.Intake.IntakeState;
 
 public class Auton{
-    //enum for storing what path we are going to take in auton
+    /**
+     * Enum for storing what path we are going to take in auton:
+     * kFourBall (Not currently entirely tested and finished), kThreeBall (start in right tarmac), and kTwoBall
+     */
     public enum AutonPath{
 
         //auton path for starting on the tarmac lines on the right side from the drivers' station perspective and shoot four balls
@@ -16,7 +19,9 @@ public class Auton{
         kTwoBall;
     }
 
-    //enum for each of the steps in our auton
+    /**
+     * enum for each of the steps in our auton (k1-k18 and kStop)
+     */
     public enum AutonStep{
         kStep1,
 
@@ -57,9 +62,9 @@ public class Auton{
         kStop;
     }
     
-    //this is a quick and dirty workaround because the sensors are not functional at the moment
+    //This stores the loop count to make sure the intake is not retracted before one of the two balls leaves the robot. Prevents jamming
     private int m_intakeInLoopCount = 0;
-    
+    //Member variable for a loop count to make sure the robot does not move until the balls have been fully launched
     private int m_loopsAfterLaunchCount = 0;
 
     //declares variables for the auton class
@@ -67,7 +72,7 @@ public class Auton{
     private AutonStep m_step;
     private AutonPath m_path;
 
-    //Member variables to store the systems we pass in
+    //Member variables to store the systems we pass in (drivetrain, launcher, intake, and limelight)
     private Drivetrain m_drivetrain;
     private Launcher m_launcher;
     private Intake m_intake;
@@ -75,6 +80,7 @@ public class Auton{
 
     //declares shuffleboard to be used for path selection
     private RobotShuffleboard m_shuffleboard;
+    //Initially sets/defaults our auton path to be the two ball auton (2 ball == 2, 3 ball == 3)
     private double m_currentAutonPath = RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH;
 
     //Varaible that is only true if we have a second ball to launch
@@ -83,23 +89,17 @@ public class Auton{
     boolean m_autonStartFlag = true;
     //Variable to store the current state of our Limelight LEDS
     boolean m_limelightOff = true;
-    //Variable to store whether or not we can currently see a target
-    boolean m_canSeeTarget = false;
     //Boolean for Sysout counter
     boolean m_doSysOut = true;
 
-    //Variables for Sysouts
-    double m_targetEncoderTicks;
-    double m_currentRightEncoderTicks;
-    double m_currentLeftEncoderTicks;
-
-    //Stores the value from the xAngleToTarget method
+    //Stores the value from the xAngleToTarget method (value is the x angle offset from the target)
     double m_xToTarget;
 
+    //Member variable for the sysOutCounter to prevent the console from being flooded
     int m_sysOutCounter;
 
     /**
-     * constructor for auton
+     * constructor for auton to instantiate all of the objects and set our Auton step initially to step 1
      * @param drivetrain we pass in drivetrain to be able to drive around in auton
      * @param launcher we pass in the launcher to be able to launch during auton
      * @param intake we pass in the intake to be able to pick up game pieces during auton
@@ -117,7 +117,8 @@ public class Auton{
     }
 
     /**
-     * this method will be run at the start of every auton period
+     * this method will be run at the start of every auton period (called in autonomousInit() in Robot.java).
+     * This initally selects which auton path we will be running through the shuffleboard.
      */
     public void init(){
         m_drivetrain.init();
@@ -137,9 +138,7 @@ public class Auton{
         //calls the limelight periodic method in order to update the network tables every cycle
         m_limelightVision.periodic();
 
-        m_currentRightEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
-        m_currentLeftEncoderTicks = m_drivetrain.getLeftDriveEncoderPosition();
-
+        //Variable to store the status of the leds on the limelight
         int CurrentLEDStatus = m_limelightVision.currentLEDStatus();
         //If the Limelight is off, sets m_limelightOff to be true
         if(CurrentLEDStatus == 1){
@@ -167,20 +166,23 @@ public class Auton{
             m_doSysOut = false;
         }
 
+        //Prints out the current Auton step, path, and status of the magazine sensors
         if(m_doSysOut == true){
             // System.out.println("Current Angle: " + m_drivetrain.getGyro());
             System.out.println("Current Step:" + m_step + " Current Path:" + m_path);
             System.out.println("First Sensor   [" + m_intake.getMagazineSensor0() + "] --- " + "Second Sensor    [" + m_intake.getMagazineSensor1() + "]");
         }
-        
 
-        //Starts auton pathing in our path: Two ball and Four ball
+        //Starts auton pathing. Our paths are Two ball and Four ball
+        /**
+         * This path will have our robot launch 2 balls during auton.
+         * The robot can start in either tarmac as close to the front of it as possible while being centered on and pointed at the ball
+         */
         if (m_path == AutonPath.kTwoBall){ 
             //Activates intake and drives forward to a target in order to pick up a game piece
             if(m_step == AutonStep.kStep1){
                 m_intake.setIntakeExtension(IntakeState.kExtended);
                 m_intake.takeIn(RobotMap.IntakeConstants.ROLLER_SPEED);
-                // m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.TWO_BALL_STEP_ONE_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep2;
@@ -190,7 +192,7 @@ public class Auton{
                     return;
                 }
             }
-            //step to retract intake if build finds a way to do this
+            //This step uses a loop count to have the robot intake for 30 loops to make sure the ball is actually picked up
             else if(m_step == AutonStep.kStep2){
                 m_intakeInLoopCount ++;
                 if(m_intakeInLoopCount >= RobotMap.AutonConstants.INTAKE_WAITING_LOOPS){
@@ -199,10 +201,10 @@ public class Auton{
                     m_step = AutonStep.kStep3;
                 }
             }
-            //step to Turn the robot a full 180 degrees in order to face the hub. Also brings ball up to the feeder.
+            //step to Turn the robot 179 degrees in order to face the hub.
             else if(m_step == AutonStep.kStep3){
-                // m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.TWO_BALL_STEP_FOUR_TARGET_ANGLE)){
+                    //Zeros the drivetrain when we are at our desired angle so we don't keep spinning.
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep4;
                     m_drivetrain.zeroEncoders();
@@ -212,15 +214,15 @@ public class Auton{
                     return;
                 }
             }
-            //step to turn robot roughly to the target to be fine tuned by the turret
+            //step to turn the robot roughly to the target to be fine tuned by the turret
             else if(m_step == AutonStep.kStep4){
                 //If the limelight is currently not switched on, turn it on. Otherwise, keep it on
                 System.out.println("Activating Limelight");
                 m_limelightVision.enableLEDs();
-                //Stores the current distance from the target to the center of the screen on the x axis in a variable
+                //Stores the current angle from the target to the center of the screen on the x axis in a variable
                 m_xToTarget = m_limelightVision.xAngleToTarget();
                 if(m_limelightVision.seeTarget()){
-                    //If the target is close enough to the center of the screen, send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
+                    //If the target is close enough to the center of the screen (within 5 degrees on both sides), send a print out to the driver station, stop the robot, turn of the limelight LEDS, and reset encoders
                     if(m_xToTarget < RobotMap.TOLERATED_TARGET_ERROR && m_xToTarget > -RobotMap.TOLERATED_TARGET_ERROR){
                         m_drivetrain.periodic(0,0);
                         m_drivetrain.zeroEncoders();
@@ -229,11 +231,11 @@ public class Auton{
                             System.out.println("On Target");
                         }
                     }
-                    //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
+                    //If the target is not close enough to the center of the screen, print out that we are not on target and move left so that it is
                     else if(m_xToTarget > RobotMap.TOLERATED_TARGET_ERROR){
                         m_drivetrain.periodic(0, RobotMap.AutonConstants.TARGETING_SPEED);
                     }
-                    //If the target is not close enough to the center of the screen, print out that we are not on target move so that it is
+                    //If the target is not close enough to the center of the screen, print out that we are not on target move right so that it is
                     else if(m_xToTarget < -RobotMap.TOLERATED_TARGET_ERROR){
                         if(m_doSysOut == true){
                             System.out.println("Not On Target");
@@ -251,6 +253,7 @@ public class Auton{
             //step to aim with the turret and launch
             else if (m_step == AutonStep.kStep5){ 
                 m_launcher.targetAndLaunch();
+                //This loop count is used to make sure both balls have been fully launched before moving on to the next step
                 m_intakeInLoopCount ++;
                 if(m_intakeInLoopCount >= RobotMap.AutonConstants.LOOPS_AFTER_LAUNCH){
                     //zeros the loop count to be used again
@@ -275,6 +278,10 @@ public class Auton{
                 else{
                     return;
                 }
+/**
+ * *******************************  This is how far I got in checking and cleaning up the Auton Code *********************************
+ * 
+ */
             }
             // In this step we turn 179 degrees around to orient ourself for teleop
             else if (m_step == AutonStep.kStep7){
@@ -847,16 +854,16 @@ public class Auton{
 
     //Method to set the auton path from the shuffleboard. 0 = Right Line, 1 = Right Wall, 2 = Left Wall
     private void selectPath(){
-        if(m_currentAutonPath == 0){
+        if(m_currentAutonPath == 2){
             System.out.println("Setting Auton to Right Line Path");
             m_path = AutonPath.kTwoBall;
         }
-        else if(m_currentAutonPath == 1){
+        else if(m_currentAutonPath == 3){
             System.out.println("Setting Auton to Right Wall Path");
             m_path = AutonPath.kThreeBall;
         }
         else{
-            m_currentAutonPath = 0;
+            m_currentAutonPath = 2;
             System.out.println("Setting Auton to Right Line Path");
             m_path = AutonPath.kTwoBall;
         }
