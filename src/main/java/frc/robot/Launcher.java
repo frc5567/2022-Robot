@@ -58,7 +58,7 @@ public class Launcher{
     //Stores target flywheel RPM value from the shuffleboard for testing 
     //Commented out because it is currently unused, but should be used if we want to do further distance testing
     //private double m_currentTargetFlywheelRpm = RobotMap.LauncherConstants.DEFAULT_TARGET_FLYWHEEL_RPM;
-    
+
     //Stores max turret speed value from the shuffleboard to change how fast the turret moves
     private double m_currentMaxTurretSpeed = RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED;
     //Stores target flywheel percent power from the shuffleboard for manual launching
@@ -245,7 +245,7 @@ public class Launcher{
         m_rightDriveEncoderTicks = m_drivetrain.getRightDriveEncoderPosition();
         m_turretEncoderTicks = getTurretPosition();
 
-        System.out.println("Angle to Target: " + angleToTarget);
+        // System.out.println("Angle to Target: " + angleToTarget);
 
         //Checks if we have moved since we were on target last; if we have, record that we are no longer on target.
         //This is to make sure if we lose vision of the target we can record that we are on target until either the robot or the turret moves

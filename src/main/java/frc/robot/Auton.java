@@ -203,7 +203,7 @@ public class Auton{
             }
             //step to Turn the robot 179 degrees in order to face the hub.
             else if(m_step == AutonStep.kStep3){
-                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.TWO_BALL_STEP_FOUR_TARGET_ANGLE)){
+                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.TWO_BALL_STEP_THREE_TARGET_ANGLE)){
                     //Zeros the drivetrain when we are at our desired angle so we don't keep spinning.
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep4;
@@ -278,18 +278,15 @@ public class Auton{
                 else{
                     return;
                 }
-/**
- * *******************************  This is how far I got in checking and cleaning up the Auton Code *********************************
- * 
- */
             }
             // In this step we turn 179 degrees around to orient ourself for teleop
             else if (m_step == AutonStep.kStep7){
-                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.TWO_BALL_STEP_NINE_TARGET_ANGLE)){
+                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.TWO_BALL_STEP_SEVEN_TARGET_ANGLE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStop;
                     m_drivetrain.zeroEncoders();
-                    m_drivetrain.zeroGyro();                }
+                    m_drivetrain.zeroGyro();                
+                }
                 else{
                     return;
                 }
@@ -302,12 +299,13 @@ public class Auton{
                 m_drivetrain.periodic(0, 0);
             }
         }
+        //Path to pick up a second ball, shoot both that ball and the preloaded ball, and then pick up a third ball and shoot it
+        //Must start on the edge of the tarmac on the right side (from the driver's station perspective) facing the ball closest to the wall
         else if (m_path == AutonPath.kThreeBall){
             //Activates intake and drives forward to a target in order to pick up a game piece
             if(m_step == AutonStep.kStep1){
                 m_intake.setIntakeExtension(IntakeState.kExtended);
                 m_intake.takeIn(RobotMap.IntakeConstants.ROLLER_SPEED);
-                // m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
                 if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.THREE_BALL_STEP_ONE_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep2;
@@ -317,7 +315,7 @@ public class Auton{
                     return;
                 }
             }
-            //step to retract intake if build finds a way to do this
+            //step to wait while the intake is running in order to give the robot time to pick up the ball
             else if(m_step == AutonStep.kStep2){
                 m_intakeInLoopCount ++;
                 if(m_intakeInLoopCount >= RobotMap.AutonConstants.INTAKE_WAITING_LOOPS){
@@ -326,10 +324,9 @@ public class Auton{
                     m_step = AutonStep.kStep3;
                 }
             }
-            //step to Turn the robot a full 180 degrees in order to face the hub. Also brings ball up to the feeder.
+            //step to Turn the robot 170 degrees in order to face the hub.
             else if(m_step == AutonStep.kStep3){
-                // m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
-                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.THREE_BALL_STEP_FOUR_TARGET_ANGLE)){
+                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.THREE_BALL_STEP_THREE_TARGET_ANGLE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep4;
                     m_drivetrain.zeroEncoders();
@@ -380,19 +377,23 @@ public class Auton{
             else if (m_step == AutonStep.kStep5){
                 m_launcher.targetAndLaunch();
 
+                //If either sensor is being activated, record that we are not done launching.
                 if(m_intake.getMagazineSensor0() || m_intake.getMagazineSensor1()){
                     m_loopsAfterLaunchCount = 0;
                 }
 
+                //If there is no ball in the second slot, retract the intake to make sure the second ball is pushed into place
                 if(!(m_intake.getMagazineSensor1())){
                     m_intake.setIntakeExtension(IntakeState.kRetracted);
                     
+                    //If both sensors are empty, start counting cycles
                     if(!(m_intake.getMagazineSensor0())){
                         System.out.println("BOTH SENSORS ARE EMPTY --- COUNT IS AT " + m_loopsAfterLaunchCount);
                         m_loopsAfterLaunchCount++;
                     }
                 }
 
+                //after 15 cycles, move on to the next step.
                 if(m_loopsAfterLaunchCount >= 15){
                     m_loopsAfterLaunchCount = 0;
                     m_step = AutonStep.kStep6;
@@ -412,9 +413,9 @@ public class Auton{
                 m_drivetrain.zeroEncoders();
                 m_step = AutonStep.kStep7;
             }
-            //step to turn 45 degrees counter clockwise around to orient ourself for the terminal ball
+            //step to turn 50 degrees counter clockwise around to orient ourself for the third ball
             else if (m_step == AutonStep.kStep7){
-                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.THREE_BALL_STEP_NINE_TARGET_ANGLE)){
+                if(turnToAngle(-RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.THREE_BALL_STEP_SEVEN_TARGET_ANGLE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep8;
                     m_drivetrain.zeroEncoders();
@@ -424,9 +425,9 @@ public class Auton{
                     return;
                 }
             }
-            //step to drive to the other ball
+            //step to drive 55 inches towards the third ball
             else if (m_step == AutonStep.kStep8){
-                if(driveToTarget(0.7, RobotMap.AutonConstants.THREE_BALL_STEP_TEN_TARGET_DISTANCE)){
+                if(driveToTarget(0.7, RobotMap.AutonConstants.THREE_BALL_STEP_EIGHT_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep9;
                     m_drivetrain.zeroEncoders();
@@ -435,11 +436,12 @@ public class Auton{
                     return;
                 }
             }
+            //step to extend the intake once we are closer to the ball and drive forward slowly the rest of the way to the ball
             else if(m_step == AutonStep.kStep9){
                 m_intake.setIntakeExtension(IntakeState.kExtended);
                 m_intake.takeIn(RobotMap.IntakeConstants.ROLLER_SPEED);
                 m_intake.setMagazineSpeed(RobotMap.IntakeConstants.MAGAZINE_SPEED);
-                if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.THREE_BALL_STEP_ELEVEN_TARGET_DISTANCE)){
+                if(driveToTarget(RobotMap.AutonConstants.DRIVE_SPEED, RobotMap.AutonConstants.THREE_BALL_STEP_NINE_TARGET_DISTANCE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep10;
                     m_drivetrain.zeroEncoders();
@@ -448,6 +450,7 @@ public class Auton{
                     return;
                 }
             }
+            //Step to give the robot time to pick up the ball
             else if(m_step == AutonStep.kStep10){
                 m_intakeInLoopCount ++;
                 if(m_intakeInLoopCount >= RobotMap.AutonConstants.INTAKE_WAITING_LOOPS){
@@ -456,12 +459,12 @@ public class Auton{
                     m_step = AutonStep.kStep11;
                 }
             }
-            //step to turn towards the hub again
+            //step to turn 75 degrees towards the hub again
             else if (m_step == AutonStep.kStep11){
                 m_intake.setIntakeExtension(IntakeState.kRetracted);
                 m_intake.takeIn(0);
                 m_intake.setMagazineSpeed(0);
-                if(turnToAngle(RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.THREE_BALL_STEP_THIRTEEN_TARGET_ANGLE)){
+                if(turnToAngle(RobotMap.AutonConstants.TURN_SPEED, RobotMap.AutonConstants.THREE_BALL_STEP_ELEVEN_TARGET_ANGLE)){
                     m_drivetrain.periodic(0,0);
                     m_step = AutonStep.kStep12;
                     m_drivetrain.zeroEncoders();
@@ -471,28 +474,34 @@ public class Auton{
                     return;
                 }
             }
+            //Step to aim with the turret and launch
             else if (m_step == AutonStep.kStep12){
                 m_limelightVision.enableLEDs();
                 m_launcher.targetAndLaunch();
 
+                //If either sensor is being activated, record that we are not done launching.
                 if(m_intake.getMagazineSensor0() || m_intake.getMagazineSensor1()){
                     m_loopsAfterLaunchCount = 0;
                 }
 
+                 //If there is no ball in the second slot, retract the intake to make sure the second ball is pushed into place
                 if(!(m_intake.getMagazineSensor1())){
                     m_intake.setIntakeExtension(IntakeState.kRetracted);
                     
+                    //If both sensors are empty, start counting cycles
                     if(!(m_intake.getMagazineSensor0())){
                         System.out.println("BOTH SENSORS ARE EMPTY --- COUNT IS AT " + m_loopsAfterLaunchCount);
                         m_loopsAfterLaunchCount++;
                     }
                 }
 
+                //After 15 cycles move on to the next step
                 if(m_loopsAfterLaunchCount >= 15){
                     m_loopsAfterLaunchCount = 0;
                     m_step = AutonStep.kStop;
                 }
             }
+            //Step to zero everything and completely stop the robot once we have finished all other steps
             else if (m_step == AutonStep.kStop){
                 m_intake.setIntakeExtension(IntakeState.kRetracted);
                 m_launcher.setFeederSpeed(0);
@@ -507,6 +516,8 @@ public class Auton{
             }
 
         }
+        //THIS PATH IS NOT CURRENTLY USED
+        //This will probably only be used if we somehow find time to make it work at Jackson or states. It is currently out of date and will need to be thoroughly reviewed/tested
         else if (m_path == AutonPath.kFourBall){ 
             //Activates intake and drives forward to a target in order to pick up a game piece
             if(m_step == AutonStep.kStep1){
@@ -852,7 +863,9 @@ public class Auton{
         }
     }
 
-    //Method to set the auton path from the shuffleboard. 0 = Right Line, 1 = Right Wall, 2 = Left Wall
+    /**
+     * Method to set the auton path from the shuffleboard. 2 = TwoBall, 3 = ThreeBall. Currently defaults to twoball
+     */
     private void selectPath(){
         if(m_currentAutonPath == 2){
             System.out.println("Setting Auton to Right Line Path");
