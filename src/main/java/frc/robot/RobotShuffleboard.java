@@ -154,7 +154,7 @@ public class RobotShuffleboard {
         m_launcherKFEntry = m_PidTab.addPersistent(("kF"), RobotMap.LauncherConstants.FLYWHEEL_GAINS.kF)
                             .withWidget(BuiltInWidgets.kTextView)
                             .getEntry();
-        m_targetFlywheelRpmEntry = m_PidTab.addPersistent("Target Flywheel Rpm", RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM)
+        m_targetFlywheelRpmEntry = m_PidTab.addPersistent("Target Flywheel Rpm", RobotMap.LauncherConstants.DEFAULT_TARGET_FLYWHEEL_RPM)
                             .withWidget(BuiltInWidgets.kTextView)
                             .getEntry();
         m_PidTab.addPersistent("current RPM PID", m_launcher.getRealSpeed())
@@ -209,7 +209,7 @@ public class RobotShuffleboard {
      * Sets the targetFlywheelSpeed to be equal to the value on the shuffleboard
      */
     private void setTargetFlywheelRpm(){
-        m_targetFlywheelRpm = m_targetFlywheelRpmEntry.getDouble(RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM);
+        m_targetFlywheelRpm = m_targetFlywheelRpmEntry.getDouble(RobotMap.LauncherConstants.DEFAULT_TARGET_FLYWHEEL_RPM);
         m_launcher.setTargetFlywheelRpm(m_targetFlywheelRpm);
     }
 

@@ -156,14 +156,6 @@ public class Intake {
     }
 
     /**
-     * Reverses all intake and magazine motors to unjam the robot
-     */
-    public void unJam(){
-        setRollerSpeed(RobotMap.IntakeConstants.REVERSE_ROLLER_SPEED);
-        //setMagazineSpeed(RobotMap.IntakeConstants.REVERSE_MAGAZINE_SPEED);
-    }
-
-    /**
      * sets the intake system between extended/retracted states
      * @param intakeState desired state (intakeExtension.kExtended, intakeExtension.kRetracted)
      */

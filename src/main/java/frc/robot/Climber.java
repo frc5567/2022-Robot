@@ -29,8 +29,8 @@ public class Climber {
      * constructor to instantiate climber objects
      */
     public Climber() {
-        m_liftMotor = new VictorSPX(RobotMap.ClimberConstants.CLIMBER_MOTOR_ID);
-        m_winchMotor = new VictorSPX(RobotMap.ClimberConstants.CLIMBER_WINCH_ID);
+        m_liftMotor = new VictorSPX(RobotMap.ClimberConstants.LIFT_MOTOR_ID);
+        m_winchMotor = new VictorSPX(RobotMap.ClimberConstants.WINCH_ID);
     }
 
      /**

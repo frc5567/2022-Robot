@@ -59,7 +59,7 @@ public class Launcher{
     private double m_turretCurrentSpeed;
 
     //Stores target flywheel RPM value from the shuffleboard for testing 
-    private double m_currentTargetFlywheelRpm = RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM;
+    private double m_currentTargetFlywheelRpm = RobotMap.LauncherConstants.DEFAULT_TARGET_FLYWHEEL_RPM;
     //Stores max turret speed value from the shuffleboard to change how fast the turret moves
     private double m_currentMaxTurretSpeed = RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED;
     //Stores target flywheel percent power from the shuffleboard for manual launching
@@ -276,7 +276,7 @@ public class Launcher{
 
         if(m_limelightVision.seeTarget()){
             if(turretInBounds()){
-                if(angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_RIGHT && angleToTarget > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_LEFT){
+                if(angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR && angleToTarget > -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
                     setTurretSpeed(0);
                     m_onTargetLeftTicks = m_leftDriveEncoderTicks;
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;
