@@ -8,9 +8,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.Intake.IntakeState;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.CvSource;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -30,8 +28,6 @@ public class Robot extends TimedRobot {
   private Climber m_climber;
   private RobotShuffleboard m_shuffleboard;
   private UsbCamera m_camera;
-  private CvSink m_cvSink;
-  private CvSource m_outputStream;
 
 
 

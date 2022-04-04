@@ -59,22 +59,6 @@ public class CopilotController {
      */
     public void testPeriodic(){
         System.out.println("First Sensor   [" + m_intake.getMagazineSensor0() + "] --- " + "Second Sensor    [" + m_intake.getMagazineSensor1() + "]");
-        //m_launcher.setFeederSpeed(0.2);
-        //System.out.println("Turret Encoder Ticks: " + m_launcher.getTurretPosition());
-        // manualLauncherCmd();
-        // manualIntakeCmd();
-
-        // m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
-        // m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
-        // m_shuffleboard.periodic();
-
-        // m_intake.indexing();
-
-        // boolean sensor1 = m_intake.getMagazineSensor1();
-        // boolean sensor2 = m_intake.getMagazineSensor2();
-
-        // System.out.println("Current Distance: " + m_limelight.distToTarget(RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND) + " ---- ");
-        // System.out.print("Current RPM: "+ m_launcher.getRealSpeed());
     }
 
     /**
