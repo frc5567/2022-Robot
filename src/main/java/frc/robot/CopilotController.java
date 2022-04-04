@@ -59,6 +59,7 @@ public class CopilotController {
      */
     public void testPeriodic(){
         System.out.println("First Sensor   [" + m_intake.getMagazineSensor0() + "] --- " + "Second Sensor    [" + m_intake.getMagazineSensor1() + "]");
+
         //m_launcher.setFeederSpeed(0.2);
         //System.out.println("Turret Encoder Ticks: " + m_launcher.getTurretPosition());
         // manualLauncherCmd();
