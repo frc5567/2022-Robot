@@ -15,6 +15,9 @@ public class CopilotController {
 
     boolean m_carwashRunning = false;
 
+    // Tracks how many cycles it has been since the last set of print outs to know when we can print again
+    int m_sysOutCounter = 0;
+
 
     /**
      * constructor for copilot controller- passes in all of the systems that we interact with in this class.
@@ -52,6 +55,10 @@ public class CopilotController {
         controlIntake();
         controlLauncher();
         controlClimber();
+
+        if ((++m_sysOutCounter % 10) == 0){
+            //put any sys.outs here
+        }
     }
 
     /**
