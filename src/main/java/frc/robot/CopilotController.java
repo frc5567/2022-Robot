@@ -65,7 +65,6 @@ public class CopilotController {
         // manualIntakeCmd();
 
         // m_currentFlywheelVelocity = m_shuffleboard.getFlywheelVelocity();
-        // m_currentLaunchPreset = m_shuffleboard.getLaunchPreset();
         // m_shuffleboard.periodic();
 
         // m_intake.indexing();
@@ -132,7 +131,6 @@ public class CopilotController {
             m_launcher.zeroTurretPosition();
             m_limelight.disableLEDs();
             m_intake.indexing();
-            m_launcher.resetSecondBallTracker();
         }
 
         //calls feeder command button to set feeder speed

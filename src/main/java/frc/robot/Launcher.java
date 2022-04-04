@@ -48,9 +48,6 @@ public class Launcher{
     double m_onTargetRightTicks = m_rightDriveEncoderTicks;
     double m_onTargetTurretTicks = m_turretEncoderTicks;   
 
-    //Boolean to track whether or not we're launching the second ball in our robot
-    boolean m_secondBall = false;
-
     //Tracks the cycles the flywheel has been at speed so we know if we overshoot
     int m_launcherAtSpeedCount = 0;
 
@@ -59,7 +56,9 @@ public class Launcher{
     private double m_turretCurrentSpeed;
 
     //Stores target flywheel RPM value from the shuffleboard for testing 
-    private double m_currentTargetFlywheelRpm = RobotMap.LauncherConstants.TARGET_FLYWHEEL_RPM;
+    //Commented out because it is currently unused, but should be used if we want to do further distance testing
+    //private double m_currentTargetFlywheelRpm = RobotMap.LauncherConstants.DEFAULT_TARGET_FLYWHEEL_RPM;
+    
     //Stores max turret speed value from the shuffleboard to change how fast the turret moves
     private double m_currentMaxTurretSpeed = RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED;
     //Stores target flywheel percent power from the shuffleboard for manual launching
@@ -185,8 +184,8 @@ public class Launcher{
             // System.out.println("Launcher at speed count: " + m_launcherAtSpeedCount );
 
             //Sysouts for testing
-            double ticks = m_masterFlywheelMotor.getSelectedSensorVelocity();
-            double dticks = desiredRpm * (double)RobotMap.LauncherConstants.TICKS_PER_ROTATION / 600.0;
+            //double ticks = m_masterFlywheelMotor.getSelectedSensorVelocity();
+            //double dticks = desiredRpm * (double)RobotMap.LauncherConstants.TICKS_PER_ROTATION / 600.0;
             // System.out.println("Desired RPM:    [" + desiredRpm + "]   Actual RPM:    [" + ((ticks * 600.0) / 2048.0) + "]");
             // System.out.println("Desired ticks:  [" + dticks +     "]   Actual ticks:  [" + ticks + "]");
         }
@@ -270,9 +269,7 @@ public class Launcher{
         if(m_limelightVision.seeTarget()){
             //Checks if the turret is within the bounds we set in the code
             if(turretInBounds()){
-                //Checks if the turret is currently on target. If not, set the speed of the turret based on how far the turret is from the target
-                if(angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_RIGHT && angleToTarget > RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR_LEFT){
-                    //When we are on target zero the turret motor and record the encoder ticks of our turret and drivetrain
+                if(angleToTarget < RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR && angleToTarget > -RobotMap.LauncherConstants.TOLERATED_TURRET_ERROR){
                     setTurretSpeed(0);
                     m_onTargetLeftTicks = m_leftDriveEncoderTicks;
                     m_onTargetRightTicks = m_rightDriveEncoderTicks;
@@ -329,6 +326,7 @@ public class Launcher{
      * @param speed desired speed (Positive for one direction, negative for the other)
      */
     public void setTurretSpeed(double speed){
+        //Only sets the speed of the motor once each time we want it to change speed to limit CAN usage
         if(m_turretCurrentSpeed != speed){
             m_turretCurrentSpeed = speed;
             m_turretMotor.set(ControlMode.PercentOutput, speed);
@@ -337,9 +335,10 @@ public class Launcher{
 
     /**
      * Sets the speed of the feeder motor
-     * @param speed desired speed
+     * @param speed desired speed of the feeder motor
      */
     public void setFeederSpeed(double speed){
+        //Only sets the speed of the motor once each time we want it to change speed to limit CAN usage
         if(m_feederCurrentSpeed != speed){
             m_feederCurrentSpeed = speed;
             m_feederMotor.set(ControlMode.PercentOutput, speed);
@@ -362,18 +361,18 @@ public class Launcher{
     }
 
     /**
-     * Turns the turret back to center within a deadband of 10 ticks. If we are within the deadband, the turret stops moving and the encoder is set to zero
+     * Turns the turret back to center within a deadband of 50 ticks on each side. If we are within the deadband, the turret stops moving and the encoder is set to zero
      */
     public void zeroTurretPosition(){
         double turretPosition = getTurretPosition();
-        //System.out.println(" turret position in ticks (zero encoder): [" + turretPosition + "]");
+        //Checks if the turret is within the outside bounds 
         if(turretInBounds()){
             if(turretPosition >= RobotMap.LauncherConstants.TURRET_ENCODER_BAND){
-                //System.out.println("RIGHT");
+                //System.out.println("MOVE RIGHT");
                 m_turretMotor.set(ControlMode.PercentOutput, calcTurretSpeedToTicks(turretPosition));
             }
             else if(turretPosition <= -RobotMap.LauncherConstants.TURRET_ENCODER_BAND){
-                //System.out.println("LEFT");
+                //System.out.println("MOVE LEFT");
                 m_turretMotor.set(ControlMode.PercentOutput, calcTurretSpeedToTicks(turretPosition));
             }
             else {
@@ -387,10 +386,11 @@ public class Launcher{
 
     /**
      * Method to check whether or not we are inside our outer limits on the turret. If we aren't, turn the turret until we are.
-     * @return true if we are inside our bounds, false if we are outside our bounds
+     * @return True if we are inside our bounds, False if we are outside our bounds
      */
     private boolean turretInBounds(){
         boolean inBounds = false;
+        //Updates the current position of the turret in encoder ticks every loop
         double turretPosition = getTurretPosition();
         //checks if the turret encoder is within the tolerated range, and if we're not print a message and adjust
         if(turretPosition > -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT && turretPosition < RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
@@ -399,13 +399,11 @@ public class Launcher{
         }
         //If we are to the left of our motor limit, print out a message and turn right
         else if(turretPosition < -RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
-            //System.out.println("Not Ready to Launch 3");
             inBounds = false;
             setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
         }
         //If we are to the right of our motor limit, print out a message and turn left
         else if(turretPosition > RobotMap.LauncherConstants.TURRET_ENCODER_LIMIT){
-            //System.out.println("Not Ready to Launch 4");
             inBounds = false;
             setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
         }
@@ -419,19 +417,25 @@ public class Launcher{
      */
     private double calcTurretSpeedToAngle(double angleOffset){
         double turretSpeed;
+        //Records the sign (Positive or negative) of the angleoffset
         double sign = Math.signum(angleOffset);
         // System.out.println("angle offset: " + angleOffset);
-        //System.out.println("hi\n\nhi\n\nhi***********************************************\n**********************************************");
-        //Danny's funny sysout ^
-        if(Math.abs(angleOffset) > 12){
+        // System.out.println("hi\n\nhi\n\nhi***********************************************\n**********************************************");
+        // Danny's funny sysout ^
+
+        //If we are of by greater than 12 degrees, set the speed of the target to the max speed set on the shuffleboard devided by 1.5
+        if(Math.abs(angleOffset) > RobotMap.LauncherConstants.TURRET_SPEED_ANGLE_3){
             turretSpeed = sign*m_currentMaxTurretSpeed/1.5;     
         }
-        else if (Math.abs(angleOffset) > 8){
+        //If we are of by greater than 8 degrees, set the speed of the target to the max speed set on the shuffleboard devided by 2
+        else if (Math.abs(angleOffset) > RobotMap.LauncherConstants.TURRET_SPEED_ANGLE_2){
             turretSpeed = sign*m_currentMaxTurretSpeed/2;
         }
-        else if (Math.abs(angleOffset) > 3){
-            turretSpeed = sign*0.3;//m_currentMaxTurretSpeed/4;
+        //If we are of by greater than 3 degrees, set the speed of the target to 0.3
+        else if (Math.abs(angleOffset) > RobotMap.LauncherConstants.TURRET_SPEED_ANGLE_1){
+            turretSpeed = sign*RobotMap.LauncherConstants.LOW_TURRET_SPEED;
         }
+        //If we are of by less than 3 degrees, set the speed of the target to 0.1
         else{
             turretSpeed = sign*RobotMap.LauncherConstants.MIN_TURRET_SPEED;
         }
@@ -446,14 +450,18 @@ public class Launcher{
      */
     private double calcTurretSpeedToTicks(double tickOffset){
         double turretSpeed = 0;
+        //Records the sign (Positive or negative) of the tickOffset
         double sign = Math.signum(tickOffset);
 
-        if(Math.abs(tickOffset) > 3000){
+        //If we are of by greater than 3000 ticks, set the speed of the target to the max speed set on the shuffleboard
+        if(Math.abs(tickOffset) > RobotMap.LauncherConstants.TURRET_SPEED_TICKS_2){
             turretSpeed = sign*m_currentMaxTurretSpeed;
         }
-        else if (Math.abs(tickOffset) > 2000){
+        //If we are of by greater than 2000 ticks, set the speed of the target to the max speed set on the shuffleboard devided by 4
+        else if (Math.abs(tickOffset) > RobotMap.LauncherConstants.TURRET_SPEED_TICKS_1){
             turretSpeed = sign*m_currentMaxTurretSpeed/4;
         }
+        //If we are of by less than 2000 ticks, set the speed of the target to 0.1
         else{
             turretSpeed = sign*RobotMap.LauncherConstants.MIN_TURRET_SPEED;
         }
@@ -461,42 +469,73 @@ public class Launcher{
         return turretSpeed;
     }
 
+    /**
+     * @return the curret percent power being sent to the flywheel motor
+     */
     public double getCurrentPercent(){
         return m_masterFlywheelMotor.getMotorOutputPercent();
     }
 
+    /**
+     * Sets the maximum percent power of the turret 
+     * @param speed desired maximum percent power of the turret motor
+     */
     public void setMaxTurretSpeed(double speed){
         m_currentMaxTurretSpeed = speed;
     }
 
+    /**
+     * Sets the percent power of the flywheel motor for use in manual launching
+     * @param speed desired percent power of the flywheel motor
+     */
     public void setFlywheelPercentPower(double speed){
         m_currentFlywheelPercentPower = speed;
     }
 
-    public void setTargetFlywheelRpm(double speed){
-        m_currentTargetFlywheelRpm = speed;
-    }
+    /**
+     * Sets the target flywheel RPM for use in the flywheel PID
+     * Commented out because it is currently unused, but should be used if we want to do further distance testing
+     * @param speed desired target flywheel RPM
+     */
+    // public void setTargetFlywheelRpm(double speed){
+    //     m_currentTargetFlywheelRpm = speed;
+    // }
 
+    /**
+     * Sets the Proportional gain in our flywheel PID
+     * @param P desired P gain
+     */
     public void setKP(double P){
         m_currentKP = P;
     }
 
+    /**
+     * Sets the Integral gain in our flywheel PID
+     * @param I desired I gain
+     */
     public void setKI(double I){
         m_currentKI = I;
     }
 
+    /**
+     * Sets the Derivative gain in our flywheel PID
+     * @param D desired D gain
+     */
     public void setKD(double D){
         m_currentKD = D;
     }
 
+    /**
+     * Sets the Feed Forward gain in our flywheel PID
+     * @param F desired F gain
+     */
     public void setKF(double F){
         m_currentKF = F;
     }
 
-    public void resetSecondBallTracker(){
-        m_secondBall = false;
-    }
-
+    /**
+     * Sets the turret and feeder motors to coast mode. For use in disabled periodic only.
+     */
     public void coastMode(){
         m_turretMotor.setNeutralMode(NeutralMode.Coast);
         m_feederMotor.setNeutralMode(NeutralMode.Coast);
@@ -511,22 +550,22 @@ public class Launcher{
         //If the gains changed in shuffleboard, change them in our code
         if(m_masterConfig.slot2.kP != m_currentKP){
             anythingChanged = true;
-            m_masterConfig.slot2.kP = m_currentKP; //0.57
+            m_masterConfig.slot2.kP = m_currentKP; // Our original gain: 0.57
         }
         
         if(m_masterConfig.slot2.kI != m_currentKI){
             anythingChanged = true;
-            m_masterConfig.slot2.kI = m_currentKI; //0
+            m_masterConfig.slot2.kI = m_currentKI; // Our original gain: 0
         }
         
         if(m_masterConfig.slot2.kD != m_currentKD){
             anythingChanged = true;
-            m_masterConfig.slot2.kD = m_currentKD; //16
+            m_masterConfig.slot2.kD = m_currentKD; // Our original gain: 16
         }
 
         if(m_masterConfig.slot2.kF != m_currentKF){
             anythingChanged = true;
-            m_masterConfig.slot2.kF = m_currentKF; //0.05
+            m_masterConfig.slot2.kF = m_currentKF; // Our original gain: 0.05
         }
         
         //if any of the gains were changed, reconfigure the PID with the new settings
@@ -536,12 +575,15 @@ public class Launcher{
         
     }
 
+    /**
+     * Called in initialization to apply all of our motor configurations for PID on the flywheel
+     */
     private void configTalonPID(){
         m_masterFlywheelMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 30);
-        m_masterConfig.slot2.kP = m_currentKP; //0.57 //Danny's: 0.55
-        m_masterConfig.slot2.kI = m_currentKI; //0 //Danny's: 0.005
-        m_masterConfig.slot2.kD = m_currentKD; //16 //Danny's: 13
-        m_masterConfig.slot2.kF = m_currentKF; //0.05 //Danny's: 0.045
+        m_masterConfig.slot2.kP = m_currentKP; //Original: 0.57 //Danny's: 0.55
+        m_masterConfig.slot2.kI = m_currentKI; //Original: 0 //Danny's: 0.005
+        m_masterConfig.slot2.kD = m_currentKD; //Original: 16 //Danny's: 13
+        m_masterConfig.slot2.kF = m_currentKF; //Original: 0.05 //Danny's: 0.045
         m_masterConfig.slot2.integralZone = RobotMap.LauncherConstants.FLYWHEEL_GAINS.kIzone;
 		m_masterConfig.slot2.closedLoopPeakOutput = RobotMap.LauncherConstants.FLYWHEEL_GAINS.kPeakOutput;
         m_masterConfig.slot2.closedLoopPeriod = 1;
