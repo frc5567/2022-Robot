@@ -10,33 +10,28 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 public class RobotShuffleboard {
     Launcher m_launcher;
     LimelightVision m_limelight;
-    // Declares the member variable to later create the driver tab to control the scalers in the shuffleboard tab
+    // Declares the member variable for the driver tab to control the scalers in the shuffleboard 
     ShuffleboardTab m_driverTab;
-
+    // Declares the member variable for the PID tab to control PID values in the shuffleboard
     ShuffleboardTab m_PidTab;
     // Declares the member variables for the scalers
     double m_highVelocityScaler;
     double m_lowVelocityScaler;
     double m_highTurnScaler;
     double m_lowTurnScaler;
-    // Declares member variables for manual launcher testing
+    // Declares member variables for flywheel control
     double m_flywheelPercentPower;
     double m_targetFlywheelRpm;
     // Declares member variable for choosing an auton path
     double m_autonPath;
-    double m_launchPreset;
-    // Declares member variables for max turret speed and proportional constant
+    // Declares member variable for setting the max turret speed
     double m_maxTurretSpeed;
-    double m_proportionalConstant;
-
+    // Declares member variables to set the gains on the flywheel from the shuffleboard
     double m_launcherKP;
     double m_launcherKI;
     double m_launcherKD;
     double m_launcherKF;
 
-    boolean m_rpmBoolean;
-
-    double m_currentRpm;
     // Declares member variables for the entries on the table
     private NetworkTableEntry m_highVelocityScalerEntry;
     private NetworkTableEntry m_lowVelocityScalerEntry;
@@ -44,32 +39,30 @@ public class RobotShuffleboard {
     private NetworkTableEntry m_lowTurnScalerEntry;
     private NetworkTableEntry m_flywheelPercentPowerEntry;
     private NetworkTableEntry m_autonPathEntry;
-    private NetworkTableEntry m_launchPresetEntry;
-    private NetworkTableEntry m_targetFlywheelRpmEntry;
+    //Commented out because it is currently unused, but should be used if we want to do further distance testing
+    //private NetworkTableEntry m_targetFlywheelRpmEntry;
     private NetworkTableEntry m_maxTurretSpeedEntry;
-    private NetworkTableEntry m_proportionalConstantEntry;
     private NetworkTableEntry m_launcherKPEntry;
     private NetworkTableEntry m_launcherKIEntry;
     private NetworkTableEntry m_launcherKDEntry;
     private NetworkTableEntry m_launcherKFEntry;
-    private NetworkTableEntry m_currentRpmEntry;
 
     /**
      * Constructor for robot shuffleboard class
-     * Ceeates a the Driver Tab on the shuffleboard
+     * Sets launcher and limelight objects and initializes both tabs
      */
     public RobotShuffleboard(Launcher launcher, LimelightVision limelight){
         m_launcher = launcher;
         m_limelight = limelight;
-        // Creates the new tab on the Shuffleboard for the driver
+        // Initializes the new tab on the Shuffleboard for drive values
         m_driverTab = Shuffleboard.getTab("Driver Tab");
+        // Initializes a new tab on the shuffleboard for PID values
         m_PidTab = Shuffleboard.getTab("PID Tab");
     }
 
     /**
-     * Initialization method for RobotShuffleBoard
-     * Calls drivetrainShuffleboardConfig, setDrivetrainInputScaler, and setFlywheelVelocity to create the shuffleboard and its inputs.
-     * Also sets the current values for inputs to the values from the shuffleboard.
+     * Initialization method for RobotShuffleBoard, called every time the robot is enabled
+     * Configures the shuffleboard tabs and sets all of the values from shuffleboard
      */
     public void init(){
         drivetrainShuffleboardConfig();
@@ -77,9 +70,9 @@ public class RobotShuffleboard {
         setDrivetrainInputScaler();
         setFlywheelVelocity();
         setAutonPath();
-        setLaunchPreset();
-        setTargetFlywheelRpm();
-        setTurretValues();
+        //Commented out because it is currently unused, but should be used if we want to do further distance testing
+        //setTargetFlywheelRpm();
+        setMaxTurretSpeed();
         setKP();
         setKI();
         setKD();
@@ -92,16 +85,17 @@ public class RobotShuffleboard {
      */
     public void periodic(){
         SmartDashboard.putNumber("Current RPM", m_launcher.getRealSpeed());
-        SmartDashboard.putNumber("Target RPM", getTargetFlywheelSpeed());
+        //Commented out because it is currently unused, but should be used if we want to do further distance testing
+        // SmartDashboard.putNumber("Target RPM", getTargetFlywheelRpm());
         SmartDashboard.putNumber("Current Voltage", m_launcher.getCurrentPercent());
         SmartDashboard.putBoolean("At RPM", m_launcher.m_atRPM);
         
         setDrivetrainInputScaler();
         setFlywheelVelocity();
         setAutonPath();
-        setLaunchPreset();
-        setTargetFlywheelRpm();
-        setTurretValues();
+        //Commented out because it is currently unused, but should be used if we want to do further distance testing
+        //setTargetFlywheelRpm();
+        setMaxTurretSpeed();
         setKP();
         setKI();
         setKD();
@@ -139,6 +133,9 @@ public class RobotShuffleboard {
                                     .getEntry();
     }
 
+    /**
+     * Configures shuffleboard so we can get the entries from the PID driver tab
+     */
     public void PidShuffleboardConfig(){
         Shuffleboard.selectTab("PID Tab");
 
@@ -154,20 +151,15 @@ public class RobotShuffleboard {
         m_launcherKFEntry = m_PidTab.addPersistent(("kF"), RobotMap.LauncherConstants.FLYWHEEL_GAINS.kF)
                             .withWidget(BuiltInWidgets.kTextView)
                             .getEntry();
-        m_targetFlywheelRpmEntry = m_PidTab.addPersistent("Target Flywheel Rpm", RobotMap.LauncherConstants.DEFAULT_TARGET_FLYWHEEL_RPM)
-                            .withWidget(BuiltInWidgets.kTextView)
-                            .getEntry();
+        //Commented out because it is currently unused, but should be used if we want to do further distance testing
+        // m_targetFlywheelRpmEntry = m_PidTab.addPersistent("Target Flywheel Rpm", RobotMap.LauncherConstants.DEFAULT_TARGET_FLYWHEEL_RPM)
+        //                     .withWidget(BuiltInWidgets.kTextView)
+        //                     .getEntry();
         m_PidTab.addPersistent("current RPM PID", m_launcher.getRealSpeed())
                             .withWidget(BuiltInWidgets.kTextView)
                             .getEntry();
 
-        m_launchPresetEntry = m_PidTab.addPersistent(("Launch Preset"), RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET)
-                            .withWidget(BuiltInWidgets.kTextView)
-                            .getEntry();
         m_maxTurretSpeedEntry = m_PidTab.addPersistent(("Max Turret Speed"), RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED)
-                            .withWidget(BuiltInWidgets.kTextView)
-                            .getEntry();
-        m_proportionalConstantEntry = m_PidTab.addPersistent(("Proportional Constant"), RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT)
                             .withWidget(BuiltInWidgets.kTextView)
                             .getEntry();
     }
@@ -187,76 +179,7 @@ public class RobotShuffleboard {
     }
 
     /**
-     * Sets the velocity of the flywheel equal to the value on the shuffleboard. 
-     * If no value is found on the shuffleboard for flywheelVelocity, returns with nothing, the value will be set to 0.5 from RobotMap
-     */
-    private void setFlywheelVelocity(){
-        m_flywheelPercentPower = m_flywheelPercentPowerEntry.getDouble(RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_PERCENT_POWER);
-        m_launcher.setFlywheelPercentPower(m_flywheelPercentPower);
-    }
-
-    /**
-     * Gets the current value for the flywheel velocity from the shuffleboard
-     * @return the flywheel velocity double from the shuffleboard
-     */
-    public double getFlywheelVelocity(){
-        // Gets the updated value from the shuffleboard
-        setFlywheelVelocity();
-        return m_flywheelPercentPower;
-    }
-
-    /**
-     * Sets the targetFlywheelSpeed to be equal to the value on the shuffleboard
-     */
-    private void setTargetFlywheelRpm(){
-        m_targetFlywheelRpm = m_targetFlywheelRpmEntry.getDouble(RobotMap.LauncherConstants.DEFAULT_TARGET_FLYWHEEL_RPM);
-        m_launcher.setTargetFlywheelRpm(m_targetFlywheelRpm);
-    }
-
-    /**
-     * Gets the current target flywheel speed from the shuffleboard
-     * @return the speed in RPM that we want the flywheels to be going before launching
-     */
-    public double getTargetFlywheelSpeed(){
-        setTargetFlywheelRpm();
-        return m_targetFlywheelRpm;
-    }
-
-    /**
-     * Sets maxTurretSpeed and proportional constant equal to value input on the shuffleboard
-     */
-    private void setTurretValues(){
-        m_maxTurretSpeed = m_maxTurretSpeedEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED);
-        m_proportionalConstant = m_proportionalConstantEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_PROPORTIONAL_CONSTANT);
-        m_launcher.setMaxTurretSpeed(m_maxTurretSpeed);
-    }
-
-    public double getTurretValues(){
-        setTurretValues();
-        return m_maxTurretSpeed;
-    }
-    
-    private void setAutonPath(){
-        m_autonPath = m_autonPathEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH);
-    }
-
-    public double getAutonPath(){
-        setAutonPath();
-        return m_autonPath;
-    }
-
-    private void setLaunchPreset(){
-        m_launchPreset = m_launchPresetEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_LAUNCH_PRESET);
-    }
-
-    public double getLaunchPreset(){
-        setLaunchPreset();
-        return m_launchPreset;
-    }
-    
-
-    /**
-     * Gets the value for HighVelocityScaler and returns it
+     * Gets the value for HighVelocityScaler from the shuffleboard
      * @return The value of HighVelocity Scaler
      */
     public double getHighVelocityScaler(){
@@ -265,7 +188,7 @@ public class RobotShuffleboard {
     }
 
     /**
-     * Gets the value for LowVelocityScaler and returns it
+     * Gets the value for LowVelocityScaler from the shuffleboard
      * @return The value for LowVelocityScaler
      */
     public double getLowVelocityScaler(){
@@ -274,7 +197,7 @@ public class RobotShuffleboard {
     }
 
     /**
-     * Gets the value for HighTurnScaler and returns it
+     * Gets the value for HighTurnScaler from the shuffleboard
      * @return The value for HighTurnScaler
      */
     public double getHighTurnScaler(){
@@ -283,7 +206,7 @@ public class RobotShuffleboard {
     }
 
     /**
-     * Gets the value for LowTurnScaler and returns it
+     * Gets the value for LowTurnScaler from the shuffleboard
      * @return The value for LowTurnScaler
      */
     public double getLowTurnScaler(){
@@ -291,44 +214,94 @@ public class RobotShuffleboard {
         return m_lowTurnScaler;
     }
 
+    /**
+     * Records the current Auton Path from the shuffleboard
+     * If no value is found on the shuffleboard for autonPath, the value will be set to 2 (two ball)
+     */
+    private void setAutonPath(){
+        m_autonPath = m_autonPathEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_AUTON_PATH);
+    }
+
+    /**
+     * Gets the current Auton path from the shuffleboard
+     * @return the path the robot will take in auton
+     */
+    public double getAutonPath(){
+        setAutonPath();
+        return m_autonPath;
+    }
+
+    /**
+     * Records the percent power of the value on the shuffleboard and sets it in the Launcher class
+     * If no value is found on the shuffleboard for flywheelVelocity, the value will be set to 0.72
+     */
+    private void setFlywheelVelocity(){
+        m_flywheelPercentPower = m_flywheelPercentPowerEntry.getDouble(RobotMap.ShuffleboardConstants.FLYWHEEL_DEFAULT_PERCENT_POWER);
+        m_launcher.setFlywheelPercentPower(m_flywheelPercentPower);
+    }
+
+    /**
+     * Records the target flywheel RPM from the shuffleboard and sets it in the Launcher class
+     * If no value is found on the shuffleboard for targetFlywheelRPM, the value will be set to 4000
+     * Commented out because it is currently unused, but should be used if we want to do further distance testing
+     */
+    // private void setTargetFlywheelRpm(){
+    //     m_targetFlywheelRpm = m_targetFlywheelRpmEntry.getDouble(RobotMap.LauncherConstants.DEFAULT_TARGET_FLYWHEEL_RPM);
+    //     m_launcher.setTargetFlywheelRpm(m_targetFlywheelRpm);
+    // }
+
+    /**
+     * Gets the current target flywheel RPM from the shuffleboard
+     * Commented out because it is currently unused, but should be used if we want to do further distance testing
+     * @return the speed in RPM that we want the flywheels to be going before launching
+     */
+    // public double getTargetFlywheelRpm(){
+    //     setTargetFlywheelRpm();
+    //     return m_targetFlywheelRpm;
+    // }
+
+    /**
+     * Records the maximum turret percent power from the shuffleboard and sets it in the Launcher class
+     * If no value is found on the shuffleboard for maxTurretSpeed, the value will be set to 0.75
+     */
+    private void setMaxTurretSpeed(){
+        m_maxTurretSpeed = m_maxTurretSpeedEntry.getDouble(RobotMap.ShuffleboardConstants.DEFAULT_MAX_TURRET_SPEED);
+        m_launcher.setMaxTurretSpeed(m_maxTurretSpeed);
+    }
+
+    /**
+     * Sets our P gain in the Launcher class to the value on shuffleboard
+     * If no value is found in shuffleboard, set it to the P constant in RobotMap
+     */
     private void setKP(){
         m_launcherKP = m_launcherKPEntry.getDouble(RobotMap.LauncherConstants.FLYWHEEL_GAINS.kP);
         m_launcher.setKP(m_launcherKP);
     }
 
-    public double getKP(){
-        setKP();
-        return m_launcherKP;
-    }
-
+    /**
+     * Sets our Igain in the Launcher class to the value on shuffleboard
+     * If no value is found in shuffleboard, set it to the I constant in RobotMap
+     */
     private void setKI(){
         m_launcherKI = m_launcherKIEntry.getDouble(RobotMap.LauncherConstants.FLYWHEEL_GAINS.kI);
         m_launcher.setKI(m_launcherKI);
     }
-    
-    public double getKI(){
-        setKI();
-        return m_launcherKI;
-    }
 
+    /**
+     * Sets our D gain in the Launcher class to the value on shuffleboard
+     * If no value is found in shuffleboard, set it to the D constant in RobotMap
+     */
     private void setKD(){
         m_launcherKD = m_launcherKDEntry.getDouble(RobotMap.LauncherConstants.FLYWHEEL_GAINS.kD);
         m_launcher.setKD(m_launcherKD);
     }
 
-    public double getKD(){
-        setKD();
-        return m_launcherKD;
-    }
-
+    /**
+     * Sets our F gain in the Launcher class to the value on shuffleboard
+     * If no value is found in shuffleboard, set it to the F constant in RobotMap
+     */
     private void setKF(){
         m_launcherKF = m_launcherKFEntry.getDouble(RobotMap.LauncherConstants.FLYWHEEL_GAINS.kF);
         m_launcher.setKF(m_launcherKF);
     }
-
-    public double getKF(){
-        setKF();
-        return m_launcherKF;
-    }
-
 }

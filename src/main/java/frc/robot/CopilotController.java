@@ -116,7 +116,6 @@ public class CopilotController {
             m_launcher.zeroTurretPosition();
             m_limelight.disableLEDs();
             m_intake.indexing();
-            m_launcher.resetSecondBallTracker();
         }
 
         //calls feeder command button to set feeder speed
