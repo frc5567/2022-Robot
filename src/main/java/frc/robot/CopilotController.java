@@ -114,7 +114,7 @@ public class CopilotController {
             m_launcher.setFlywheelSpeed(0);
             m_launcher.setFeederSpeed(0);
             m_launcher.zeroTurretPosition();
-            m_limelight.disableLEDs();
+            //m_limelight.disableLEDs();
             m_intake.indexing();
         }
 
@@ -133,6 +133,13 @@ public class CopilotController {
                 m_carwashRunning = false;
             }
         }
+
+        // This prints out the distance to target and desired rpm only once each time the targetAndLaunch button is pressed
+        // if(m_gamePad.getTargetAndLaunchPressed()){
+        //     double dist = m_limelight.distToTarget();
+        //     double desiredRpm = (0.0078 * Math.pow(dist, 3) - 2.3105 * Math.pow(dist, 2) + 236.44 * (dist) - 4384.4);
+        //     System.out.println("Desired RPM:" + desiredRpm + "\tDistance: " + m_limelight.distToTarget());
+        // }
     }
     /**
      * This method controls the climber with two buttons, one for lifting the climbing mechanism up, and another for retracting the winch

@@ -65,7 +65,7 @@ public class LimelightVision {
      * Limelight init to initially disable the LEDs and set the pipeline
      */
     public void init(){
-        disableLEDs();
+        //disableLEDs();
         setPipeline(Pipeline.kStandard);
     }
 

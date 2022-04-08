@@ -184,7 +184,7 @@ public class RobotMap {
         /**
          * Constant for the flywheel RPM bound, similar to a deadband for the flywheel RPM.
          */
-        public static final int FLYWHEEL_RPM_BOUND = 15;
+        public static final int FLYWHEEL_RPM_BOUND = 25;
 
         /**
          * Constant for the maximum amount of feeding cycles
@@ -308,7 +308,7 @@ public class RobotMap {
         /**
          * Default drive input scaler value. Returns if the value is not found from the shuffleboard
          */
-        public static final double DRIVE_DEFAULT_INPUT_SCALER = 0.5;
+        public static final double DRIVE_DEFAULT_INPUT_SCALER = 1.0;
 
         /**
          * Default flywheel velocity value. Returns if the value is not found from the shuffleboard

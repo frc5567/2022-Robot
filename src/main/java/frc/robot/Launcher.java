@@ -117,7 +117,7 @@ public class Launcher{
         m_feederMotor.set(ControlMode.PercentOutput, 0);
         m_turretCurrentSpeed = 0;
         m_turretMotor.set(ControlMode.PercentOutput, 0);
-        m_limelightVision.disableLEDs();
+        //m_limelightVision.disableLEDs();
 
         m_feederMotor.setNeutralMode(NeutralMode.Brake);
         m_turretMotor.setNeutralMode(NeutralMode.Brake);
@@ -175,8 +175,8 @@ public class Launcher{
         m_masterFlywheelMotor.selectProfileSlot(RobotMap.LauncherConstants.PID_SLOT, RobotMap.LauncherConstants.PID_MODE);
         //Prints out our current distance
         //Calculates desired RPM based on our distance from the hub
-        double desiredRpm = (0.0078 * Math.pow(dist, 3) - 2.3105 * Math.pow(dist, 2) + 236.44 * (dist) - 4384.4);
-        // System.out.println("Distance: " + dist + "\tDesRPM: "+ desiredRpm);
+        double desiredRpm = (0.0013 * Math.pow(dist, 3) - 0.3723 * Math.pow(dist, 2) + 50.707 * (dist) + 1274.1);
+        System.out.println("Distance: " + dist + "\tDesRPM: "+ desiredRpm + "\tCurrentRPM " );
         
         if(runPID(desiredRpm)){
             //Adds to our at speed count every cycle we're at speed
@@ -184,12 +184,14 @@ public class Launcher{
             // System.out.println("Launcher at speed count: " + m_launcherAtSpeedCount );
 
             //Sysouts for testing
-            //double ticks = m_masterFlywheelMotor.getSelectedSensorVelocity();
+            double ticks = m_masterFlywheelMotor.getSelectedSensorVelocity();
             //double dticks = desiredRpm * (double)RobotMap.LauncherConstants.TICKS_PER_ROTATION / 600.0;
+            //System.out.println([" + ((ticks * 600.0) / 2048.0) + "]");
             // System.out.println("Desired RPM:    [" + desiredRpm + "]   Actual RPM:    [" + ((ticks * 600.0) / 2048.0) + "]");
             // System.out.println("Desired ticks:  [" + dticks +     "]   Actual ticks:  [" + ticks + "]");
         }
     }
+
 
     /**
      * Method that is run when the target and launch button on the gamepad is pressed. 
@@ -201,7 +203,7 @@ public class Launcher{
 
         boolean onTarget = target();
         
-        if(m_launcherAtSpeedCount > 10 && onTarget){
+        if(m_launcherAtSpeedCount > 5 && onTarget){
             // System.out.println("launching (count:" + m_launcherAtSpeedCount + ")");
             feedLauncher();
         }

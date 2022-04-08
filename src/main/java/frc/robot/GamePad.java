@@ -68,6 +68,10 @@ public class GamePad extends GenericHID {
 		return super.getRawButton(GamePadControls.targetAndLaunchCMD.portNum);
 	}
 
+	public boolean getTargetAndLaunchPressed(){
+		return super.getRawButtonPressed(GamePadControls.targetAndLaunchCMD.portNum);
+	}
+
 	/**
 	 * Method to check if the Trajectory Up button was pressed
 	 */
