@@ -175,7 +175,7 @@ public class Launcher{
         m_masterFlywheelMotor.selectProfileSlot(RobotMap.LauncherConstants.PID_SLOT, RobotMap.LauncherConstants.PID_MODE);
         //Prints out our current distance
         //Calculates desired RPM based on our distance from the hub
-        double desiredRpm = (0.0013 * Math.pow(dist, 3) - 0.3723 * Math.pow(dist, 2) + 50.707 * (dist) + 1274.1);
+        double desiredRpm = (0.0012 * Math.pow(dist, 3) - 0.3501 * Math.pow(dist, 2) + 45.719 * (dist) + 1530.6); //1274.1);
         System.out.println("Distance: " + dist + "\tDesRPM: "+ desiredRpm + "\tCurrentRPM " );
         
         if(runPID(desiredRpm)){
@@ -203,7 +203,7 @@ public class Launcher{
 
         boolean onTarget = target();
         
-        if(m_launcherAtSpeedCount > 5 && onTarget){
+        if(m_launcherAtSpeedCount > 10 && onTarget){
             // System.out.println("launching (count:" + m_launcherAtSpeedCount + ")");
             feedLauncher();
         }

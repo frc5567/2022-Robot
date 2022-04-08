@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -38,6 +39,8 @@ public class LimelightVision {
 
     // Declares object for Target Area (0% to 100% of image)
     double m_areaOfScreen;
+
+    LinearFilter distFilt;
     
     /**
      * Constructor for limelight to allow robot to target for launching
@@ -54,6 +57,8 @@ public class LimelightVision {
         m_yAngleOffset = m_limelightTable.getEntry("ty").getDouble(0.0);
         // ta is the percent area of the screen that is taken up by the target
         m_areaOfScreen = m_limelightTable.getEntry("ta").getDouble(0.0); 
+
+        distFilt = LinearFilter.movingAverage(20);
 
         // Creates/assigns the offset and area variables onto the dashboard table
         SmartDashboard.putNumber("LimelightX Offset", m_xAngleOffset);
@@ -176,7 +181,11 @@ public class LimelightVision {
         tanOfAngle = Math.tan((RobotMap.LimelightConstants.CAMERA_DEGREES_FROM_GROUND + m_yAngleOffset) * RobotMap.LimelightConstants.ANGLE_TO_RADIAN_CONVERT);
         //calculates the distance that the robot is from the hub (parallel to the ground)
         distance = totalHeight/tanOfAngle;
+        distance*=2;
+
+        distance = distFilt.calculate(distance);
+        
         //returns calculated distance in inches. Have to double the distance (multiply by 2) because what is returned is half of the actual distance if we don't.
-        return distance * 2;
+        return distance;
     }
 }

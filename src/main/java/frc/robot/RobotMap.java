@@ -76,7 +76,7 @@ public class RobotMap {
         /**
          * Constant for filters on turning in order to prevent brownouts
          */
-        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 2.0;
+        public static final double SLEW_SIGNAL_TURN_RATE_OF_CHANGE = 2.5;
 
         /**
          * The speed that the robot will move forward when the back button on the pilot controller is pressed for climbing
@@ -184,7 +184,7 @@ public class RobotMap {
         /**
          * Constant for the flywheel RPM bound, similar to a deadband for the flywheel RPM.
          */
-        public static final int FLYWHEEL_RPM_BOUND = 25;
+        public static final int FLYWHEEL_RPM_BOUND = 15;
 
         /**
          * Constant for the maximum amount of feeding cycles
@@ -434,7 +434,7 @@ public class RobotMap {
         /**
          * The target distances we want out robot to move in step one
          */
-        public static final double THREE_BALL_STEP_ONE_TARGET_DISTANCE = 45;
+        public static final double THREE_BALL_STEP_ONE_TARGET_DISTANCE = 44;
 
         /**
          * This value is passed into turnToTarget method in Auton to turn the robot 170 degrees
@@ -450,17 +450,17 @@ public class RobotMap {
         /**
          * This value is passed into turnToTarget method in Auton to turn the robot 110 degrees
          */
-        public static final double THREE_BALL_STEP_SEVEN_TARGET_ANGLE = 50;
+        public static final double THREE_BALL_STEP_SEVEN_TARGET_ANGLE = 60;
         
         /**
          * This value is passed into driveToTarget method in Auton to move the robot 160 inches
          */
-        public static final double THREE_BALL_STEP_EIGHT_TARGET_DISTANCE = 55;
+        public static final double THREE_BALL_STEP_EIGHT_TARGET_DISTANCE = 59;
 
         /**
          * This value is passed into driveToTarget method in auton to move the robot 35 inches
          */
-        public static final double THREE_BALL_STEP_NINE_TARGET_DISTANCE = 35;
+        public static final double THREE_BALL_STEP_NINE_TARGET_DISTANCE = 53;
         
         /**
          * This value is passed into turnToTarget method in Auton to turn the robot 110 degrees
