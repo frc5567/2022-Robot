@@ -113,7 +113,9 @@ public class CopilotController {
         else{
             m_launcher.setFlywheelSpeed(0);
             m_launcher.setFeederSpeed(0);
-            m_launcher.zeroTurretPosition();
+            if (!m_launcher.m_manualTurret){
+               m_launcher.zeroTurretPosition();
+            }
             //m_limelight.disableLEDs();
             m_intake.indexing();
         }

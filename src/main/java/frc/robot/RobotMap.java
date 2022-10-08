@@ -184,7 +184,7 @@ public class RobotMap {
         /**
          * Constant for the flywheel RPM bound, similar to a deadband for the flywheel RPM.
          */
-        public static final int FLYWHEEL_RPM_BOUND = 15;
+        public static final int FLYWHEEL_RPM_BOUND = 25;
 
         /**
          * Constant for the maximum amount of feeding cycles

@@ -79,6 +79,8 @@ public class Launcher{
 
     int m_feedingCounter = 0;
 
+    public boolean m_manualTurret = false;
+
     /**
      * Constructor for Launcher objects
      * @param limelightVision we pass in limelight to use in launch targeting
@@ -184,7 +186,7 @@ public class Launcher{
             // System.out.println("Launcher at speed count: " + m_launcherAtSpeedCount );
 
             //Sysouts for testing
-            double ticks = m_masterFlywheelMotor.getSelectedSensorVelocity();
+            //double ticks = m_masterFlywheelMotor.getSelectedSensorVelocity();
             //double dticks = desiredRpm * (double)RobotMap.LauncherConstants.TICKS_PER_ROTATION / 600.0;
             //System.out.println([" + ((ticks * 600.0) / 2048.0) + "]");
             // System.out.println("Desired RPM:    [" + desiredRpm + "]   Actual RPM:    [" + ((ticks * 600.0) / 2048.0) + "]");

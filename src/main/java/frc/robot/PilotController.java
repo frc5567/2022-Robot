@@ -32,6 +32,8 @@ public class PilotController {
     //Boolean for determining if the back button is being pressed
     //boolean m_movingToClimb;
 
+    boolean m_turretTurning = false;
+
     /**
      * Constuctor for the pilot controller
      */
@@ -204,22 +206,24 @@ public class PilotController {
     }
 
     private void manualTurretCmd(){
-        boolean turretTurning = false;
         // If the right bumper is being pressed, turn the turret right
         if(m_controller.getRightBumper()){
-            turretTurning = true;
+            m_turretTurning = true;
+            m_launcher.m_manualTurret = true;
             m_launcher.setTurretSpeed(RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
         }
         // If the left bumper is being pressed, turn the turret left
         else if(m_controller.getLeftBumper()){
-            turretTurning = true;
+            m_launcher.m_manualTurret = true;
+            m_turretTurning = true;
             m_launcher.setTurretSpeed(-RobotMap.LauncherConstants.TURRET_ROTATION_SPEED);
         }
         // Zero the turret motor once if we are not pressing either button 
         else{
-            if(turretTurning){
+            if(m_turretTurning){
                 m_launcher.setTurretSpeed(0);
-                turretTurning = false;
+                m_turretTurning = false;
+                m_launcher.m_manualTurret = false;
             }
             
         }
